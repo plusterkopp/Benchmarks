@@ -5,7 +5,7 @@ import de.icubic.mm.bench.base.*;
 
 public class Task implements Runnable {
 
-	public static int Matrix_size = 50;
+	public static int Matrix_size = 500;
 
 	static int[][] matrix_A = null;
 	static int[][] matrix_B = null;

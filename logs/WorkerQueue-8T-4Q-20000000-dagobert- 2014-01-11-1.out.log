@@ -1,0 +1,37 @@
+2.407: Creating 20.000.000 jobs 
+2.015.811.318: estimate: 31.646.000 jobs in 1.000ms, total size 16 M in 1.000 ms (15.822 ops/ms, 31.646.000 jobs/s, 31 ns/job
+2.015.968.676: eval for: 1.0 -> -1969.0
+3.923.558.325: estimate: 25.838.000 jobs in 1.000ms, total size 65 M in 1.000 ms (64.570 ops/ms, 25.838.000 jobs/s, 38 ns/job
+3.923.700.940: eval for: 2.0 -> -1962.0
+5.334.632.415: estimate: 15.879.000 jobs in 1.000ms, total size 270 M in 1.000 ms (269.850 ops/ms, 15.879.000 jobs/s, 62 ns/job
+5.334.782.852: eval for: 4.0 -> -1938.0
+6.743.742.087: estimate: 4.796.000 jobs in 1.000ms, total size 623 M in 1.000 ms (623.283 ops/ms, 4.796.000 jobs/s, 208 ns/job
+6.743.847.996: eval for: 8.0 -> -1792.0
+12.521.936.845: estimate: 844.000 jobs in 1.000ms, total size 868 M in 1.001 ms (867.424 ops/ms, 843.157 jobs/s, 1.186 ns/job
+12.522.037.940: eval for: 16.0 -> -814.0
+13.939.437.640: estimate: 120.000 jobs in 1.000ms, total size 985 M in 1.000 ms (984.662 ops/ms, 120.000 jobs/s, 8.333 ns/job
+13.939.530.009: eval for: 32.0 -> 6333.0
+15.359.769.373: estimate: 262.000 jobs in 1.000ms, total size 908 M in 1.000 ms (908.050 ops/ms, 262.000 jobs/s, 3.816 ns/job
+15.359.865.353: eval for: 24.0 -> 1816.0
+18.147.230.500: estimate: 843.000 jobs in 1.000ms, total size 867 M in 1.001 ms (866.412 ops/ms, 842.158 jobs/s, 1.187 ns/job
+18.147.338.214: eval for: 16.0 -> -813.0
+19.570.244.841: estimate: 571.000 jobs in 1.000ms, total size 901 M in 1.001 ms (900.192 ops/ms, 570.430 jobs/s, 1.753 ns/job
+19.570.350.148: eval for: 18.473944465576263 -> -247.0
+20.981.258.455: estimate: 499.000 jobs in 1.000ms, total size 915 M in 1.002 ms (913.510 ops/ms, 498.004 jobs/s, 2.008 ns/job
+20.981.362.558: eval for: 19.42430213702044 -> 8.0
+23.802.176.956: estimate: 500.000 jobs in 1.000ms, total size 913 M in 1.001 ms (912.299 ops/ms, 499.500 jobs/s, 2.002 ns/job
+23.802.282.263: eval for: 19.3944869943869 -> 2.0
+25.223.282.241: estimate: 501.000 jobs in 1.000ms, total size 914 M in 1.001 ms (912.742 ops/ms, 500.500 jobs/s, 1.998 ns/job
+25.223.386.645: eval for: 19.384628439861483 -> -2.0
+26.635.440.085: estimate: 501.000 jobs in 1.000ms, total size 914 M in 1.000 ms (914.296 ops/ms, 501.000 jobs/s, 1.996 ns/job
+26.635.548.401: eval for: 19.38955771712419 -> -4.0
+29.409.939.187: estimate: 501.000 jobs in 1.000ms, total size 915 M in 1.001 ms (913.823 ops/ms, 500.500 jobs/s, 1.998 ns/job
+29.410.045.096: eval for: 19.392843901965996 -> -2.0
+30.829.222.670: estimate: 501.000 jobs in 1.000ms, total size 915 M in 1.001 ms (913.932 ops/ms, 500.500 jobs/s, 1.998 ns/job
+30.829.330.684: eval for: 19.39366544817645 -> -2.0
+32.244.926.334: estimate: 499.000 jobs in 1.000ms, total size 911 M in 1.001 ms (910.448 ops/ms, 498.501 jobs/s, 2.006 ns/job
+32.245.064.135: eval for: 19.394076221281672 -> 6.0
+35.049.505.180: estimate: 500.000 jobs in 1.000ms, total size 913 M in 1.001 ms (912.209 ops/ms, 499.500 jobs/s, 2.002 ns/job
+35.049.587.620: eval for: 19.393768141452753 -> 2.0
+36.460.798.609: estimate: 500.000 jobs in 1.000ms, total size 913 M in 1.001 ms (912.201 ops/ms, 499.500 jobs/s, 2.002 ns/job
+36.460.891.880: eval for: 19.3937167948146 -> 2.0

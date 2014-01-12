@@ -45,7 +45,7 @@ public class WorkAssignerThread extends Thread {
 	@Override
 	public void run() {
 		final int numThreads = workQ.getNumAssignerThreads();
-		BenchLogger.sysout( "assigning " + totalTasks + " tasks started in " + numThreads + " threads" + ( jobsPerSecond >0 ? " (throtteled)" : ""));
+		BenchLogger.sysout( "assigning " + totalTasks + " tasks started in " + numThreads + " threads" + ( jobsPerSecond >0 ? " (throttled)" : ""));
 		threads = new AssignerThread[ numThreads];
 		final long	sizes[] = new long[ numThreads];
 		final int	block = totalTasks / numThreads;
@@ -111,7 +111,7 @@ public class WorkAssignerThread extends Thread {
 			sum += at.queuedJobCount.get();
 			size += sizes[ t];
 		}
-		BenchLogger.sysout( "assigning " + sum + " tasks finished " + lnf.format( sum / ( 1e-9 * durNS)) + " jobs/s" + ( jobsPerSecond >0 ? " (throtteled)" : ""));
+		BenchLogger.sysout( "assigning " + sum + " tasks finished " + lnf.format( sum / ( 1e-9 * durNS)) + " jobs/s" + ( jobsPerSecond >0 ? " (throttled)" : ""));
 	}
 
 	protected int getNumQueues() {
