@@ -6,14 +6,14 @@ public abstract class SimpleWorkQueue extends AWorkQueue {
 	static final int QUEUE_THRESHOLD = 300;
 	private final BlockingQueue<Runnable> queue;
 
+//	/* constructor to initiate worker threads and queue associated with it */
+//	public SimpleWorkQueue( int nThreads, int totalTasks) {
+//		this( nThreads, totalTasks, false, false);
+//	}
+//
 	/* constructor to initiate worker threads and queue associated with it */
-	public SimpleWorkQueue( int nThreads, int totalTasks) {
-		this( nThreads, totalTasks, false);
-	}
-
-	/* constructor to initiate worker threads and queue associated with it */
-	public SimpleWorkQueue( int nThreads, int totalTasks, boolean isBatched) {
-		super( nThreads, 1, totalTasks, isBatched);
+	public SimpleWorkQueue( int nThreads, int totalTasks, boolean isBatched, boolean useAffinity) {
+		super( nThreads, 1, totalTasks, isBatched, useAffinity);
 		queue = createQueue();
 		threads = new PoolWorker[ nThreads];
 	}
@@ -64,6 +64,14 @@ public abstract class SimpleWorkQueue extends AWorkQueue {
 	@Override
 	protected int size() {
 		return queue.size();
+	}
+
+	@Override
+	int getQueueIndex( Object key) {
+		if ( key == queue) {
+			return 0;
+		}
+		return -1;
 	}
 
 

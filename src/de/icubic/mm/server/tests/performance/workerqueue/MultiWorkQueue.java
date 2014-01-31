@@ -7,14 +7,14 @@ public abstract class MultiWorkQueue extends AWorkQueue {
 	private AtomicInteger queue_no = new AtomicInteger();
 	private BlockingQueue<Runnable>[] queues;
 
+//	/* constructor to initiate worker threads and queue associated with it */
+//	public MultiWorkQueue( int nThreads, int nQueues, int totalTasks) {
+//		this( nThreads, nQueues, totalTasks, false, false);
+//	}
+//
 	/* constructor to initiate worker threads and queue associated with it */
-	public MultiWorkQueue( int nThreads, int nQueues, int totalTasks) {
-		this( nThreads, nQueues, totalTasks, false);
-	}
-
-	/* constructor to initiate worker threads and queue associated with it */
-	public MultiWorkQueue( int nThreads, int nQueues, int totalTasks, boolean isBatched) {
-		super( nThreads, nQueues, totalTasks, isBatched);
+	public MultiWorkQueue( int nThreads, int nQueues, int totalTasks, boolean isBatched, boolean useAffinity) {
+		super( nThreads, nQueues, totalTasks, isBatched, useAffinity);
 
 		queues = new BlockingQueue[ maxQueues];
 		for ( int i = 0; i < maxQueues; i++) {
@@ -86,5 +86,14 @@ public abstract class MultiWorkQueue extends AWorkQueue {
 		return sum;
 	}
 
+	@Override
+	int getQueueIndex( Object key) {
+		for ( int i = 0; i < queues.length; i++) {
+			if ( key == queues[ i]) {
+				return i;
+			}
+		}
+		return -1;
+	}
 
 }

@@ -45,7 +45,7 @@ public class WorkAssignerThread extends Thread {
 	@Override
 	public void run() {
 		final int numThreads = workQ.getNumAssignerThreads();
-		BenchLogger.sysout( "assigning " + totalTasks + " tasks started in " + numThreads + " threads" + ( jobsPerSecond >0 ? " (throttled)" : ""));
+		BenchLogger.sysinfo( "assigning " + totalTasks + " tasks started in " + numThreads + " threads" + ( jobsPerSecond >0 ? " (throttled)" : ""));
 		threads = new AssignerThread[ numThreads];
 		final long	sizes[] = new long[ numThreads];
 		final int	block = totalTasks / numThreads;
@@ -57,6 +57,7 @@ public class WorkAssignerThread extends Thread {
 				@Override
 				public void run() {
 					try {
+						workQ.waitForWorkersCreated();
 						assignBlock( start, start+block, ft, sizes, jobsPerSecond / numThreads);
 					} catch ( InterruptedException e) {
 						// TODO Auto-generated catch block
@@ -160,8 +161,8 @@ public class WorkAssignerThread extends Thread {
 		Task[]	tasks = new Task[ total];
 		int tSize;
 		for ( int	i = 0;  i < total;  i++) {
-			if ( Task.Matrix_size > 0) {
-				tSize = Math.round( 1 + random.nextInt( Task.Matrix_size));
+			if ( Task.MatrixSize > 0) {
+				tSize = Math.round( 1 + random.nextInt( Task.MatrixSize));
 			} else {
 				tSize = 0;
 			}

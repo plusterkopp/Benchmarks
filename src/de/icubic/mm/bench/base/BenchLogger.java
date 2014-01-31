@@ -6,6 +6,7 @@ import java.text.*;
 public class BenchLogger {
 
 	static PrintStream	outStream;
+	static PrintStream	infoStream;
 	static PrintStream	errStream;
 
 	public static void sysout( String string) {
@@ -13,7 +14,7 @@ public class BenchLogger {
 	}
 
 	private static void sysout( String string, Throwable	t) {
-		sysout( outStream, System.out, string, t);
+		sysout( string, t, outStream, infoStream, System.out);
 	}
 
 	public static void syserr( String string) {
@@ -21,20 +22,22 @@ public class BenchLogger {
 	}
 
 	public static void syserr( String string, Throwable	t) {
-		sysout( errStream, System.err, string, t);
+		sysout( string, t, errStream, infoStream, System.err);
 	}
 
-	private static void sysout( PrintStream outStream, PrintStream sys, String string, Throwable t) {
+	public static void sysinfo( String string) {
+		sysout( string, null, infoStream, System.out);
+	}
+
+	private static void sysout( String string, Throwable t, PrintStream... outStreams) {
 		final String message = getMessage( string);
-		if ( outStream != null) {
-			outStream.println( message);
-			if ( t != null) {
-				t.printStackTrace( outStream);
+		for ( PrintStream outStream : outStreams) {
+			if ( outStream != null) {
+				outStream.println( message);
+				if ( t != null) {
+					t.printStackTrace( outStream);
+				}
 			}
-		}
-		sys.println( message);
-		if ( outStream == null && t != null) {
-			t.printStackTrace( sys);
 		}
 	}
 
@@ -48,10 +51,14 @@ public class BenchLogger {
 		if ( outStream != null) {
 			outStream.close();
 		}
+		if ( infoStream != null) {
+			infoStream.close();
+		}
 		if ( errStream != null) {
 			errStream.close();
 		}
 		outStream = createStream( base, ".out.log");
+		infoStream = createStream( base, ".info.log");
 		errStream = createStream( base, ".err.log");
 	}
 

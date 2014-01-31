@@ -4,12 +4,18 @@ import java.io.*;
 import java.text.*;
 import java.util.*;
 
+import net.openhft.affinity.*;
 import de.icubic.mm.bench.base.*;
 import de.icubic.mm.server.tests.performance.workerqueue.WorkerQueueFactory.EWorkQueueType;
 
 public class MainClass {
 
-	public static NumberFormat	nf = new DecimalFormat();
+	public static NumberFormat	lnf = new DecimalFormat();
+	public static NumberFormat	dnf = new DecimalFormat();
+	private static double secsPerJobNSpeed;
+	private static double secsPerJobNHalfSpeed;
+	private static double secsPerJobNMinusOneSpeed;
+	private static double singleSpeed;
 
 	public static void main( String[] args) {
 
@@ -25,7 +31,7 @@ public class MainClass {
 		long jobSizeNS = Long.parseLong( args[ 3]);
 		String	machine = args[4];
 
-		String	outName = "logs" + File.separator + "WorkerQueue-" + nThreads + "T-" + nQueues + "Q-" + totalTasks;
+		String	outName = "logs" + File.separator + "WorkerQueue-" + nThreads + "T-" + nQueues + "Q-" + totalTasks + "-" + jobSizeNS + "ns";
 		DateFormat	df = new SimpleDateFormat( "yyyy-MM-dd");
 		outName += "-" + machine + "- " + df.format( new Date());
 		BenchLogger.setLogName( outName);
@@ -35,13 +41,18 @@ public class MainClass {
 		writer.put( "Queues", "" + nQueues);
 		writer.put( "Jobs", "" + totalTasks);
 
-		nf.setMaximumFractionDigits( 1);
-		nf.setGroupingUsed( true);
+		dnf.setMaximumFractionDigits( 3);
+		lnf.setMaximumFractionDigits( 1);
+		lnf.setGroupingUsed( true);
 
 		Task[]	tasks;
 
-		BenchLogger.sysout( "Creating " + nf.format( totalTasks) + " jobs ");
+		BenchLogger.sysinfo( AffinityLock.dumpLocks());
+		BenchLogger.sysinfo( "Creating " + lnf.format( totalTasks) + " jobs ");
 		tasks = WorkAssignerThread.createTasks( totalTasks);
+		BenchLogger.sysout( "warmup");
+		getRawSpeed( tasks, 5, 1, 100);
+
 		ProblemSizer	ps = new ProblemSizer( tasks);
 		ps.setProblemSize( jobSizeNS);
 		long ops = 0;
@@ -51,10 +62,19 @@ public class MainClass {
 		writer.put( "MOps", String.format( Locale.GERMANY, "%e", ops / 1e6));
 		writer.put( "Ops/Job", String.format( Locale.GERMANY, "%e", ( double) ops / tasks.length));
 
-		BenchLogger.sysout( "warmup");
-		getRawSpeed( tasks, 5);
+		BenchLogger.sysinfo( "warmup 2");
+		getRawSpeed( tasks, 20, 1, 1000);
 		BenchLogger.sysout( "estimate single thread");
-		double singleSpeed = getRawSpeed( tasks, 5);
+		singleSpeed = getRawSpeed( tasks, 10, 1, 10000);
+		double nSpeed = getRawSpeed( tasks, 10, nThreads, 10000);
+		secsPerJobNSpeed = 1 / nSpeed;
+		BenchLogger.sysout( "Max Speedup: " + dnf.format( nSpeed / singleSpeed));
+		double nHalfSpeed = getRawSpeed( tasks, 10, nThreads / 2, 10000);
+		secsPerJobNHalfSpeed = 1 / nHalfSpeed;
+		BenchLogger.sysout( "Half Speedup: " + dnf.format( nHalfSpeed / singleSpeed));
+		double nMinusOneSpeed = getRawSpeed( tasks, 10, nThreads - 1, 10000);
+		secsPerJobNMinusOneSpeed = 1 / nMinusOneSpeed;
+		BenchLogger.sysout( "MinusOne Speedup: " + dnf.format( nMinusOneSpeed / singleSpeed));
 		writer.put( "Single", String.format( Locale.GERMANY, "%e", singleSpeed));
 		StatsUtils	statsUtils = new StatsUtils();
 		double speed;
@@ -64,13 +84,14 @@ public class MainClass {
 			speed = run( type, nThreads, nQueues, tasks, 0);
 			writer.put( type.toString(), String.format( Locale.GERMANY, "%e", speed));
 		}
-		Task.Matrix_size = 0;
+		Task.MatrixSize = 0;
 		tasks = WorkAssignerThread.createTasks( totalTasks);
 		for ( EWorkQueueType type : EWorkQueueType.values()) {	//  Arrays.asList( EWorkQueueType.Disruptor, EWorkQueueType.DisruptorB)
 			System.gc();
 			// for latency run, limit jobs per second…
 			final long maxJobsPerSec = 1000000; // Math.min( 1000000, ( long) singleSpeed);
 			speed = run( type, nThreads, nQueues, tasks, maxJobsPerSec);
+			BenchLogger.sysinfo( type.name() + " ");
 			writer.put( type.toString(), String.format( Locale.GERMANY, "%e", speed));
 			// …and print latency stats
 			statsUtils.computeStatsFor( tasks);
@@ -79,40 +100,68 @@ public class MainClass {
 		BenchLogger.sysout( "\n" + writer.asString());
 	}
 
-	private static double getRawSpeed( Task[] tasks, int runTimeS) {
-		int		startIndex = 0;
-		int		batchSize = 10000;
-		int		endIndex = startIndex + batchSize;
-		int		runTimeMS = 1000 * runTimeS;
+	private static double getRawSpeed( final Task[] tasks, final int runTimeS, int nThreads, int batchSizeArg) {
+		final int		width = tasks.length / nThreads;
+		final int		batchSize = Math.min( batchSizeArg, width);
+
+		final long[]		runCounts = new long[ nThreads];
+		final long[]		opsCounts = new long[ nThreads];
+		Thread[]				threads = new Thread[ nThreads];
+
 		long	startTime = System.currentTimeMillis();
-		long	runUntil = startTime + runTimeMS;
-		long	ops = 0;
-		long	now;
-		long	runCount = 0;
-		while ( ( now = System.currentTimeMillis()) < runUntil) {
-			for ( int i = startIndex;  i < endIndex;  i++) {
-				final Task task = tasks[ i];
-				task.run();
-				ops += task.getSize();
-			}
-			startIndex = endIndex;
-			endIndex += batchSize;
-			if ( endIndex > tasks.length) {
-				startIndex = 0;
-				endIndex = startIndex + batchSize;
-			}
-			runCount += batchSize;
+		final int		runTimeMS = 1000 * runTimeS;
+
+		for ( int t = 0;  t < nThreads; t++) {
+			final int lowerBound = width * t;
+			final int upperBound = lowerBound + width;
+			final int tF = t;
+			threads[ t] = new Thread( "RawSpeed " + t + "/" + nThreads) {
+				@Override
+				public void run() {
+					long	startTimeT = System.currentTimeMillis();
+					final long	runUntil = startTimeT + runTimeMS;
+
+					int		startIndex = lowerBound;
+					int		endIndex = startIndex + batchSize;
+					opsCounts[ tF] = 0;
+					while ( System.currentTimeMillis() < runUntil) {
+						for ( int i = startIndex;  i < endIndex;  i++) {
+							final Task task = tasks[ i];
+							task.run();
+							opsCounts[ tF] += task.getSize();
+						}
+						startIndex = endIndex;
+						endIndex += batchSize;
+						if ( endIndex > upperBound) {
+							startIndex = lowerBound;
+							endIndex = startIndex + batchSize;
+						}
+						runCounts[ tF] += batchSize;
+					}
+				}
+			};
+			threads[ t].start();
 		}
-		long	durMS = now - startTime;
+		long	runCount = 0;
+		long	opsCount = 0;
+		for ( int t = 0;  t < nThreads;  t++) {
+			try {
+				threads[ t].join();
+			} catch ( InterruptedException e) {
+			}
+			opsCount += opsCounts[ t];
+			runCount += runCounts[ t];
+		}
+		long durMS = System.currentTimeMillis() - startTime;
 		final double jobsPerSec = 1000.0 * runCount / durMS;
-		BenchLogger.sysout( "Single Thread Speed: " + nf.format( runCount) + " jobs in " + nf.format( runTimeMS) + "ms, total size " + nf.format( ops / 1e6) + " M in " + nf.format( durMS) + " ms " +
-				"(" + nf.format( ops / durMS) + " ops/ms, " + nf.format( jobsPerSec) + " jobs/s");
+		BenchLogger.sysout( "No-Queue Speed in " + nThreads + " Threads: " + lnf.format( runCount) + " jobs in " + lnf.format( runTimeMS) + "ms, total size " + lnf.format( opsCount / 1e6) + " M in " + lnf.format( durMS) + " ms " +
+				"(" + lnf.format( opsCount / durMS) + " ops/ms, " + lnf.format( jobsPerSec) + " jobs/s");
 		return jobsPerSec;
 	}
 
 	private static double run( EWorkQueueType type, int nThreads, int nQueues, Task[] tasks, long assignJobsPerSec) {
 		boolean throttledForLatency = ( assignJobsPerSec > 0);
-		BenchLogger.sysout( "building " + type
+		BenchLogger.sysinfo( "building " + type
 				+ "-" + nThreads + "T-"
 				+ nQueues + "Q"
 				+ ( throttledForLatency ? " (throttled)" : ""));
@@ -127,13 +176,18 @@ public class MainClass {
 		workAssigner.start();
 
 		long startTime = System.currentTimeMillis();
-		String	id = "" + type + " - " + workQueue.getNumThreads() + "T - " + workQueue.getNumQueues() + "Q";
-		workQueue.startAllThreads( id);
+		final int numThreadsActual = workQueue.getNumThreads();
+		String	id = "" + type + " - " + numThreadsActual + "T - " + workQueue.getNumQueues() + "Q";
+		try {
+			workQueue.startAllThreads( id);
+		} catch ( InterruptedException ie) {
+			BenchLogger.syserr( "startAllThreads interrupted", ie);
+		}
 
 		long tasksDone = workQueue.stopWhenAllTaskFinished( id);
 		int batchesDone = workQueue.getBatchCount();
 
-		// sp�ter joinen, damit wir nicht zu fr�h zum wait am Lock der WorkQueue laufen
+		// später joinen, damit wir nicht zu früh zum wait am Lock der WorkQueue laufen
 		try {
 			workAssigner.join();
 //			BenchLogger.sysout( "Assigner " + id + " finished");
@@ -145,15 +199,37 @@ public class MainClass {
 		long endTime = System.currentTimeMillis();
 		long durMS = endTime - startTime;
 		StringBuilder	sb = new StringBuilder();
-		sb.append( type.name() + ( throttledForLatency ? " (throttled)" : "") + ": " + nf.format( tasksDone) + " jobs,  ");
+		sb.append( type.name() + ( throttledForLatency ? " (throttled)" : "") + ": " + lnf.format( tasksDone) + " jobs,  ");
 		if ( tasksDone != batchesDone) {
-			sb.append( "in " + nf.format( batchesDone) + " batches, (" + nf.format( ( double) tasksDone / batchesDone) + " t/b), ");
+			sb.append( "in " + lnf.format( batchesDone) + " batches, (" + lnf.format( ( double) tasksDone / batchesDone) + " t/b), ");
 		}
 		final double completedJobsPerSec = 1000.0 * tasksDone / durMS;
-		BenchLogger.sysout( sb.toString()  + "total size: " + nf.format( totalSize / 1e6) + "M " +
-				"in " + durMS + " ms " +
-				"(" + nf.format( totalSize / durMS) + " ops/ms, " +
-				nf.format( completedJobsPerSec) + " jobs/s");
+		sb.append( "total size: " + lnf.format( totalSize / 1e6) + "M " +
+				"in " + lnf.format( durMS) + " ms " +
+				"(" + lnf.format( totalSize / durMS) + " ops/ms, " +
+				lnf.format( completedJobsPerSec) + " jobs/s, ");
+		if ( ! throttledForLatency) {
+			double secsPerJobExpected;
+			if ( numThreadsActual == nThreads) {
+				secsPerJobExpected = secsPerJobNSpeed;
+			} else if ( numThreadsActual == nThreads / 2) {
+				secsPerJobExpected = secsPerJobNHalfSpeed;
+			} else if ( numThreadsActual == nThreads - 1) {
+				secsPerJobExpected = secsPerJobNMinusOneSpeed;
+			} else if ( numThreadsActual == 1) {
+				secsPerJobExpected = 1.0 / singleSpeed;
+			} else {
+				final double threadFactor = ( double) workQueue.getNumThreads() / nThreads;	// adjust for using less threads than planned
+				secsPerJobExpected = secsPerJobNSpeed * threadFactor;
+			}
+			double	secPerJob = 1 / completedJobsPerSec;
+			final double overheadSecs = secPerJob - secsPerJobExpected;
+			double	overheadRel = overheadSecs / secPerJob;
+				sb.append( "speedup " + dnf.format( completedJobsPerSec / singleSpeed)
+						+ ", "  +dnf.format( overheadSecs * 1e9) + " ns (" + dnf.format( 100.0 * overheadRel) + "%) overhead, "
+						+ dnf.format( 100.0 * completedJobsPerSec * secsPerJobExpected) + "% of max perf");
+		}
+		BenchLogger.sysout( sb.toString());
 		return completedJobsPerSec;
 	}
 }

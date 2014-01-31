@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.*;
 import de.icubic.mm.bench.base.*;
 
 /**
- * Diese Klasse ändert das Verhalten von ThreadPoolExecutor dahingehend, dass neue Thread
+ * Diese Klasse ï¿½ndert das Verhalten von ThreadPoolExecutor dahingehend, dass neue Thread
  * kreiert werden, auch wenn die WorkQueue noch nicht voll ist. der
  * <code>creationThreshold</code>-Parameter steuert dieses Verhalten.
  *
@@ -19,8 +19,8 @@ public class AddThreadBeforeQueuingThreadPoolExecutor extends ThreadPoolExecutor
 
 	/**
 	 * erzeugt Executor mit benannten Threads, weitere Voreinstellungen: CoreSize 0, 1 Minute Timeout, creationThreshold 0
-	 * @param size	Größe des Pools
-	 * @param poolName	Name des Pools: Threadnamen bekommen die Threadnummer angehängt
+	 * @param size	GrÃ¶ÃŸe des Pools
+	 * @param poolName	Name des Pools: Threadnamen bekommen die Threadnummer angehï¿½ngt
 	 * @param queue
 	 * @return neuer TPE
 	 */
@@ -112,7 +112,7 @@ public class AddThreadBeforeQueuingThreadPoolExecutor extends ThreadPoolExecutor
 	}
 
 	/**************************************************************************
-	 * packt den Job in die Warteschlange und erhöht die Anzahl der Worker um 1, wenn noch Platz ist
+	 * packt den Job in die Warteschlange und erhï¿½ht die Anzahl der Worker um 1, wenn noch Platz ist
 	 * @see java.util.concurrent.Executor#execute(java.lang.Runnable)
 	 * @param command
 	 */
@@ -145,8 +145,8 @@ public class AddThreadBeforeQueuingThreadPoolExecutor extends ThreadPoolExecutor
 
 	/**
 	 * Beendet mich mit {@link #shutdown()} und wartet dann mit {@link #awaitTermination(long, TimeUnit)} auf die
-	 * komplette Abarbeitung. Fall diese länger dauert als im Intervall angegeben, wird nach jedem Intervall in
-	 * {@link IQLog#logTest} die übergebene Nachricht mit der restlichen Jobanzahl geloggt. Werden vor Ende des ersten Intervalls
+	 * komplette Abarbeitung. Fall diese lï¿½nger dauert als im Intervall angegeben, wird nach jedem Intervall in
+	 * {@link IQLog#logTest} die ï¿½bergebene Nachricht mit der restlichen Jobanzahl geloggt. Werden vor Ende des ersten Intervalls
 	 * alle Jobs abgearbeitet, wird nichts geloggt.
 	 *
 	 * @param time	Anzahl der TimeUnits
@@ -161,11 +161,11 @@ public class AddThreadBeforeQueuingThreadPoolExecutor extends ThreadPoolExecutor
 				awaitTermination( time, unit);
 				terminated = isTerminated();
 				if ( ! terminated && ! Utils.isStringNullOrEmpty( message)) {
-					BenchLogger.sysout( message + " " + getQueue().size() + " jobs left");
+					BenchLogger.sysinfo( message + " " + getQueue().size() + " jobs left");
 				}
 			} catch( InterruptedException ie) {
 				Thread dummy = getThreadFactory().newThread( null);
-				BenchLogger.sysout( "waiting for TPE " + dummy.getName() + " interrupted");
+				BenchLogger.sysinfo( "waiting for TPE " + dummy.getName() + " interrupted");
 			}
 		} while ( ! terminated);
 	}

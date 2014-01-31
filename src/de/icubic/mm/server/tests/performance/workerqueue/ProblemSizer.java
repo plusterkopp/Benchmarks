@@ -5,8 +5,11 @@ import java.util.*;
 
 import org.apache.commons.math3.analysis.*;
 import org.apache.commons.math3.analysis.solvers.*;
+import org.apache.commons.math3.exception.*;
 
 import de.icubic.mm.bench.base.*;
+import de.icubic.mm.communication.util.Utils.MutableInteger;
+import de.icubic.mm.communication.util.Utils.MutableLong;
 
 public class ProblemSizer {
 
@@ -17,11 +20,10 @@ public class ProblemSizer {
 		this.tasks = tasks;
 	}
 
-	private long getRawSpeed( Task[] tasks, int runTimeS) {
+	private long getRawSpeed( Task[] tasks, int batchSize, double runTimeS) {
 		int		startIndex = 0;
-		int		batchSize = 1000;
 		int		endIndex = startIndex + batchSize;
-		int		runTimeMS = 1000 * runTimeS;
+		int		runTimeMS = ( int) ( 1000 * runTimeS);
 		long	startTime = System.currentTimeMillis();
 		long	runUntil = startTime + runTimeMS;
 		long	ops = 0;
@@ -45,21 +47,32 @@ public class ProblemSizer {
 		final double jobsPerSec = 1000.0 * runCount / durMS;
 		final long nsPerJob = ( long) ( 1e6 * durMS / runCount);
 		NumberFormat	nf = BenchLogger.lnf;
-		BenchLogger.sysout( "estimate: " + nf.format( runCount) + " jobs in " + nf.format( runTimeMS) + "ms, total size " + nf.format( ops / 1e6) + " M in " + nf.format( durMS) + " ms " +
+		BenchLogger.sysinfo( "estimate: " + nf.format( runCount) + " jobs in " + nf.format( runTimeMS) + "ms, actual " + nf.format( durMS) + " ms " +
 				"(" + nf.format( ops / durMS) + " ops/ms, " + nf.format( jobsPerSec) + " jobs/s, " + nf.format( nsPerJob) + " ns/job");
 		return nsPerJob;
 	}
 
 	public void setProblemSize( final long avgNS) {
+		final MutableLong	mResult = new MutableLong( ( long) 1e9);
+		final MutableInteger	batchSize = new MutableInteger( 1000);
 		UnivariateFunction	taskSizeToRuntimeNS = new UnivariateFunction() {
 			@Override
 			public double value( double pSize) {
 				// setup tasks, using pSize as upper bound for random to pseudo random get Matrix Size
 				fillTasks( tasks, pSize);
 				System.gc();
-				double nsPerJob = getRawSpeed( tasks, 1);
-				final double result = nsPerJob - avgNS;
-				BenchLogger.sysout( "eval for: " + pSize + " -> " + result);
+				double runTimeMS;
+				if ( Math.abs( mResult.longValue()) > avgNS * 0.8) {
+					runTimeMS = 0.1;
+				} else if ( Math.abs( mResult.longValue()) > avgNS / 2) {
+					runTimeMS = 1;
+				} else {
+					runTimeMS = 2;
+				}
+				double nsPerJob = getRawSpeed( tasks, batchSize.getInteger(), runTimeMS);
+				mResult.setValue( ( long) ( nsPerJob - avgNS));
+				final double result = mResult.doubleValue();
+				BenchLogger.sysinfo( "eval for: " + pSize + " -> " + result);
 				return result;
 			}
 		};
@@ -68,8 +81,20 @@ public class ProblemSizer {
 		while ( taskSizeToRuntimeNS.value( upperBound) < 0) {
 			upperBound *= 2;
 		}
-		UnivariateSolver	solver = new BrentSolver();
-		solver.solve( maxEval, taskSizeToRuntimeNS, upperBound / 2, upperBound, 3 * upperBound / 4);
+		batchSize.setValue( 10000);
+		UnivariateSolver	solver = new BrentSolver() {
+			@Override
+			public double getFunctionValueAccuracy() {
+				return avgNS * 0.05;
+			}
+		};
+		try {
+			BenchLogger.sysinfo( "estimate problem size for " + BenchLogger.lnf.format( avgNS)
+					+ " ns, +/- " + BenchLogger.lnf.format( ( long) solver.getFunctionValueAccuracy()));
+			solver.solve( maxEval, taskSizeToRuntimeNS, upperBound / 3, upperBound * 1.5, 3 * upperBound / 4);
+		} catch ( TooManyEvaluationsException tmee) {
+			BenchLogger.sysinfo( "reached eval limit, cancelling estimation");
+		}
 	}
 
 	protected void fillTasks( Task[] tasks, double pSize) {

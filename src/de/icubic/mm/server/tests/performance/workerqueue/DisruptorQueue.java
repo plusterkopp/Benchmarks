@@ -3,6 +3,9 @@ package de.icubic.mm.server.tests.performance.workerqueue;
 import java.text.*;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
+
+import net.openhft.affinity.*;
 
 import com.lmax.disruptor.*;
 import com.lmax.disruptor.dsl.*;
@@ -12,7 +15,7 @@ import de.icubic.mm.communication.util.*;
 
 public class DisruptorQueue implements IWorkQueue {
 
-	static NumberFormat nf = MainClass.nf;
+	static NumberFormat nf = MainClass.lnf;
 
 	public class TaskEventFactory implements EventFactory<TaskEvent> {
 		@Override
@@ -67,14 +70,22 @@ public class DisruptorQueue implements IWorkQueue {
 	EventFactory<TaskEvent> eventFactory;
 	WorkerPool<TaskEvent> workerPool;
 	CountDownLatch	assigningFinished = new CountDownLatch( 1);
-	ExecutorService executor;
+	CountDownLatch	workersReady;
+	ThreadPoolExecutor executor;
 //	Set<Integer> published = new HashSet<Integer>( 1000);
 
 	private Disruptor<TaskEvent> disruptor;
 
+	private boolean useAffinity;
+
 //	public final AtomicInteger taskQueued = new AtomicInteger( 0);
 
 	public DisruptorQueue( int nthreads, int nQueues, int totalTasks, boolean batch, int bufSize) {
+		this( nthreads, nQueues, totalTasks, batch, bufSize, false);
+	}
+
+	public DisruptorQueue( int nthreads, int nQueues, int totalTasks, boolean batch, int bufSize, boolean useAffinity) {
+		this.useAffinity = useAffinity;
 		final int numAT = getNumAssignerThreads();
 		int	freeAfterAssign = Runtime.getRuntime().availableProcessors() - numAT;
 		if ( freeAfterAssign >= nthreads) {	// enough
@@ -82,7 +93,8 @@ public class DisruptorQueue implements IWorkQueue {
 		} else {
 			nThreads = Math.max( 1, nthreads - numAT);
 		}
-		createRingBuffer( bufSize, numAT > 1);
+		workersReady = new CountDownLatch( nThreads);
+		createRingBuffer( bufSize, numAT > 1, useAffinity);
 		thArray = new TaskHandler[ nThreads];
 		if ( batch) {
 			setupForBatching();
@@ -154,13 +166,41 @@ public class DisruptorQueue implements IWorkQueue {
 		workerPool.start( executor);
 	}
 
-	private void createRingBuffer(int bufSize, boolean isMulti) {
+	private void createRingBuffer(int bufSize, boolean isMulti, boolean useAffinity) {
 		eventFactory = new TaskEventFactory();
 		int	pot = 1;
 		while ( pot < bufSize && pot <= ( Integer.MAX_VALUE / 2)) {
 			pot *= 2;
 		}
 		executor = AddThreadBeforeQueuingThreadPoolExecutor.getExecutor( nThreads, "Disruptor", new LinkedBlockingQueue<Runnable>());
+		ThreadFactory	tf;
+		if ( useAffinity) {
+			tf = new AffinityThreadFactory( "Disruptor", AffinityStrategies.SAME_SOCKET, AffinityStrategies.ANY) {
+				@Override
+				protected void beforeRun( AffinityLock al, Thread currentThread) {
+					super.beforeRun( al, currentThread);
+					workersReady.countDown();
+					BenchLogger.sysinfo( al.dumpLock());
+				}
+			};
+		} else {
+			tf = new ThreadFactory() {
+				final AtomicInteger threadNumber = new AtomicInteger( 0);
+				@Override
+				public Thread newThread( final Runnable r) {
+					Thread t = new Thread( new Runnable() {
+						@Override
+						public void run() {
+							workersReady.countDown();
+							r.run();
+						}
+					}, "Disruptor-" + threadNumber.incrementAndGet());
+					return t;
+				}
+			};
+		}
+		executor.setThreadFactory( tf);
+		executor.prestartAllCoreThreads();
 		disruptor = new Disruptor<TaskEvent>( eventFactory, pot, executor,
 				 ( isMulti ? ProducerType.MULTI : ProducerType.SINGLE),
 //				ProducerType.MULTI,
@@ -176,9 +216,9 @@ public class DisruptorQueue implements IWorkQueue {
 	public int stopWhenAllTaskFinished( String id) {
 		// wait for threads to complete running the tasks
 			try {
-				BenchLogger.sysout( "Assigning tasks finished?");
+				BenchLogger.sysinfo( "Assigning tasks finished?");
 				assigningFinished.await();
-				BenchLogger.sysout( "Main waiting for " + id);
+				BenchLogger.sysinfo( "Main waiting for " + id);
 				if ( workerPool != null) {
 					workerPool.drainAndHalt();
 				} else {
@@ -188,7 +228,7 @@ public class DisruptorQueue implements IWorkQueue {
 				executor.awaitTermination( 10, TimeUnit.SECONDS);
 				disruptor = null;
 				ringBuffer = null;
-				BenchLogger.sysout( "Main resuming from " + id);
+				BenchLogger.sysinfo( "Main resuming from " + id);
 //				checkExecution( thArray);
 			} catch ( InterruptedException e) {
 				e.printStackTrace();
@@ -306,6 +346,13 @@ public class DisruptorQueue implements IWorkQueue {
 
 		};
 		return wat;
+	}
+
+	@Override
+	public void waitForWorkersCreated() throws InterruptedException {
+		if ( workersReady != null) {
+			workersReady.await();
+		}
 	}
 
 }

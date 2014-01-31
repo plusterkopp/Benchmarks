@@ -5,7 +5,8 @@ import de.icubic.mm.bench.base.*;
 
 public class Task implements Runnable {
 
-	public static int Matrix_size = 500;
+	public static int MatrixSize = 50;
+	public static int MatrixSizeMax = 500;
 
 	static int[][] matrix_A = null;
 	static int[][] matrix_B = null;
@@ -15,7 +16,7 @@ public class Task implements Runnable {
 		matrix_B = fillupMatrix();
 	}
 
-	int realSize = Matrix_size;
+	int realSize = MatrixSize;
 	long	enqueuedAtNano = 0;
 	long	finishedAtNano = 0;
 	Thread	finishedBy = null;
@@ -23,7 +24,7 @@ public class Task implements Runnable {
 	static ThreadLocal<int[][]> matrix_R_TL = new ThreadLocal<int[][]>() {
 		@Override
 		protected int[][] initialValue() {
-			return new int[ Matrix_size][ Matrix_size];
+			return new int[ MatrixSizeMax][ MatrixSizeMax];
 		}
 	};
 
@@ -56,10 +57,10 @@ public class Task implements Runnable {
 
 	private static int[][] fillupMatrix() {
 		int index = 0;
-		int[][] matrix = new int[ Matrix_size][ Matrix_size];
+		int[][] matrix = new int[ MatrixSizeMax][ MatrixSizeMax];
 
-		for ( int i = 0; i < Matrix_size; i++) {
-			for ( int j = 0; j < Matrix_size; j++) {
+		for ( int i = 0; i < MatrixSizeMax; i++) {
+			for ( int j = 0; j < MatrixSizeMax; j++) {
 				matrix[ i][ j] = index++;
 			}
 		}

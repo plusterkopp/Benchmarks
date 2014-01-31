@@ -8,8 +8,8 @@ public class WorkStealingQueue extends AWorkQueue {
 	private BlockingDeque<Runnable>[] queues;
 
 	/* constructor to initiate worker threads and queues associated with it */
-	public WorkStealingQueue( int nThreads, int nQueues, int totalTasks) {
-		super( nThreads, nQueues, totalTasks);
+	public WorkStealingQueue( int nThreads, int nQueues, int totalTasks, boolean useAffinity) {
+		super( nThreads, nQueues, totalTasks, useAffinity);
 
 		queues = new BlockingDeque[ nThreads];
 		for ( int i = 0; i < nQueues; i++) {
@@ -142,6 +142,16 @@ public class WorkStealingQueue extends AWorkQueue {
 			}
 		}
 		return sum;
+	}
+
+	@Override
+	int getQueueIndex( Object key) {
+		for ( int i = 0; i < queues.length; i++) {
+			if ( key == queues[ i]) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 }

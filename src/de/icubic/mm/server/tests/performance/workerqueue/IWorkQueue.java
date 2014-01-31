@@ -4,7 +4,7 @@ import java.util.concurrent.*;
 
 public interface IWorkQueue {
 
-	public abstract void startAllThreads(String id);
+	public abstract void startAllThreads(String id) throws InterruptedException;
 
 	public int stopWhenAllTaskFinished( String id);
 
@@ -21,5 +21,7 @@ public interface IWorkQueue {
 	public abstract int getNumAssignerThreads();
 
 	public abstract int getNumThreads();
+
+	public abstract void waitForWorkersCreated() throws InterruptedException;
 
 }

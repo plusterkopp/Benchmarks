@@ -72,16 +72,16 @@ class StatsUtils {
 			if ( firstError != lastError) {
 			Task	first = tasks[ firstError];
 			Task	last = tasks[ lastError];
-			sb.append( "Task " + MainClass.nf.format( firstError) + "-" + MainClass.nf.format( lastError)
-					+ ": enc " + MainClass.nf.format( first.enqueuedAtNano) + "-" + MainClass.nf.format( last.enqueuedAtNano)
-					+ " but fin " + MainClass.nf.format( first.finishedAtNano) + "-" + MainClass.nf.format( last.finishedAtNano)
-					+ " (lat " + MainClass.nf.format( first.finishedAtNano - first.enqueuedAtNano) + "-" + MainClass.nf.format( last.finishedAtNano - last.enqueuedAtNano) + "), ");
+			sb.append( "Task " + MainClass.lnf.format( firstError) + "-" + MainClass.lnf.format( lastError)
+					+ ": enc " + MainClass.lnf.format( first.enqueuedAtNano) + "-" + MainClass.lnf.format( last.enqueuedAtNano)
+					+ " but fin " + MainClass.lnf.format( first.finishedAtNano) + "-" + MainClass.lnf.format( last.finishedAtNano)
+					+ " (lat " + MainClass.lnf.format( first.finishedAtNano - first.enqueuedAtNano) + "-" + MainClass.lnf.format( last.finishedAtNano - last.enqueuedAtNano) + "), ");
 			} else {
 				Task	first = tasks[ firstError];
-				sb.append( "Task " + MainClass.nf.format( firstError) // + "-" + nf.format( lastError)
-						+ ": enc " + MainClass.nf.format( first.enqueuedAtNano) // + "-" + nf.format( last.enqueuedAtNano)
-						+ " but fin " + MainClass.nf.format( first.finishedAtNano) // + "-" + nf.format( last.finishedAtNano)
-						+ " (lat " + MainClass.nf.format( first.finishedAtNano - first.enqueuedAtNano) // + "-" + nf.format( last.enqueuedAtNano - last.finishedAtNano)
+				sb.append( "Task " + MainClass.lnf.format( firstError) // + "-" + nf.format( lastError)
+						+ ": enc " + MainClass.lnf.format( first.enqueuedAtNano) // + "-" + nf.format( last.enqueuedAtNano)
+						+ " but fin " + MainClass.lnf.format( first.finishedAtNano) // + "-" + nf.format( last.finishedAtNano)
+						+ " (lat " + MainClass.lnf.format( first.finishedAtNano - first.enqueuedAtNano) // + "-" + nf.format( last.enqueuedAtNano - last.finishedAtNano)
 						+ "), ");
 			}
 		}
