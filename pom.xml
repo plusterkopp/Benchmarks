@@ -3,19 +3,22 @@
   <groupId>Benchmarks</groupId>
   <artifactId>Benchmarks</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <dependencies>
+  <dependency>
+  	<groupId>org.apache.commons</groupId>
+  	<artifactId>commons-math3</artifactId>
+  </dependency>
+  <dependency>
+  	<groupId>com.lmax</groupId>
+  	<artifactId>disruptor</artifactId>
+  </dependency>
+  </dependencies>
   <scm>
   	<url>https://github.com/plusterkopp/Benchmarks.git</url>
   </scm>
-  <dependencies>
-  	<dependency>
-  		<groupId>org.apache.commons</groupId>
-  		<artifactId>commons-math3</artifactId>
-  	</dependency>
-  	<dependency>
-  		<groupId>com.lmax</groupId>
-  		<artifactId>disruptor</artifactId>
-  	</dependency>
-  </dependencies>
+  <properties>
+  	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
   <dependencyManagement>
   	<dependencies>
   		<dependency>
