@@ -33,7 +33,7 @@ public class MainClass {
 
 		String	outName = "logs" + File.separator + "WorkerQueue-" + nThreads + "T-" + nQueues + "Q-" + totalTasks + "-" + jobSizeNS + "ns";
 		DateFormat	df = new SimpleDateFormat( "yyyy-MM-dd");
-		outName += "-" + machine + "- " + df.format( new Date());
+		outName += "-" + machine + "-" + df.format( new Date());
 		BenchLogger.setLogName( outName);
 
 		CSVWriter	writer = new CSVWriter();

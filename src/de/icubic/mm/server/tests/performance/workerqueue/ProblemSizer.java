@@ -82,7 +82,7 @@ public class ProblemSizer {
 			upperBound *= 2;
 		}
 		batchSize.setValue( 10000);
-		UnivariateSolver	solver = new BrentSolver() {
+		UnivariateSolver	solver = new RiddersSolver() {
 			@Override
 			public double getFunctionValueAccuracy() {
 				return avgNS * 0.05;
