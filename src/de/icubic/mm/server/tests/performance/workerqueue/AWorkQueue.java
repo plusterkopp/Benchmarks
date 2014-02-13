@@ -149,9 +149,13 @@ public abstract class AWorkQueue implements IWorkQueue {
 			if ( al != null) {
 				AffinityLock	result = al.acquireLock( AffinityStrategies.SAME_SOCKET_OR_CORE, AffinityStrategies.ANY);
 				final String lockInfo = result.dumpLock() + " for " + al.dumpLock();
-				int socketAl = AffinityLock.cpuLayout().socketId( al.cpuId());
-				int socketResult = AffinityLock.cpuLayout().socketId( result.cpuId());
-				BenchLogger.sysinfo( "Q " + queueIndex + " Found " + ( socketAl == socketResult ? "Same" : "Different") + " Socket " + lockInfo);
+				if ( result.cpuId() > -1) {
+					int socketAl = AffinityLock.cpuLayout().socketId( al.cpuId());
+					int socketResult = AffinityLock.cpuLayout().socketId( result.cpuId());
+					BenchLogger.sysinfo( "Q " + queueIndex + " Found " + ( socketAl == socketResult ? "Same" : "Different") + " Socket " + lockInfo);
+				} else {
+					BenchLogger.sysinfo( "Q " + queueIndex + " Did not bind: " + lockInfo);
+				}
 				return result;
 			}
 			// finde alle vergebenen sockets
@@ -169,10 +173,14 @@ public abstract class AWorkQueue implements IWorkQueue {
 			for ( Object queue : mapQueueToLock.keySet()) {
 				int qi = getQueueIndex( queue);
 				AffinityLock	lock = mapQueueToLock.get( queue);
-				int	lockSocket = AffinityLock.cpuLayout().socketId( lock.cpuId());
-				int	mySocket = AffinityLock.cpuLayout().socketId( al.cpuId());
-				if ( lockSocket == mySocket) {
-					sharing.add( qi);
+				if ( al.cpuId() > -1 &&  lock.cpuId() > -1) {
+					int	lockSocket = AffinityLock.cpuLayout().socketId( lock.cpuId());
+					int	mySocket = AffinityLock.cpuLayout().socketId( al.cpuId());
+					if ( lockSocket == mySocket) {
+						sharing.add( qi);
+					} else {
+						away.add( qi);
+					}
 				} else {
 					away.add( qi);
 				}

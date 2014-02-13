@@ -30,19 +30,10 @@ public class BenchLogger {
 	}
 
 	private static void sysout( String string, Throwable t, PrintStream... outStreams) {
-		final String message = getMessage( string);
-		for ( PrintStream outStream : outStreams) {
-			if ( outStream != null) {
-				outStream.println( message);
-				if ( t != null) {
-					t.printStackTrace( outStream);
-				}
-			}
-		}
+		sysout( BenchRunner.getNow(), string, t, outStreams);
 	}
 
-	private static String getMessage( String m) {
-		long	now = BenchRunner.getNow();
+	private static String getMessage( long now, String m) {
 		final String message = lnf.format( now) + ": " + m;
 		return message;
 	}
@@ -81,5 +72,25 @@ public class BenchLogger {
 	}
 
 	public static NumberFormat lnf = DecimalFormat.getNumberInstance();
+
+	public static void syserr( long nanoTime, String string) {
+		syserr( nanoTime, string, null);
+	}
+
+	private static void syserr( long nanoTime, String string, Throwable t) {
+		sysout( nanoTime, string, t, errStream, infoStream, System.err);
+	}
+
+	private static void sysout( long nanoTime, String string, Throwable t, PrintStream ...streams) {
+		final String message = getMessage( nanoTime, string);
+		for ( PrintStream outStream : streams) {
+			if ( outStream != null) {
+				outStream.println( message);
+				if ( t != null) {
+					t.printStackTrace( outStream);
+				}
+			}
+		}
+	}
 
 }

@@ -286,7 +286,7 @@ public class BenchRunner implements IBenchRunner {
 			lastNanoOrigin = nanoOrigin;
 		} else {
 			if ( Math.abs( lastNanoOrigin - nanoOrigin) > 500) {
-				BenchLogger.syserr( Thread.currentThread().getName() + " NanoOrigin jump by " + BenchLogger.lnf.format( nanoOrigin - lastNanoOrigin) + " ms");
+				BenchLogger.syserr( nanoTime, Thread.currentThread().getName() + " NanoOrigin jump by " + BenchLogger.lnf.format( nanoOrigin - lastNanoOrigin) + " ms");
 			}
 		}
 	}
