@@ -57,7 +57,7 @@ public class FibonacciFork extends RecursiveTask<Long> {
 		}
 		System.out.println( "CSV results for Fibo " + fiboArg + "\n" + "RekLimit\t" + "Jobs ns\t" + "time ms");
 		for ( int rekLimit = 2;  rekLimit <= fiboArg;  rekLimit++) {
-			System.out.println( rekLimit + "\t" + singleNS[ rekLimit] + "\t" + results[ rekLimit]);
+			System.out.println( rekLimit + "\t" + singleNS[ rekLimit] + "\t" + results[ rekLimit].durMS);
 		}
 	}
 
