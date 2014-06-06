@@ -17,7 +17,7 @@ public class Task implements Runnable {
 	}
 
 	int realSize = MatrixSize;
-	long	enqueuedAtNano = 0;
+	volatile long	enqueuedAtNano = Long.MIN_VALUE;
 	long	finishedAtNano = 0;
 	Thread	finishedBy = null;
 
@@ -50,9 +50,11 @@ public class Task implements Runnable {
 	}
 
 	private void onFinish() {
-		finishedAtNano = BenchRunner.getNow();
-		finishedBy = Thread.currentThread();
-//		assert( finishedAtNano >= enqueuedAtNano);
+		if ( enqueuedAtNano > Long.MIN_VALUE) {
+			finishedAtNano = BenchRunner.getNow();
+			finishedBy = Thread.currentThread();
+			// assert( finishedAtNano >= enqueuedAtNano);
+		}
 	}
 
 	private static int[][] fillupMatrix() {
@@ -86,6 +88,8 @@ public class Task implements Runnable {
 		finishedBy = null;
 		if ( isLatencyRun) {
 			enqueuedAtNano = BenchRunner.getNow();
+		} else {
+			enqueuedAtNano = Long.MIN_VALUE;
 		}
 	}
 

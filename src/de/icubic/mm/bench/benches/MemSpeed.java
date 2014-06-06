@@ -35,9 +35,9 @@ import de.icubic.mm.communication.util.*;
 public class MemSpeed extends AbstractBenchRunnable {
 
 	static enum RunMode {
-		SerialParallel,	// mit N Threads, die jeweils einen gleich gro�en Abschnitt des Speichers bearbeiten
-		Serial,	// durchl�uft die aufeinanderfolgenden Longs aller Buckets, geht am Ende zum n�chsten Bucket
-		Random,	// springt von Bucket zu Bucket bei gleichen Index im Bucket, also gr��ere Spr�nge
+		SerialParallel,	// mit N Threads, die jeweils einen gleich großen Abschnitt des Speichers bearbeiten
+		Serial,	// durchläuft die aufeinanderfolgenden Longs aller Buckets, geht am Ende zum nächsten Bucket
+		// Random,	// springt von Bucket zu Bucket bei gleichen Index im Bucket, also größere Sprünge
 		}
 	static int	mega = 1024 * 1024;
 	/**
@@ -104,7 +104,7 @@ public class MemSpeed extends AbstractBenchRunnable {
 	 */
 	ArrayList<long[]>	arrays;
 	/**
-	 * Gesamtzahl der Long-Eintr�ge aller Buckets
+	 * Gesamtzahl der Long-Einträge aller Buckets
 	 */
 	private long nLongs;;
 	/**
@@ -115,7 +115,7 @@ public class MemSpeed extends AbstractBenchRunnable {
 	private RunMode	runmode;
 
 	/**
-	 * zur Verhinderung von mehrfachem Anfordern des Speichers f�r den zweiten Runmode
+	 * zur Verhinderung von mehrfachem Anfordern des Speichers für den zweiten Runmode
 	 */
 	private long allocated;
 
@@ -144,7 +144,7 @@ public class MemSpeed extends AbstractBenchRunnable {
 				public void run() {
 					int	allocs = 0;
 					while ( remaining.getAndAdd( -mega) > mega) {
-						long[] bucket = new long[ mega];	// mache alle Buckets 8 MB gro�, auch wenn das vielleicht mehr ist als verlangt
+						long[] bucket = new long[ mega];	// mache alle Buckets 8 MB groß, auch wenn das vielleicht mehr ist als verlangt
 						q.add( bucket);
 						allocs++;
 					}
@@ -168,7 +168,7 @@ public class MemSpeed extends AbstractBenchRunnable {
 		}
 		arrays.addAll( q);
 		while ( remaining.getAndAdd( -mega) > 0) {
-			long[] bucket = new long[ mega];	// mache alle Buckets 8 MB gro�, auch wenn das vielleicht mehr ist als verlangt
+			long[] bucket = new long[ mega];	// mache alle Buckets 8 MB groß, auch wenn das vielleicht mehr ist als verlangt
 			arrays.add( bucket);
 		}
 	}
@@ -219,15 +219,15 @@ public class MemSpeed extends AbstractBenchRunnable {
 		switch ( runmode) {
 		case Serial:
 			runSerial(); break;
-		case Random:
-			runRandom(); break;
+//		case Random:
+//			runRandom(); break;
 		case SerialParallel:
 			runSerialParallel(); break;
 		}
 	}
 
 	/**
-	 * nicht wirklich random, sondern nimmt jedesmal einen anderen Bucket, also die Innenschleife geht �ber verschiedene Felder so da� Quelle und Ziel der Zuweisung weit auseinander liegen
+	 * nicht wirklich random, sondern nimmt jedesmal einen anderen Bucket, also die Innenschleife geht über verschiedene Felder so daß Quelle und Ziel der Zuweisung weit auseinander liegen
 	 */
 	private void runRandom() {
 //		long lastValue = startValue;
@@ -253,7 +253,7 @@ public class MemSpeed extends AbstractBenchRunnable {
 
 	private void runSerial() {
 		long[]	array = arrays.get( 0);
-//		long lastValue = startValue;	// nur zur Verifikation, nicht f�r den Bench-Lauf
+//		long lastValue = startValue;	// nur zur Verifikation, nicht für den Bench-Lauf
 		int outerRun = 0;
 		long remaining = nLongs;
 		while ( remaining > 0) {
@@ -362,7 +362,11 @@ public class MemSpeed extends AbstractBenchRunnable {
 	 */
 	@Override
 	public String getCSVHeader() {
-		return toCSV( "MB", RunMode.SerialParallel + " MB/s", RunMode.Serial + " MB/s", RunMode.Random + " MB/s");
+		return toCSV( "MB"
+				,  RunMode.SerialParallel + " MB/s"
+				,  RunMode.Serial + " MB/s"
+//				, RunMode.Random + " MB/s"
+				);
 	}
 
 	/* (non-Javadoc)
@@ -370,7 +374,11 @@ public class MemSpeed extends AbstractBenchRunnable {
 	 */
 	@Override
 	public String getCSVLine() {
-		return toCSV( memSize / mega, results.get( RunMode.SerialParallel) / mega, results.get( RunMode.Serial) / mega, results.get( RunMode.Random) / mega);
+		return toCSV( memSize / mega
+				, results.get( RunMode.SerialParallel) / mega
+				, results.get( RunMode.Serial) / mega
+//				, results.get( RunMode.Random) / mega
+				);
 	}
 
 }
