@@ -110,7 +110,8 @@ public class MapBench {
 
 			@Override
 			int getValue( int i) {
-				final Integer intV = map.get( i);
+				final Integer	key = Integer.valueOf( i);
+				final Integer intV = map.get( key);
 				if ( intV == null) {
 					return 0;
 				}
@@ -193,7 +194,8 @@ public class MapBench {
 		Thread	t = new Thread() {
 			@Override
 			public void run() {
-				IBenchRunner	runner = new BenchRunner( lbench);
+				BenchRunner	runner = new BenchRunner( lbench);
+				runner.setCSVName( "MapBench-wksdrrh1.csv", "Test\tns/run");
 				runner.setRuntime( TimeUnit.SECONDS, 10);
 				runner.run();
 				runner.printResults();
@@ -213,7 +215,7 @@ public class MapBench {
 				int[] runSizes = { 10, 100, 1000, 10000};
 				for ( int i : runSizes) {
 					RunSize = i;
-					secs = 10;
+					secs = 30;
 					BenchLogger.sysinfo( "Runs " + secs + " s");
 					runner.setRuntime( TimeUnit.SECONDS, secs);
 					for ( MapRunnable iBenchRunnable : benches) {
@@ -222,6 +224,7 @@ public class MapBench {
 						runner.setBenchRunner( iBenchRunnable);
 						runner.run();
 						runner.printResults();
+						runner.writeCSV( getName() + "\t" + runner.getTimePerRun( TimeUnit.NANOSECONDS));
 						double rps = runner.getRunsPerSecond();
 						BenchRunner.addToComparisonList( iBenchRunnable.getName(), rps);
 					}

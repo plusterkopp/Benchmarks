@@ -297,4 +297,21 @@ public class BenchRunner implements IBenchRunner {
 		return now - startNanos;
 	}
 
+	public double getTimePerRun( TimeUnit unit) {
+		if ( unit == null) {
+			return Double.NaN;
+		}
+		double rps = getRunsPerSecond();
+		switch ( unit) {
+		case DAYS: return 1.0 / ( 86400.0 * rps);
+		case HOURS: return 1.0 / ( 3600.0 * rps);
+		case MINUTES: return 1.0 / ( 60.0 * rps);
+		case SECONDS: return 1.0 / rps;
+		case MILLISECONDS: return 1e3 / rps;
+		case MICROSECONDS: return 1e6 / rps;
+		case NANOSECONDS: return 1e9 / rps;
+		}
+		return Double.NaN;
+	}
+
 }
