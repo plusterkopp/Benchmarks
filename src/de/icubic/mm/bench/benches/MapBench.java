@@ -228,7 +228,7 @@ public class MapBench {
 						runner.setBenchRunner( iBenchRunnable);
 						runner.run();
 						runner.printResults();
-						runner.writeCSV( getName() + "\t" + runner.getTimePerRun( TimeUnit.NANOSECONDS));
+						runner.writeCSV( iBenchRunnable.getName() + "\t" + runner.getTimePerRun( TimeUnit.NANOSECONDS));
 						double rps = runner.getRunsPerSecond();
 						BenchRunner.addToComparisonList( iBenchRunnable.getName(), rps);
 					}
