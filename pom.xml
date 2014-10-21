@@ -12,6 +12,14 @@
   	<groupId>com.lmax</groupId>
   	<artifactId>disruptor</artifactId>
   </dependency>
+  <dependency>
+  	<groupId>net.openhft</groupId>
+  	<artifactId>koloboke-impl-jdk6-7</artifactId>
+  </dependency>
+  <dependency>
+  	<groupId>net.sf.trove4j</groupId>
+  	<artifactId>trove4j</artifactId>
+  </dependency>
   </dependencies>
   <scm>
   	<url>https://github.com/plusterkopp/Benchmarks.git</url>
@@ -30,6 +38,16 @@
   			<groupId>com.lmax</groupId>
   			<artifactId>disruptor</artifactId>
   			<version>3.2.0</version>
+  		</dependency>
+  		<dependency>
+  			<groupId>net.openhft</groupId>
+  			<artifactId>koloboke-impl-jdk6-7</artifactId>
+  			<version>0.6.3</version>
+  		</dependency>
+  		<dependency>
+  			<groupId>net.sf.trove4j</groupId>
+  			<artifactId>trove4j</artifactId>
+  			<version>3.0.3</version>
   		</dependency>
   	</dependencies>
   </dependencyManagement>

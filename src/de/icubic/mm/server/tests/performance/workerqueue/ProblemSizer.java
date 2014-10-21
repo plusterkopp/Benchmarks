@@ -78,6 +78,11 @@ public class ProblemSizer {
 		};
 		int	maxEval = 30;
 		double	upperBound = 1;
+		if ( taskSizeToRuntimeNS.value( upperBound) > 0) {	// even with size 1, we are too slow: use 0 then
+			taskSizeToRuntimeNS.value( 0);
+			return;
+		}
+		// we can actually iterate
 		while ( taskSizeToRuntimeNS.value( upperBound) < 0) {
 			upperBound *= 2;
 		}
