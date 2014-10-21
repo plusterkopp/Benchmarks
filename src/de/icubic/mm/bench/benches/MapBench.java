@@ -31,12 +31,14 @@ public class MapBench {
 
 			private final int nruns = 550055;
 
+			@Override
 			public void run() {
 				for ( int i = nruns; i > 0 ; i--) {
 //					@SuppressWarnings("unused") long time = System.nanoTime();
 				}
 			}
 
+			@Override
 			public long getRunSize() {
 				return nruns;
 			}
@@ -49,6 +51,7 @@ public class MapBench {
 				init();
 			}
 
+			@Override
 			public void run() {
 //				System.out.println( getName() + " Map: " + getMap());
 				int	sum = 0;
@@ -69,6 +72,7 @@ public class MapBench {
 			abstract Object getMap();
 			abstract int getValue( int i);
 
+			@Override
 			public long getRunSize() {
 				return RunSize * ReadFactor;
 			}
@@ -213,7 +217,7 @@ public class MapBench {
 				int[] runSizes = { 10, 100, 1000, 10000};
 				for ( int i : runSizes) {
 					RunSize = i;
-					secs = 10;
+					secs = 30;
 					BenchLogger.sysinfo( "Runs " + secs + " s");
 					runner.setRuntime( TimeUnit.SECONDS, secs);
 					for ( MapRunnable iBenchRunnable : benches) {
