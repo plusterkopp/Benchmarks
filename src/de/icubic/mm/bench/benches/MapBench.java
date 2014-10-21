@@ -1,0 +1,240 @@
+/*
+ * Created on 13.08.2007
+ *
+ */
+package de.icubic.mm.bench.benches;
+
+import gnu.trove.map.hash.*;
+
+import java.util.*;
+import java.util.concurrent.*;
+
+import net.openhft.koloboke.collect.map.hash.*;
+import de.icubic.mm.bench.base.*;
+
+/**
+ * <p>@author ralf
+ *
+ */
+public class MapBench {
+
+	private static int RunSize = 100;
+	private static final int ReadFactor = 1000;
+
+	/**
+	 * @param args
+	 */
+	public static void main( String[] args) {
+
+		// leer loop
+		final IBenchRunnable lbench = new AbstractBenchRunnable( "loop") {
+
+			private final int nruns = 550055;
+
+			public void run() {
+				for ( int i = nruns; i > 0 ; i--) {
+//					@SuppressWarnings("unused") long time = System.nanoTime();
+				}
+			}
+
+			public long getRunSize() {
+				return nruns;
+			}
+		};
+
+		abstract class MapRunnable extends AbstractBenchRunnable {
+
+			public MapRunnable( String string) {
+				super( string);
+				init();
+			}
+
+			public void run() {
+//				System.out.println( getName() + " Map: " + getMap());
+				int	sum = 0;
+				try {
+					for ( int j = 0;  j < ReadFactor; j++) {
+						for ( int i = RunSize;  i > 0;  i--) {
+							int value = getValue( i);
+							sum += value;
+						}
+					}
+				} catch ( Exception e) {
+					e.printStackTrace();
+					System.err.println( sum);
+					return;
+				}
+			}
+
+			abstract Object getMap();
+			abstract int getValue( int i);
+
+			public long getRunSize() {
+				return RunSize * ReadFactor;
+			}
+
+			@Override
+			public String getName() {
+				return super.getName() + "-" + RunSize;
+			}
+
+			abstract void createMap();
+
+			public void init() {
+				createMap();
+//				System.out.println( getName() + " Map: " + getMap());
+				Random	rnd = new Random();
+				try {
+					for ( int i = RunSize;  i > 0;  i--) {
+						int	key = rnd.nextInt( RunSize);
+						int	value = rnd.nextInt();
+						putValueAt( value, key);
+					}
+				} catch ( Exception e) {
+					e.printStackTrace();
+					return;
+				}
+//				BenchLogger.sysinfo( "Filled " + getName());
+			}
+
+			abstract void putValueAt( int value, int key);
+		}
+
+		abstract class UtilMapRunnable extends MapRunnable {
+
+			public UtilMapRunnable( String string) {
+				super( string);
+			}
+
+			Map<Integer, Integer> map;
+
+			@Override
+			int getValue( int i) {
+				final Integer intV = map.get( i);
+				if ( intV == null) {
+					return 0;
+				}
+				return intV;
+			}
+
+			@Override
+			void putValueAt( int value, int key) {
+				map.put( key, value);
+			}
+
+			@Override
+			Object getMap() {
+				return map;
+			}
+		}
+
+		final MapRunnable hashMapBench = new UtilMapRunnable( "HashMap") {
+			@Override
+			void createMap() {
+				map = new HashMap<Integer, Integer>();
+			}
+		};
+
+		final MapRunnable concHashMapBench = new UtilMapRunnable( "ConcHashMap") {
+			@Override
+			void createMap() {
+				map = new ConcurrentHashMap<Integer, Integer>();
+			}
+		};
+
+		final MapRunnable koloHashMapBench = new UtilMapRunnable( "KoloHashMap IntInt") {
+			@Override
+			void createMap() {
+				map = HashIntIntMaps.newMutableMap();
+			}
+		};
+
+		final MapRunnable koloHashMapBench4 = new UtilMapRunnable( "KoloHashMap IntInt F") {
+			@Override
+			void createMap() {
+				map = HashIntIntMaps.newMutableMap( RunSize);
+			}
+		};
+
+		final MapRunnable koloHashMapBench2 = new UtilMapRunnable( "KoloHashMap ObjObj") {
+			@Override
+			void createMap() {
+				map = HashObjObjMaps.newMutableMap();
+			}
+		};
+
+		final MapRunnable tIntIntHashMapBench = new MapRunnable( "TIntIntHashMap") {
+
+			private TIntIntHashMap map;
+
+			@Override
+			void createMap() {
+				map = new TIntIntHashMap();
+			}
+
+			@Override
+			int getValue( int i) {
+				return map.get( i);
+			}
+
+			@Override
+			void putValueAt( int value, int key) {
+				map.put( key, value);
+			}
+
+			@Override
+			Object getMap() {
+				return map;
+			}
+
+		};
+
+
+		Thread	t = new Thread() {
+			@Override
+			public void run() {
+				IBenchRunner	runner = new BenchRunner( lbench);
+				runner.setRuntime( TimeUnit.SECONDS, 10);
+				runner.run();
+				runner.printResults();
+				double lruns = runner.getRunsPerSecond();
+				runner.setEmptyLoops( lruns);
+
+				MapRunnable[] benches = { hashMapBench, concHashMapBench, koloHashMapBench, koloHashMapBench2, tIntIntHashMapBench, koloHashMapBench4};
+				int secs = 5;
+				BenchLogger.sysinfo( "Warmup " + secs + " s");
+				runner.setRuntime( TimeUnit.SECONDS, secs);
+				for ( MapRunnable iBenchRunnable : benches) {
+					runner.setBenchRunner( iBenchRunnable);
+					runner.run();
+					runner.printResults();
+				}
+
+				int[] runSizes = { 10, 100, 1000, 10000};
+				for ( int i : runSizes) {
+					RunSize = i;
+					secs = 10;
+					BenchLogger.sysinfo( "Runs " + secs + " s");
+					runner.setRuntime( TimeUnit.SECONDS, secs);
+					for ( MapRunnable iBenchRunnable : benches) {
+						iBenchRunnable.init();
+						System.gc();
+						runner.setBenchRunner( iBenchRunnable);
+						runner.run();
+						runner.printResults();
+						double rps = runner.getRunsPerSecond();
+						BenchRunner.addToComparisonList( iBenchRunnable.getName(), rps);
+					}
+				}
+				BenchRunner.printComparisonList();
+			}
+		};
+		t.start();
+		try {
+			t.join();
+		} catch ( InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+}
