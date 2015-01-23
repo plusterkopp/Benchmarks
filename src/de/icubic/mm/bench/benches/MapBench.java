@@ -154,11 +154,19 @@ public class MapBench {
 			}
 		};
 
-		final MapRunnable koloHashMapBench4 = new UtilMapRunnable( "KoloHashMap IntInt F") {
+		final MapRunnable koloHashMapBench4 = new UtilMapRunnable( "KoloHashMap IntInt Imm") {
 			@Override
 			void createMap() {
-				map = HashIntIntMaps.newMutableMap( RunSize);
+				map = new HashMap<Integer, Integer>( RunSize);
 			}
+
+			@Override
+			public void init() {
+				super.init();
+				// jetzt mit der ursprünglichen Map eine konstante erzeugen
+				map = HashIntIntMaps.newImmutableMap( map);
+			}
+
 		};
 
 		final MapRunnable koloHashMapBench2 = new UtilMapRunnable( "KoloHashMap ObjObj") {
@@ -219,7 +227,7 @@ public class MapBench {
 				int[] runSizes = { 10, 100, 1000, 10000};
 				for ( int i : runSizes) {
 					RunSize = i;
-					secs = 30;
+					secs = 5;
 					BenchLogger.sysinfo( "Runs " + secs + " s");
 					runner.setRuntime( TimeUnit.SECONDS, secs);
 					for ( MapRunnable iBenchRunnable : benches) {
