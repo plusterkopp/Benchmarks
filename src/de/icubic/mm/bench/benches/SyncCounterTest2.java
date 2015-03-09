@@ -55,7 +55,7 @@ public class SyncCounterTest2 {
 			}
 		};
 
-		// ohne Sync: einfach z�hlen (nur f�r Single-Thread)
+		// ohne Sync: einfach zählen (nur für Single-Thread)
 		class UnsyncCounterBenchRunnable extends CounterBenchRunnable {
 
 			public UnsyncCounterBenchRunnable( String name) {
@@ -306,7 +306,7 @@ public class SyncCounterTest2 {
 				runner.printResults();
 				BenchRunner.addToComparisonList( ubench.getName(), runner.getRunsPerSecond());
 				List<CounterBenchRunnable>	benches = IQequitiesUtils.List( abench, vbench, sbench, lbench, tbench, stbench);
-				List<Integer>	threadCounts = IQequitiesUtils.List( 1, 2, 4, 16, 256);
+				List<Integer>	threadCounts = IQequitiesUtils.List( 1, 2, 4, 16);
 				for ( Integer nThreads : threadCounts) {
 						System.out.println( "Using " + nThreads + " Threads, "
 								+ Runtime.getRuntime().availableProcessors() + " cores");
