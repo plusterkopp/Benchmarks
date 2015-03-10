@@ -26,7 +26,7 @@ public class LockModBench {
 	static final int Procs = Runtime.getRuntime().availableProcessors();
 
 	static final ThreadLocal<Random> tlRnd = ThreadLocal.withInitial( () -> new Random());
-	static final int N = Procs;
+	static final int N = 8;
 	/**
 	 * Platz zwischen den zu lesenden Werten. Damit es dem Cache nicht zu gut geht, lesen wir die
 	 * Werte auch noch alle, nachden wir den eigentlichen Werten haben.
@@ -36,11 +36,11 @@ public class LockModBench {
 
 	static final int R = Procs - 1;
 	static final int M = Procs - R;
-	static final double P = 0.001;
+	static final double P = 0.1;
 	/**
 	 * Nanos
 	 */
-	static final long T = 1000;
+	static final long T = 100;
 	static long TLoops;
 
 	static interface LockType {
@@ -77,6 +77,9 @@ public class LockModBench {
 		}
 	}
 
+	/**
+	 * synchronize Block, für Lesen und Schreiben, sperrt das Objekt jeweils komplett
+	 */
 	static class LTSync implements LockType {
 
 		static final Object[]	locks = new Object[ N];
@@ -119,7 +122,11 @@ public class LockModBench {
 		}
 	}
 
-	static class LTReeLock implements LockType {
+	/**
+	 * nutzt {@link ReentrantReadWriteLock}, {@link ReentrantReadWriteLock#readLock()} beim Lesen,
+	 * {@link ReentrantReadWriteLock#writeLock()} beim Schreiben,
+	 */
+	static class LTReentLock implements LockType {
 
 		static final ReentrantReadWriteLock[]	locks = new ReentrantReadWriteLock[ N];
 		static {
@@ -169,6 +176,9 @@ public class LockModBench {
 		}
 	}
 
+	/**
+	 * {@link StampedLock} mit ausschließlich pessimistischen Lese/Schreiblocks
+	 */
 	static class LTStPLock implements LockType {
 
 		static final StampedLock[]	locks = new StampedLock[ N];
@@ -219,6 +229,9 @@ public class LockModBench {
 		}
 	}
 
+	/**
+	 * {@link StampedLock} mit optimistischem Leseversuchen und Rückfall auf pessimistich bei Fehlschlag
+	 */
 	static class LTStOLock implements LockType {
 
 		static final StampedLock[]	locks = new StampedLock[ N];
@@ -330,7 +343,7 @@ public class LockModBench {
 				+ nf.format( 100.0 * P) + " % chance of modification, "
 				+ N + " locked objects, " + nf.format( 8 * PaddingFactor) + " B padding");
 		calibrate();
-		List<LockType> lockTypes = IQequitiesUtils.List( new LTSync(), new LTReeLock(), new LTStPLock(), new LTStOLock());
+		List<LockType> lockTypes = IQequitiesUtils.List( new LTSync(), new LTReentLock(), new LTStPLock(), new LTStOLock());
 		Thread[]	readers = new Thread[ R];
 		Thread[] writers = new Thread[ M];
 		List<WorkerJob<LockType>> jobs = new ArrayList<>();
