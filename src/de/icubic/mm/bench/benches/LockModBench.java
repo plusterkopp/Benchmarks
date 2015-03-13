@@ -58,7 +58,7 @@ public class LockModBench {
 	 * Zeit in ns, die das Lese-Lock gehalten wird, um den gelesenen Wert zu verarbeiten und währenddessen seine
 	 * Gültigkeit zu garantieren.
 	 */
-	static final long T = 1;
+	static final long T = 0;
 	/**
 	 * Anzahl der Dummy-Schleifen, die etwa gebraucht wird, um die Haltezeit {@link #T} zu simulieren
 	 */
@@ -338,6 +338,9 @@ public class LockModBench {
 	}
 
 	static void process( long v, long[] values, int startIndex) {
+		if ( TLoops <= 0) {
+			return;
+		}
 		long	loopCounter;
 		int 	arrayIndex;
 		long	dummySum = v;
@@ -361,6 +364,10 @@ public class LockModBench {
 	 * {@link #TLoops} Schleifen etwa {@link #T} ns benötigen
 	 */
 	static void calibrate() {
+		if ( T == 0) {
+			TLoops = 0;
+			return;
+		}
 		int	startIndex = 0;
 		// führt den gleichen Code aus wie process
 		IBenchRunnable	cloop = new AbstractBenchRunnable( "CLoop") {
@@ -385,7 +392,9 @@ public class LockModBench {
 		runner.run();
 		double rpns = runner.getRunsPerSecond() * 1e-9;
 		TLoops = ( long) ( T * rpns);
-		BenchLogger.sysinfo( "Calibrate: " + TLoops + " ops in " + T + " ns");
+		BenchLogger.sysinfo( "Calibrate: " + TLoops
+				+ " (" + BenchLogger.LNF.format( T * rpns) + ")"
+				+ " ops in " + T + " ns");
 	}
 
 	public static void main( String[] args) {
