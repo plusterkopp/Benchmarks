@@ -91,7 +91,7 @@ public class WorkAssignerThread extends Thread {
 						if ( awq.isStuck.get()) {
 							if ( ! reported.contains( thread)) {
 								BenchLogger.syserr( thread.getName() + ( thread.isAlive() ? " alive at " +Arrays.toString( thread.getStackTrace()) : " dead ")
-										+ "with " + lnf.format( block - thread.queuedJobCount.get()) + " jobs to assign "
+										+ "with " + LNF.format( block - thread.queuedJobCount.get()) + " jobs to assign "
 										+ "while queue stuck");
 								if ( ! thread.isAlive()) {
 									reported.add( thread);
@@ -112,7 +112,7 @@ public class WorkAssignerThread extends Thread {
 			sum += at.queuedJobCount.get();
 			size += sizes[ t];
 		}
-		BenchLogger.sysout( "assigning " + sum + " tasks finished " + lnf.format( sum / ( 1e-9 * durNS)) + " jobs/s" + ( jobsPerSecond >0 ? " (throttled)" : ""));
+		BenchLogger.sysout( "assigning " + sum + " tasks finished " + LNF.format( sum / ( 1e-9 * durNS)) + " jobs/s" + ( jobsPerSecond >0 ? " (throttled)" : ""));
 	}
 
 	protected int getNumQueues() {

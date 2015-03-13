@@ -65,7 +65,7 @@ public class MemSpeed extends AbstractBenchRunnable {
 						double	rps = runner.getRunsPerSecond();
 						instance.setResult( rm, rps);
 						double	mbps = rps / mega;
-						System.out.println( instance.getName() + ": " + BenchLogger.lnf.format( mbps) + " MB/s");
+						System.out.println( instance.getName() + ": " + BenchLogger.LNF.format( mbps) + " MB/s");
 					}
 					runner.writeCSV( instance.getCSVLine());
 					instance.dispose();

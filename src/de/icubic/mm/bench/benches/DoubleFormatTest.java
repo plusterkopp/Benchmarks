@@ -10,9 +10,8 @@ import java.util.concurrent.atomic.*;
 import org.junit.*;
 
 import de.icubic.mm.bench.base.*;
-import de.icubic.mm.bench.tests.*;
 import de.icubic.mm.server.utils.*;
-import de.icubic.mm.server.utils.QuotePrecision.*;
+import de.icubic.mm.server.utils.QuotePrecision.PrintMode;
 
 public class DoubleFormatTest {
 
@@ -42,7 +41,7 @@ public class DoubleFormatTest {
 			NF {
 				@Override
 				public String getStringValue( double value) {
-					NumberFormat	nf = BenchLogger.lnf;
+					NumberFormat	nf = BenchLogger.LNF;
 					if ( Math.rint( value) == value) {
 						nf.setMaximumFractionDigits( 0);
 					} else {
@@ -99,7 +98,7 @@ public class DoubleFormatTest {
 				plusMinusValues.add( Double.valueOf( -d));
 			}
 		}
-		NumberFormat	nfnf = BenchLogger.lnf;
+		NumberFormat	nfnf = BenchLogger.LNF;
 		nfnf.setMaximumFractionDigits( 7);
 		// alle Werte zwischen 0 und 100 in zweihunderstel Schritten
 		for ( int intPart = 0;  intPart < 100;  intPart++) {
@@ -316,7 +315,7 @@ public class DoubleFormatTest {
 			es.awaitTermination( 1, TimeUnit.HOURS);
 		} catch ( InterruptedException e) {}
 		long testDurMS = ( long) ( ( BenchRunner.getNow() - now) / 1e6);
-		NumberFormat	nfnf = BenchLogger.lnf;
+		NumberFormat	nfnf = BenchLogger.LNF;
 		nfnf.setGroupingUsed( true);
 		BenchLogger.sysout( "Test finished in " + nfnf.format( testDurMS) + " ms, " + misMatches + " mismatches");
 	}

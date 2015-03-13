@@ -18,8 +18,8 @@ import java.util.concurrent.*;
 public class BenchRunner implements IBenchRunner {
 
 	static {
-		lnf.setMaximumFractionDigits( 0);
-		lnf.setGroupingUsed( true);
+		LNF.setMaximumFractionDigits( 0);
+		LNF.setGroupingUsed( true);
 	};
 
 	static class ResultEntry {
@@ -72,18 +72,31 @@ public class BenchRunner implements IBenchRunner {
 	}
 
 	static public void printComparisonList() {
+		printComparisonList( null);
+	}
+
+	static public void printComparisonList( String baseName) {
 		if ( chart == null || chart.isEmpty()) {
 			return;
 		}
 
-		double	worst = chart.first().runsPerSecond;
-		double	best = chart.last().runsPerSecond;
+		double	worstOrBase = chart.first().runsPerSecond;
+		double	bestOrBase = chart.last().runsPerSecond;
+
+		if ( baseName != null) {
+			Optional<ResultEntry> baseO = chart.stream().filter( ( e) -> Objects.equals( e.name, baseName)).findFirst();
+			if ( baseO.isPresent()) {
+				worstOrBase = baseO.get().runsPerSecond;
+				bestOrBase = worstOrBase;
+			}
+		}
+
 		NumberFormat nf = new  DecimalFormat();
 		nf.setMaximumFractionDigits( 0);
 		for ( ResultEntry re: chart.descendingSet()) {
 			StringBuilder	sb = new StringBuilder();
-			double relPerf = re.runsPerSecond / worst;
-			double relTime = best / re.runsPerSecond;
+			double relPerf = re.runsPerSecond / worstOrBase;
+			double relTime = bestOrBase / re.runsPerSecond;
 			sb.append( re.name + ": " + nf.format( 100 * relPerf) + "% Performance / " + nf.format( 100 * relTime) + "% Time");
 			System.out.println( sb.toString());
 		}
@@ -203,7 +216,7 @@ public class BenchRunner implements IBenchRunner {
 		NumberFormat nf = DecimalFormat.getNumberInstance();
 		nf.setMaximumFractionDigits( 3);
 
-		String	resultString = "" + lnf.format( getRuns()) + " Runs in " +
+		String	resultString = "" + LNF.format( getRuns()) + " Runs in " +
 			nf.format( getRunSeconds()) + "s = ";
 		double rps = getRunsPerSecond();
 		double rrps = 1 / rps;
@@ -286,7 +299,7 @@ public class BenchRunner implements IBenchRunner {
 			lastNanoOrigin = nanoOrigin;
 		} else {
 			if ( Math.abs( lastNanoOrigin - nanoOrigin) > 500) {
-				BenchLogger.syserr( nanoTime, Thread.currentThread().getName() + " NanoOrigin jump by " + BenchLogger.lnf.format( nanoOrigin - lastNanoOrigin) + " ms");
+				BenchLogger.syserr( nanoTime, Thread.currentThread().getName() + " NanoOrigin jump by " + BenchLogger.LNF.format( nanoOrigin - lastNanoOrigin) + " ms");
 			}
 		}
 	}

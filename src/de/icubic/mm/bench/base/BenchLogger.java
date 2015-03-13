@@ -34,7 +34,7 @@ public class BenchLogger {
 	}
 
 	private static String getMessage( long now, String m) {
-		final String message = lnf.format( now) + ": " + m;
+		final String message = LNF.format( now) + ": " + m;
 		return message;
 	}
 
@@ -71,7 +71,7 @@ public class BenchLogger {
 		return stream;
 	}
 
-	public static NumberFormat lnf = DecimalFormat.getNumberInstance();
+	public static NumberFormat LNF = DecimalFormat.getNumberInstance();
 
 	public static void syserr( long nanoTime, String string) {
 		syserr( nanoTime, string, null);

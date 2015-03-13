@@ -46,7 +46,7 @@ public class ProblemSizer {
 		long	durMS = now - startTime;
 		final double jobsPerSec = 1000.0 * runCount / durMS;
 		final long nsPerJob = ( long) ( 1e6 * durMS / runCount);
-		NumberFormat	nf = BenchLogger.lnf;
+		NumberFormat	nf = BenchLogger.LNF;
 		BenchLogger.sysinfo( "estimate: " + nf.format( runCount) + " jobs in " + nf.format( runTimeMS) + "ms, actual " + nf.format( durMS) + " ms " +
 				"(" + nf.format( ops / durMS) + " ops/ms, " + nf.format( jobsPerSec) + " jobs/s, " + nf.format( nsPerJob) + " ns/job");
 		return nsPerJob;
@@ -94,8 +94,8 @@ public class ProblemSizer {
 			}
 		};
 		try {
-			BenchLogger.sysinfo( "estimate problem size for " + BenchLogger.lnf.format( avgNS)
-					+ " ns, +/- " + BenchLogger.lnf.format( ( long) solver.getFunctionValueAccuracy()));
+			BenchLogger.sysinfo( "estimate problem size for " + BenchLogger.LNF.format( avgNS)
+					+ " ns, +/- " + BenchLogger.LNF.format( ( long) solver.getFunctionValueAccuracy()));
 			solver.solve( maxEval, taskSizeToRuntimeNS, upperBound / 3, upperBound * 1.5, 3 * upperBound / 4);
 		} catch ( TooManyEvaluationsException tmee) {
 			BenchLogger.sysinfo( "reached eval limit, cancelling estimation");

@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 import de.icubic.mm.bench.base.*;
-import de.icubic.mm.bench.benches.DoubleFormatTest.*;
+import de.icubic.mm.bench.benches.DoubleFormatTest.RunMode;
 import de.icubic.mm.communication.util.*;
 
 /**
@@ -18,7 +18,7 @@ import de.icubic.mm.communication.util.*;
  */
 public class QuoteDoubleFormatBench {
 
-	static NumberFormat	nfnf = BenchLogger.lnf;
+	static NumberFormat	nfnf = BenchLogger.LNF;
 
 	static double[]		values = {
 			99.9968,
