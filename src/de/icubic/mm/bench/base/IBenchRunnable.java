@@ -11,20 +11,20 @@ package de.icubic.mm.bench.base;
 public interface IBenchRunnable extends Runnable {
 
 	/**
-	 * loopCount wird benutzt, um auf eine gewünschte Laufzeit zu kommen
+	 * loopCount wird benutzt, um auf eine gewÃ¼nschte Laufzeit zu kommen
 	 * @param loopCount
 	 */
 	public void run( long nruns);
 
 	/**
 	 * @param loopCount
-	 * @return Anzahl der inneren Durchläufe in einem Aufruf von run()
+	 * @return Anzahl der inneren DurchlÃ¤ufe in einem Aufruf von run()
 	 */
 	public long getRunSize();
 
 	/**
-	 * für die Ausgabe, um mehrere IBenchRunnables gegeneinander vergleichen zu
-	 * können
+	 * fÃ¼r die Ausgabe, um mehrere IBenchRunnables gegeneinander vergleichen zu
+	 * kÃ¶nnen
 	 *
 	 * @return name
 	 */

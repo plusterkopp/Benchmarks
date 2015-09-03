@@ -1,7 +1,6 @@
 package de.am.gc.benchmarks;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * GC benchmark producing a mix of lifetime=0 and lifetime>0 objects which are kept in randomly updated lists. It is
@@ -9,7 +8,7 @@ import java.util.List;
  * two changes to make it more real-world: 1. CPU usage is reduced by adding some latency using Thread.sleep() 2. GC
  * rates are reduced by CPU usage which does NOT create or collect objects ( but for useless String comparisons) In
  * addition, I have fixed the number of threads to 8 and reparametrized them.
- * 
+ *
  * @author jsound
  */
 public class MixedRandomListRealWorld {
@@ -58,7 +57,7 @@ public class MixedRandomListRealWorld {
 
 	/**
 	 * Create a character array of a given length
-	 * 
+	 *
 	 * @param length
 	 * @return the character array
 	 */
@@ -83,7 +82,7 @@ public class MixedRandomListRealWorld {
 		 * Each GarbageProducer creates objects that become garbage immediately (lifetime=0) and objects that become
 		 * garbage only after a lifetime>0 which is distributed about an average lifetime. This average lifetime is a
 		 * function of fractionLive and numLive
-		 * 
+		 *
 		 * @param fractionLive
 		 * @param numLive
 		 */
@@ -92,7 +91,6 @@ public class MixedRandomListRealWorld {
 			this.myNumLive = numLive;
 		}
 
-		@Override
 		public void run() {
 			int osize = objectSize;
 			char[] chars = getCharArray( objectSize);

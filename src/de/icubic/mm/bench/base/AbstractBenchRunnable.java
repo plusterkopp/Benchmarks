@@ -18,16 +18,13 @@ public abstract class AbstractBenchRunnable implements IBenchRunnable {
 		setup();
 	}
 
-	@Override
 	public void setup() {
 		reset();
 	}
 
-	@Override
 	public void reset() {
 	}
 
-	@Override
 	public void run( long nruns) {
 		for ( long i = nruns;  i > 0;  i--) {
 			run();
@@ -37,7 +34,6 @@ public abstract class AbstractBenchRunnable implements IBenchRunnable {
 	/* (non-Javadoc)
 	 * @see de.pkmd.utils.bench.IBenchRunnable#getName()
 	 */
-	@Override
 	public String getName() {
 		return name;
 	}
@@ -45,12 +41,10 @@ public abstract class AbstractBenchRunnable implements IBenchRunnable {
 	/* (non-Javadoc)
 	 * @see de.icubic.mm.bench.base.IBenchRunnable#setName(java.lang.String)
 	 */
-	@Override
 	public void setName( String string) {
 		name = string;
 	}
 
-	@Override
 	public long getTotalRunSize( long nruns) {
 		return getRunSize() * nruns;
 	}
