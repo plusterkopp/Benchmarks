@@ -2,6 +2,7 @@ package de.icubic.mm.bench.base;
 
 import java.io.*;
 import java.text.*;
+import java.util.*;
 
 public class BenchLogger {
 
@@ -53,6 +54,28 @@ public class BenchLogger {
 		errStream = createStream( base, ".err.log");
 	}
 
+	public static void initConsole() {
+		if ( isCloseable( outStream)) {
+			outStream.close();
+		}
+		if ( isCloseable( infoStream)) {
+			infoStream.close();
+		}
+		if ( isCloseable( errStream)) {
+			errStream.close();
+		}
+		outStream = System.out;
+		infoStream = null;
+		errStream = System.err;
+	}
+
+	private static boolean isCloseable( PrintStream stream) {
+		if ( stream == null || stream == System.out || stream == System.err) {
+			return false;
+		}
+		return true;
+	}
+
 	private static PrintStream createStream( String base, String suffix) {
 		PrintStream stream = null;
 		String name = base + suffix;
@@ -71,7 +94,7 @@ public class BenchLogger {
 		return stream;
 	}
 
-	public static NumberFormat LNF = DecimalFormat.getNumberInstance();
+	public static NumberFormat LNF = DecimalFormat.getNumberInstance( Locale.US);
 
 	public static void syserr( long nanoTime, String string) {
 		syserr( nanoTime, string, null);

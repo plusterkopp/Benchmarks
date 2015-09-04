@@ -23,7 +23,7 @@ public class CollCounterTest {
 		lnf.setGroupingUsed( true);
 	};
 
-	private static final int	ArraySize	= 1234 * 234;
+	private static final int	ArraySize	= 1000 * 1000 * 1;
 	static int[]	valueArray = new int[ ArraySize];
 	static {
 		Random rnd = new Random();
@@ -115,7 +115,8 @@ public class CollCounterTest {
 			public void run() {
 				for ( int r = nruns; r > 0 ; r--) {
 					sum = 0;
-					for ( int i = list.size() - 1;  i >= 0;  --i) {
+					final int size = list.size();
+					for ( int i = size - 1;  i >= 0;  --i) {
 						sum += list.get( i);
 					}
 				}
@@ -152,15 +153,17 @@ public class CollCounterTest {
 		Thread	t = new Thread() {
 			@Override
 			public void run() {
+				BenchLogger.initConsole();
+				BenchLogger.sysinfo( "filled " +lnf.format( valueArray.length) + " elements");
 				List<CounterBenchRunnable>	benches = IQequitiesUtils.List( abench, albench, lbench);
 				IBenchRunner	runner = new BenchRunner( null);
-				runner.setRuntime( TimeUnit.SECONDS, 10);
+				runner.setRuntime( TimeUnit.SECONDS, 15);
 				for ( CounterBenchRunnable bench : benches) {
+					System.gc();
 					runner.setBenchRunner( bench);
 					runner.run();
 					runner.printResults();
 					BenchRunner.addToComparisonList( bench.getName(), runner.getRunsPerSecond());
-					System.gc();
 				}
 				BenchRunner.printComparisonList();
 				BenchRunner.clearComparisonList();

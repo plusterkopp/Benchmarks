@@ -137,13 +137,16 @@ public class StreamReduceBench {
 
 		IBenchRunnable[]	benches = { srBench, psBench, asBench, apsBench};
 		// warmup
+		BenchLogger.sysinfo( "warmup");
 		runner.setRuntime( TimeUnit.SECONDS, 5);
 		for ( IBenchRunnable bench : benches) {
 			runner.setBenchRunner( bench);
 			runner.run();
 			runner.printResults();
 		}
-		runner.setRuntime( TimeUnit.SECONDS, 10);
+		final int secs = 15;
+		BenchLogger.sysinfo( "bench runs: " + secs +" s");
+		runner.setRuntime( TimeUnit.SECONDS, secs);
 		for ( IBenchRunnable bench : benches) {
 			System.gc();
 			runner.setBenchRunner( bench);

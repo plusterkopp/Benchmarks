@@ -132,6 +132,47 @@ public class SyncCounterTest2 {
 
 		final CounterBenchRunnable abench = new AtomicCounterBenchRunnable( "atomic");
 
+		// Accumulator
+		class AccumCounterBenchRunnable extends CounterBenchRunnable {
+			public AccumCounterBenchRunnable( String name) {
+				super( name);
+			}
+
+			private LongAccumulator[]	counters;
+
+			@Override
+			public void run() {
+				for ( int r = nruns; r > 0 ; r--) {
+					for ( int i = counters.length - 1;  i >= 0 ;  i--) {
+						counters[ i].accumulate( 1);
+					}
+				}
+				for ( int i = 0;  i < counters.length;  i++) {
+					counters[ i].get();
+				}
+			}
+
+			@Override
+			long getCount() {
+				long sum = 0;
+				for ( int i = 0;  i < counters.length;  i++) {
+					sum += counters[ i].get();
+				}
+				return sum;
+			}
+
+			@Override
+			public void reset() {
+				super.reset();
+				counters = new LongAccumulator[ nCores];
+				for ( int i = 0;  i < counters.length;  i++) {
+					counters[ i] = new LongAccumulator( ( a, b) -> a+b, 0);
+				}
+			}
+		};
+
+		final CounterBenchRunnable acbench = new AccumCounterBenchRunnable( "accum");
+
 		// ohne Sync: Volatile
 		class VolatileCounterBenchRunnable extends CounterBenchRunnable {
 
@@ -305,8 +346,8 @@ public class SyncCounterTest2 {
 				runner.run();
 				runner.printResults();
 				BenchRunner.addToComparisonList( ubench.getName(), runner.getRunsPerSecond());
-				List<CounterBenchRunnable>	benches = IQequitiesUtils.List( abench, vbench, sbench, lbench, tbench, stbench);
-				List<Integer>	threadCounts = IQequitiesUtils.List( 1, 2, 4, 16);
+				List<CounterBenchRunnable>	benches = IQequitiesUtils.List( abench, acbench, sbench, lbench, tbench, stbench);
+				List<Integer>	threadCounts = IQequitiesUtils.List( 1, 2, 4, 16, 64);
 				for ( Integer nThreads : threadCounts) {
 						System.out.println( "Using " + nThreads + " Threads, "
 								+ Runtime.getRuntime().availableProcessors() + " cores");

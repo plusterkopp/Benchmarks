@@ -11,9 +11,18 @@ import org.junit.*;
 
 import de.icubic.mm.bench.base.*;
 import de.icubic.mm.server.utils.*;
-import de.icubic.mm.server.utils.QuotePrecision.PrintMode;
+import de.icubic.mm.server.utils.QuotePrecision.*;
 
 public class DoubleFormatTest {
+
+	static private final ThreadLocal<NumberFormat> NfTL = new ThreadLocal<NumberFormat>() {
+		@Override
+		protected NumberFormat initialValue() {
+			final NumberFormat numberInstance = DecimalFormat.getNumberInstance( Locale.US);
+			numberInstance.setGroupingUsed( false);
+			return numberInstance;
+		}
+	};
 
 	public enum RunMode {
 			SC {
@@ -41,7 +50,7 @@ public class DoubleFormatTest {
 			NF {
 				@Override
 				public String getStringValue( double value) {
-					NumberFormat	nf = BenchLogger.LNF;
+					NumberFormat	nf = NfTL.get();
 					if ( Math.rint( value) == value) {
 						nf.setMaximumFractionDigits( 0);
 					} else {
@@ -98,7 +107,7 @@ public class DoubleFormatTest {
 				plusMinusValues.add( Double.valueOf( -d));
 			}
 		}
-		NumberFormat	nfnf = BenchLogger.LNF;
+		NumberFormat	nfnf = DecimalFormat.getNumberInstance( Locale.US);
 		nfnf.setMaximumFractionDigits( 7);
 		// alle Werte zwischen 0 und 100 in zweihunderstel Schritten
 		for ( int intPart = 0;  intPart < 100;  intPart++) {
