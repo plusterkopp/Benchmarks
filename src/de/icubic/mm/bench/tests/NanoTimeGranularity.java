@@ -3,6 +3,8 @@ import java.text.*;
 import java.util.*;
 import java.util.concurrent.atomic.*;
 
+import de.icubic.mm.bench.base.*;
+
 @SuppressWarnings("boxing")
 public class NanoTimeGranularity {
 
@@ -60,10 +62,10 @@ public class NanoTimeGranularity {
 		for ( Long diffToLastTime : granularityMap.keySet()) {
 			long	occ = granularityMap.get( diffToLastTime);
 			if ( occ > 1)
-				System.out.println( " G: " + diffToLastTime + "ns " + occ + " mal (" + nf.format( 100.0 * occ / runs.get()) + "%)");
+				BenchLogger.sysout( " G: " + diffToLastTime + "ns " + occ + " mal (" + nf.format( 100.0 * occ / runs.get()) + "%)");
 		}
 		final double runtimeNS = runTimeNS.get();
-		System.out.println( "Runs: " + runs.get() / 1e6 + " M in " + runtimeNS / 1e6 + " ms (" + ( runtimeNS / runs.get()) + " ns/Run in " + nThreads + " Threads)");
+		BenchLogger.sysout( "Runs: " + runs.get() / 1e6 + " M in " + runtimeNS / 1e6 + " ms (" + ( runtimeNS / runs.get()) + " ns/Run in " + nThreads + " Threads)");
 	}
 
 	private static double fillMap( int batchSize, SortedMap<Long, Long> granularityMap) {

@@ -99,7 +99,7 @@ public class DoubleParseBench {
 		try {
 			t.join();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			BenchLogger.syserr( "", e);
 		}
 		System.exit( 0);
 	}

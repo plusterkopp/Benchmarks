@@ -87,7 +87,7 @@ public class NanoTimeTest {
 		runner.printResults();
 		double cruns = runner.getRunsPerSecond();
 
-		System.out.println( cbench.getName() + "/" + nbench.getName() + " = " + cruns/nruns);
+		BenchLogger.sysout( cbench.getName() + "/" + nbench.getName() + " = " + cruns/nruns);
 	}
 
 	@SuppressWarnings("unused")
@@ -110,13 +110,14 @@ public class NanoTimeTest {
 				durs.put( dur, ct + 1);
 			}
 		}
-		System.out.print( "Rollover nach " + length + "ns (" + ( length / 1e6) + "ms");
-		System.out.println( ", " + count + " Aufrufe, Zeit zwischen Aufrufen:");
+		BenchLogger.sysout( "Rollover nach " + length + "ns (" + ( length / 1e6) + "ms" +
+				", " + count + " Aufrufe, Zeit zwischen Aufrufen:");
 		Map<Long, Long> dursSort =new TreeMap<Long, Long>(durs);
+		StringBuilder	sb = new StringBuilder();
 		for (Long dur : dursSort.keySet()) {
-			System.out.print( dur + "ns: " + dursSort.get( dur) + ",  ");
+			sb.append( dur + "ns: " + dursSort.get( dur) + ",  ");
 		}
-		System.out.println();
+		BenchLogger.sysout( sb.toString());
 	}
 
 }

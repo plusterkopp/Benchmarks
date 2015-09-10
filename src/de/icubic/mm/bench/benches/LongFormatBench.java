@@ -185,9 +185,8 @@ public class LongFormatBench {
 		try {
 			t.join();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			BenchLogger.syserr( "", e);
 		}
-		System.out.flush();
 		System.exit( 0);
 	}
 

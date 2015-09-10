@@ -4,8 +4,8 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
-import net.openhft.affinity.*;
 import de.icubic.mm.bench.base.*;
+import net.openhft.affinity.*;
 
 
 public abstract class AWorkQueue implements IWorkQueue {
@@ -87,7 +87,7 @@ public abstract class AWorkQueue implements IWorkQueue {
 								BenchLogger.syserr( Thread.currentThread().getName() + ": got no job out of " + s + " in queue");
 						}
 					} catch ( java.lang.Throwable e) {
-						e.printStackTrace();
+						BenchLogger.syserr( "", e);
 					}
 				}
 			} finally {
@@ -111,7 +111,7 @@ public abstract class AWorkQueue implements IWorkQueue {
 								r.run();
 								taskDoneW.incrementAndGet();
 							} catch ( java.lang.Throwable e) {
-								e.printStackTrace();
+								BenchLogger.syserr( "", e);
 							}
 						}
 						runList.clear();
@@ -121,16 +121,16 @@ public abstract class AWorkQueue implements IWorkQueue {
 							r.run();
 							taskDoneW.incrementAndGet();
 						} catch ( java.lang.Throwable e) {
-							e.printStackTrace();
+							BenchLogger.syserr( "", e);
 						}
 						batchCount.incrementAndGet();
 					}
 				} catch ( InterruptedException e1) {
-//					System.out.println( Thread.currentThread().getName() + " int " + stopNow.get());
+//					BenchLogger.sysout( Thread.currentThread().getName() + " int " + stopNow.get());
 					break;
 				}
 			}
-//			System.out.println( Thread.currentThread().getName() + " closed " + stopNow.get() + ", " + taskDoneW.get() + "t");
+//			BenchLogger.sysout( Thread.currentThread().getName() + " closed " + stopNow.get() + ", " + taskDoneW.get() + "t");
 		}
 	}
 
@@ -341,7 +341,7 @@ public abstract class AWorkQueue implements IWorkQueue {
 				lock.wait();
 				BenchLogger.sysinfo( "Main resuming from " + id);
 			} catch ( InterruptedException e) {
-				e.printStackTrace();
+				BenchLogger.syserr( "", e);
 			}
 		}
 		return taskDone.get();

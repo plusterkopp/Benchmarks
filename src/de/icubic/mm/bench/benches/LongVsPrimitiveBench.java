@@ -169,7 +169,7 @@ public class LongVsPrimitiveBench {
 			runner.run();
 			runner.printResults();
 		}
-		System.out.println( "Single-Thread Warmup complete, switching to " + Runtime.getRuntime().availableProcessors() + " Threads");
+		BenchLogger.sysout( "Single-Thread Warmup complete, switching to " + Runtime.getRuntime().availableProcessors() + " Threads");
 		runner = new TPBenchRunner( pBench);
 		runner.setRuntime( TimeUnit.SECONDS, 30);
 		for ( IBenchRunnable bench : benches) {

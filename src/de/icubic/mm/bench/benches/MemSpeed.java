@@ -65,7 +65,7 @@ public class MemSpeed extends AbstractBenchRunnable {
 						double	rps = runner.getRunsPerSecond();
 						instance.setResult( rm, rps);
 						double	mbps = rps / mega;
-						System.out.println( instance.getName() + ": " + BenchLogger.LNF.format( mbps) + " MB/s");
+						BenchLogger.sysout( instance.getName() + ": " + BenchLogger.LNF.format( mbps) + " MB/s");
 					}
 					runner.writeCSV( instance.getCSVLine());
 					instance.dispose();
@@ -77,8 +77,7 @@ public class MemSpeed extends AbstractBenchRunnable {
 			} catch ( OutOfMemoryError ooe) {
 				runner.setBenchRunner( null);
 				System.gc();
-				ooe.printStackTrace();
-				System.err.println( "OOE at " + memSizeMB);
+				BenchLogger.syserr( "OOE at " + memSizeMB, ooe);
 				System.exit( 0);
 			}
 		}
@@ -157,14 +156,14 @@ public class MemSpeed extends AbstractBenchRunnable {
 		tpe.shutdown();
 		try {
 			while ( ! tpe.awaitTermination( 10, TimeUnit.SECONDS)) {
-				System.out.println( "Waiting for Allocators");
+				BenchLogger.sysout( "Waiting for Allocators");
 			}
 		} catch ( InterruptedException e) {
-			System.err.println( "Interrupted Waiting for Allocators");
+			BenchLogger.syserr( "Interrupted Waiting for Allocators", e);
 			System.exit( 1);
 		}
 		if ( sb.length() > 0) {
-//			System.out.println( "Allocs: " + sb.toString());
+//			BenchLogger.sysout( "Allocs: " + sb.toString());
 		}
 		arrays.addAll( q);
 		while ( remaining.getAndAdd( -mega) > 0) {
@@ -315,7 +314,7 @@ public class MemSpeed extends AbstractBenchRunnable {
 					try {
 						starter.await( 1, TimeUnit.SECONDS);
 					} catch ( InterruptedException e) {
-						System.err.println( "can not start " + tName);
+						BenchLogger.syserr( "can not start " + tName, e);
 						return;
 					}
 //					System.out.print( name + " running ");
@@ -326,11 +325,11 @@ public class MemSpeed extends AbstractBenchRunnable {
 			};
 			t.start();
 		}
-//		System.out.println( nThreads + "Threads launched ");
+//		BenchLogger.sysout( nThreads + "Threads launched ");
 		try {
 			stopper.await();
 		} catch ( InterruptedException e) {
-			System.err.println( "can not wait");
+			BenchLogger.syserr( "can not wait", e);
 			return;
 		}
 	}

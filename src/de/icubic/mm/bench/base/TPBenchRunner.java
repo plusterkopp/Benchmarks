@@ -26,14 +26,14 @@ public class TPBenchRunner extends BenchRunner {
 		long nruns = 1;
 		runNanosActual = runTP( nruns);
 //		System.out.print( ", " + loopCount + "/" +  lnf.format( runNanosActual));
-		// mindestens eine Sekunde, für Hotspot Warmup
+		// mindestens eine Sekunde, fï¿½r Hotspot Warmup
 		while ( runNanosActual < 1e9) {
 			nruns *= 2;
 			runNanosActual = runTP( nruns);
 //			System.out.print( ", " + loopCount + "/" +  lnf.format( runNanosActual));
 		}
-//		System.out.println();
-		// jetzt solange laufen lassen, daß gewünschte Zeit zusammenkommt
+//		BenchLogger.sysout();
+		// jetzt solange laufen lassen, daï¿½ gewï¿½nschte Zeit zusammenkommt
 		final double f = ( double) runNanosDesired / runNanosActual;
 		nruns *= f;
 		if ( nruns < nThreads) {
@@ -50,7 +50,7 @@ public class TPBenchRunner extends BenchRunner {
 	}
 
 	private long runTP( long nruns) {
-		// aufräumen
+		// aufrï¿½umen
 		benchRunnable.reset();
 		// TPE bauen
 		BlockingQueue<Runnable>	queue = new LinkedBlockingQueue<Runnable>();
@@ -66,7 +66,7 @@ public class TPBenchRunner extends BenchRunner {
 		if ( nanos >= 0) {
 			return nanos;
 		}
-		System.out.println( "Nanotime Rollover: " + nruns);
+		BenchLogger.sysout( "Nanotime Rollover: " + nruns);
 		return 0;
 	}
 

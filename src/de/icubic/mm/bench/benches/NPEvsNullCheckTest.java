@@ -124,7 +124,7 @@ public class NPEvsNullCheckTest {
 		runner.printResults();
 		cruns = runner.getRunsPerSecond();
 
-		System.out.println( nullcheckbench.getName() + "/" + npebench.getName() + " = " + cruns/nruns);
+		BenchLogger.sysout( nullcheckbench.getName() + "/" + npebench.getName() + " = " + cruns/nruns);
 	}
 
 	private static void setup() {
@@ -140,7 +140,7 @@ public class NPEvsNullCheckTest {
 				sourceArray[i] = 200;
 			}
 		}
-		System.out.println( "" + nullCounter + "/" + ArraySize + " Nullen");
+		BenchLogger.sysout( "" + nullCounter + "/" + ArraySize + " Nullen");
 	}
 
 }

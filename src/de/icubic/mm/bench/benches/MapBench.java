@@ -4,13 +4,12 @@
  */
 package de.icubic.mm.bench.benches;
 
-import gnu.trove.map.hash.*;
-
 import java.util.*;
 import java.util.concurrent.*;
 
-import net.openhft.koloboke.collect.map.hash.*;
 import de.icubic.mm.bench.base.*;
+import gnu.trove.map.hash.*;
+import net.openhft.koloboke.collect.map.hash.*;
 
 /**
  * <p>@author ralf
@@ -53,7 +52,7 @@ public class MapBench {
 
 			@Override
 			public void run() {
-//				System.out.println( getName() + " Map: " + getMap());
+//				BenchLogger.sysout( getName() + " Map: " + getMap());
 				int	sum = 0;
 				try {
 					for ( int j = 0;  j < ReadFactor; j++) {
@@ -63,8 +62,7 @@ public class MapBench {
 						}
 					}
 				} catch ( Exception e) {
-					e.printStackTrace();
-					System.err.println( sum);
+					BenchLogger.syserr( "" + sum, e);
 					return;
 				}
 			}
@@ -86,7 +84,7 @@ public class MapBench {
 
 			public void init() {
 				createMap();
-//				System.out.println( getName() + " Map: " + getMap());
+//				BenchLogger.sysout( getName() + " Map: " + getMap());
 				Random	rnd = new Random();
 				try {
 					for ( int i = RunSize;  i > 0;  i--) {
@@ -95,7 +93,7 @@ public class MapBench {
 						putValueAt( value, key);
 					}
 				} catch ( Exception e) {
-					e.printStackTrace();
+					BenchLogger.syserr( "", e);
 					return;
 				}
 //				BenchLogger.sysinfo( "Filled " + getName());
@@ -248,7 +246,7 @@ public class MapBench {
 		try {
 			t.join();
 		} catch ( InterruptedException e) {
-			e.printStackTrace();
+			BenchLogger.syserr( "", e);
 		}
 	}
 

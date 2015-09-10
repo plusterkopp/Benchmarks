@@ -5,13 +5,12 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
-import net.openhft.affinity.*;
-
 import com.lmax.disruptor.*;
 import com.lmax.disruptor.dsl.*;
 
 import de.icubic.mm.bench.base.*;
 import de.icubic.mm.communication.util.*;
+import net.openhft.affinity.*;
 
 public class DisruptorQueue implements IWorkQueue {
 
@@ -231,7 +230,7 @@ public class DisruptorQueue implements IWorkQueue {
 				BenchLogger.sysinfo( "Main resuming from " + id);
 //				checkExecution( thArray);
 			} catch ( InterruptedException e) {
-				e.printStackTrace();
+				BenchLogger.syserr( "", e);
 			}
 			int completionCount = getCompletionCount();
 		return completionCount;

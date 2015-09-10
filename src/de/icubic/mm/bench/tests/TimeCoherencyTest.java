@@ -2,6 +2,8 @@ package de.icubic.mm.bench.tests;
 
 import java.text.*;
 
+import de.icubic.mm.bench.base.*;
+
 /**
  * test coherency between {@link System#currentTimeMillis()} and {@link System#nanoTime()}
  */
@@ -57,7 +59,7 @@ public class TimeCoherencyTest {
 				public void run() {
 					long	start = getNow( tc);
 					long	firstOrigin = tc.lastOrigin;	// get the first origin for this thread
-					System.out.println( "Thread " + fi + " started at " + lnf.format( start) + " ns");
+					BenchLogger.sysout( "Thread " + fi + " started at " + lnf.format( start) + " ns");
 					long	nruns = 0;
 					while ( getNow( tc) < RUNTIME_NS) {
 						nruns++;
@@ -66,7 +68,7 @@ public class TimeCoherencyTest {
 					final long	originDrift = tc.lastOrigin - firstOrigin;
 					nruns += 3;	// account for start and end call and the one that ends the loop
 					final long skipped = nruns - tc.numChecks;
-					System.out.println( "Thread " + fi + " finished after " + lnf.format( nruns) + " runs in " + lnf.format( runTimeNS) + " ns (" + lnf.format( ( double) runTimeNS / nruns) + " ns/call) with"
+					BenchLogger.sysout( "Thread " + fi + " finished after " + lnf.format( nruns) + " runs in " + lnf.format( runTimeNS) + " ns (" + lnf.format( ( double) runTimeNS / nruns) + " ns/call) with"
 							+ "\n\t" + lnf.format( tc.numMismatchToFirst) + " different from first origin (" + lnf.format( 100.0 * tc.numMismatchToFirst / nruns) + "%)"
 							+ "\n\t" + lnf.format( tc.numMismatchToLast) + " jumps from last origin (" + lnf.format( 100.0 * tc.numMismatchToLast / nruns) + "%)"
 							+ "\n\t" + lnf.format( tc.numMismatchToFirstBig) + " different from first origin by more than " + BIG_OFFSET_MS + " ms"

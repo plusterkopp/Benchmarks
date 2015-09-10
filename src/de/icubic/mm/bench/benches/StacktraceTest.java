@@ -49,7 +49,7 @@ public class StacktraceTest {
 						e.toString();
 					}
 				} catch ( Exception e) {
-					e.printStackTrace();
+					BenchLogger.syserr( "", e);
 					return;
 				}
 			}
@@ -83,7 +83,7 @@ public class StacktraceTest {
 							e.toString();
 					}
 				} catch ( Exception e) {
-					e.printStackTrace();
+					BenchLogger.syserr( "", e);
 					return;
 				}
 			}
@@ -125,7 +125,7 @@ public class StacktraceTest {
 				runner.run();
 				runner.printResults();
 				double runsT0 = runner.getRunsPerSecond();
-				System.out.println( stackBench.getName() + " = " + runsD0/runsT0);
+				BenchLogger.sysout( stackBench.getName() + " = " + runsD0/runsT0);
 
 				for ( int depth = 1;  depth < 1000;  depth *= 2) {
 					stackDepth = depth;
@@ -138,9 +138,9 @@ public class StacktraceTest {
 					runner.printResults();
 					double nrunsT = runner.getRunsPerSecond();
 
-					System.out.println( "D0/D" + depth + " = " + runsD0/nrunsD + " (" + runsD0/nrunsD/depth + ")");
-					System.out.println( "T0/T" + depth + " = " + runsT0/nrunsT + " (" + runsT0/nrunsT/depth + ")");
-					System.out.println( "D" + depth + "/T" + depth + " = " + nrunsD/nrunsT);
+					BenchLogger.sysout( "D0/D" + depth + " = " + runsD0/nrunsD + " (" + runsD0/nrunsD/depth + ")");
+					BenchLogger.sysout( "T0/T" + depth + " = " + runsT0/nrunsT + " (" + runsT0/nrunsT/depth + ")");
+					BenchLogger.sysout( "D" + depth + "/T" + depth + " = " + nrunsD/nrunsT);
 				}
 			}
 		};
@@ -148,7 +148,7 @@ public class StacktraceTest {
 		try {
 			t.join();
 		} catch ( InterruptedException e) {
-			e.printStackTrace();
+			BenchLogger.syserr( "", e);
 		}
 	}
 

@@ -2,6 +2,8 @@ package de.icubic.mm.bench.benches;
 
 import java.util.*;
 
+import de.icubic.mm.bench.base.*;
+
 public class ListGCBench {
 
 	// Node in the linked list
@@ -111,7 +113,7 @@ public class ListGCBench {
 
 			// Print the time taken for this pass
 			long end = System.currentTimeMillis();
-			System.out.println( "Took " + ( end - start) + " to prepend 1000000 and then sort all " + count);
+			BenchLogger.sysout( "Took " + ( end - start) + " to prepend 1000000 and then sort all " + count);
 			start = end;
 		}
 	}

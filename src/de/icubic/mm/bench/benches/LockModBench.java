@@ -354,7 +354,7 @@ public class LockModBench {
 		// um zu verhindern, daß der JIT was wegoptimiert, verwenden wir hier den berechneten Wert. Da wir die Feldwerte
 		// nie belegen, bleiben alle Werte 0 und der IF-Zweig wird nie ausgeführt.
 		if ( dummySum < v) {
-			System.out.println( "should not get smaller");
+			BenchLogger.sysout( "should not get smaller");
 		}
 	}
 
@@ -444,7 +444,7 @@ public class LockModBench {
 					thread.join( 1);
 				}
 			} catch ( InterruptedException e) {
-				e.printStackTrace();
+				BenchLogger.syserr( "", e);
 			}
 			// Ergebnisse einsammeln
 			long	rSum = 0;
@@ -467,7 +467,7 @@ public class LockModBench {
 		try {
 			Thread.sleep( i);
 		} catch ( InterruptedException e) {
-			e.printStackTrace();
+			BenchLogger.syserr( "", e);
 		}
 	}
 

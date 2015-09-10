@@ -349,7 +349,7 @@ public class SyncCounterTest2 {
 				List<CounterBenchRunnable>	benches = IQequitiesUtils.List( abench, acbench, sbench, lbench, tbench, stbench);
 				List<Integer>	threadCounts = IQequitiesUtils.List( 1, 2, 4, 16, 64);
 				for ( Integer nThreads : threadCounts) {
-						System.out.println( "Using " + nThreads + " Threads, "
+						BenchLogger.sysout( "Using " + nThreads + " Threads, "
 								+ Runtime.getRuntime().availableProcessors() + " cores");
 					runner = new TPBenchRunner( null, nThreads);
 					runner.setRuntime( TimeUnit.SECONDS, 10);
@@ -364,7 +364,7 @@ public class SyncCounterTest2 {
 					BenchRunner.clearComparisonList();
 				}
 				} catch ( Exception e) {
-					e.printStackTrace( System.err);
+					BenchLogger.syserr( "", e);
 					System.exit( 1);
 				}
 			}
@@ -373,7 +373,7 @@ public class SyncCounterTest2 {
 		try {
 			t.join();
 		} catch ( InterruptedException e) {
-			e.printStackTrace();
+			BenchLogger.syserr( "", e);
 		}
 	}
 

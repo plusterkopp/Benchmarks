@@ -70,7 +70,7 @@ public class CollCounterTest {
 				for ( int i = 0; i < valueArray.length; i++) {
 					coll.add( valueArray[ i]);
 				}
-//				System.out.println( getName() + ": Size=" + coll.size());
+//				BenchLogger.sysout( getName() + ": Size=" + coll.size());
 			}
 		};
 
@@ -173,7 +173,7 @@ public class CollCounterTest {
 		try {
 			t.join();
 		} catch ( InterruptedException e) {
-			e.printStackTrace();
+			BenchLogger.syserr( "", e);
 		}
 	}
 

@@ -4,9 +4,9 @@ import java.io.*;
 import java.text.*;
 import java.util.*;
 
-import net.openhft.affinity.*;
 import de.icubic.mm.bench.base.*;
-import de.icubic.mm.server.tests.performance.workerqueue.WorkerQueueFactory.EWorkQueueType;
+import de.icubic.mm.server.tests.performance.workerqueue.WorkerQueueFactory.*;
+import net.openhft.affinity.*;
 
 public class MainClass {
 
@@ -20,8 +20,8 @@ public class MainClass {
 	public static void main( String[] args) {
 
 		if ( args.length !=5) {
-			System.out.println( "Incorrect usage");
-			System.out.println( " Usage -> java MainClass " + "<number of threads> <number of queues> <number of task> <job size in NS> <machine name>");
+			BenchLogger.sysout( "Incorrect usage");
+			BenchLogger.sysout( " Usage -> java MainClass " + "<number of threads> <number of queues> <number of task> <job size in NS> <machine name>");
 			System.exit( - 1);
 		}
 
@@ -192,7 +192,7 @@ public class MainClass {
 			workAssigner.join();
 //			BenchLogger.sysout( "Assigner " + id + " finished");
 		} catch ( InterruptedException e) {
-			e.printStackTrace();
+			BenchLogger.syserr( "", e);
 		}
 		long totalSize = workAssigner.getSize();
 

@@ -3,6 +3,8 @@ package de.icubic.mm.server.tests.performance.workerqueue;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
+import de.icubic.mm.bench.base.*;
+
 public class WorkStealingQueue extends AWorkQueue {
 	private AtomicInteger queue_no = new AtomicInteger();
 	private BlockingDeque<Runnable>[] queues;
@@ -43,7 +45,7 @@ public class WorkStealingQueue extends AWorkQueue {
 //			}
 //			taskQueued.incrementAndGet();
 		} catch ( InterruptedException e) {
-			e.printStackTrace();
+			BenchLogger.syserr( "", e);
 		}
 	}
 

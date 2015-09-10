@@ -272,30 +272,30 @@ public class SyncCounterTest {
 			@Override
 			public void run() {
 				try {
-				IBenchRunner	runner = new BenchRunner( ubench);
-				runner.setRuntime( TimeUnit.SECONDS, 10);
-				runner.run();
-				runner.printResults();
-				BenchRunner.addToComparisonList( ubench.getName(), runner.getRunsPerSecond());
-				List<CounterBenchRunnable>	benches = IQequitiesUtils.List( abench, vbench, sbench, lbench, tbench);
-				List<Integer>	threadCounts = IQequitiesUtils.List( 1, 2, 4, 16, 256);
-				for ( Integer nThreads : threadCounts) {
-						System.out.println( "Using " + nThreads + " Threads, "
-								+ Runtime.getRuntime().availableProcessors() + " cores");
-					runner = new TPBenchRunner( null, nThreads);
+					IBenchRunner runner = new BenchRunner( ubench);
 					runner.setRuntime( TimeUnit.SECONDS, 10);
-					for ( CounterBenchRunnable bench : benches) {
-						runner.setBenchRunner( bench);
-						runner.run();
-						runner.printResults();
-						BenchRunner.addToComparisonList( bench.getName(), runner.getRunsPerSecond());
-						System.gc();
+					runner.run();
+					runner.printResults();
+					BenchRunner.addToComparisonList( ubench.getName(), runner.getRunsPerSecond());
+					List<CounterBenchRunnable> benches = IQequitiesUtils.List( abench, vbench, sbench, lbench, tbench);
+					List<Integer> threadCounts = IQequitiesUtils.List( 1, 2, 4, 16, 256);
+					for ( Integer nThreads : threadCounts) {
+						BenchLogger.sysout( "Using " + nThreads + " Threads, "
+								+ Runtime.getRuntime().availableProcessors() + " cores");
+						runner = new TPBenchRunner( null, nThreads);
+						runner.setRuntime( TimeUnit.SECONDS, 10);
+						for ( CounterBenchRunnable bench : benches) {
+							runner.setBenchRunner( bench);
+							runner.run();
+							runner.printResults();
+							BenchRunner.addToComparisonList( bench.getName(), runner.getRunsPerSecond());
+							System.gc();
+						}
+						BenchRunner.printComparisonList();
+						BenchRunner.clearComparisonList();
 					}
-					BenchRunner.printComparisonList();
-					BenchRunner.clearComparisonList();
-				}
 				} catch ( Exception e) {
-					e.printStackTrace( System.err);
+					BenchLogger.syserr( "", e);
 					System.exit( 1);
 				}
 			}
@@ -304,7 +304,7 @@ public class SyncCounterTest {
 		try {
 			t.join();
 		} catch ( InterruptedException e) {
-			e.printStackTrace();
+			BenchLogger.syserr( "", e);
 		}
 	}
 

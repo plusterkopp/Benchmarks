@@ -136,7 +136,7 @@ public class MulDivBench {
 		runner.printResults();
 		runner.setEmptyLoops( runner.getRunsPerSecond());
 
-		System.out.println( "Single-Thread Warmup complete");
+		BenchLogger.sysout( "Single-Thread Warmup complete");
 		runner.setRuntime( TimeUnit.SECONDS, 20);
 		for ( IBenchRunnable bench : benches) {
 			System.gc();

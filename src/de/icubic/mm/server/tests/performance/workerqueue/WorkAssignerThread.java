@@ -60,8 +60,7 @@ public class WorkAssignerThread extends Thread {
 						workQ.waitForWorkersCreated();
 						assignBlock( start, start+block, ft, sizes, jobsPerSecond / numThreads);
 					} catch ( InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						BenchLogger.syserr( "", e);
 					}
 				}
 			}, "Assigner-" + t);
@@ -102,7 +101,7 @@ public class WorkAssignerThread extends Thread {
 				}
 			}
 		} catch ( InterruptedException e) {
-			e.printStackTrace();
+			BenchLogger.syserr( "", e);
 		}
 		long	durNS = BenchRunner.getNow() - enqueueStartNano;
 		int	sum = 0;

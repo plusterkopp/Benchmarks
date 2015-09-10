@@ -3,6 +3,8 @@ package de.icubic.mm.bench.benches;
 //by Erik Wrenholt
 import java.util.*;
 
+import de.icubic.mm.bench.base.*;
+
 class Mandelbrot{
 	private static final int SIZE = 500;
 	static int BAILOUT = 16;
@@ -49,7 +51,7 @@ class Mandelbrot{
 			run2();
 		Date d2 = new Date( /* echte Zeit */);
 		long diff = d2.getTime() - d1.getTime();
-		System.out.println( "\nJava Elapsed " + diff / 1000.0f);
+		BenchLogger.sysout( "\nJava Elapsed " + diff / 1000.0f);
 	}
 
 	public static void main( String args[]) {

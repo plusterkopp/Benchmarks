@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 import de.icubic.mm.bench.base.*;
-import de.icubic.mm.bench.benches.DoubleFormatTest.RunMode;
+import de.icubic.mm.bench.benches.DoubleFormatTest.*;
 import de.icubic.mm.communication.util.*;
 
 /**
@@ -145,7 +145,7 @@ public class QuoteDoubleFormatBench {
 										BenchRunner.addToComparisonList( qdfbench.getName(), runner.getRunsPerSecond());
 								} catch ( Exception e) {
 									BenchLogger.sysout( "Exception");
-									e.printStackTrace();
+									BenchLogger.syserr( "", e);
 								}
 							}
 						});
@@ -162,9 +162,8 @@ public class QuoteDoubleFormatBench {
 		try {
 			t.join();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			BenchLogger.syserr( "", e);
 		}
-		System.out.flush();
 		System.exit( 0);
 	}
 

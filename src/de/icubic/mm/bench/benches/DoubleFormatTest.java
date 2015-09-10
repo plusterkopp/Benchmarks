@@ -58,7 +58,7 @@ public class DoubleFormatTest {
 					}
 					String s = nf.format( value);
 					s = QuotePrecision.stripZerosAndPeriod( s, true);
-					// hier m��ten wir auf -0 testen, was bei kleinen negativen Werten rauskommen kann und bei QuotePrecision(BigDecimal) nicht.
+					// hier müßten wir auf -0 testen, was bei kleinen negativen Werten rauskommen kann und bei QuotePrecision(BigDecimal) nicht.
 					if ( "-0".equals( s))
 						return "0";
 					return s;
@@ -79,17 +79,6 @@ public class DoubleFormatTest {
 				public double round( double value, int dp) {
 					return QuotePrecision.DSInstance.round0( value, dp);
 				}
-	//		},
-	//		DS0 {
-	//			@Override
-	//			public String getStringValue( double value) {
-	//				final int maximumFractionDigits = AbstractQuote.getMaximumFractionDigits( value);
-	//				String s = DoubleToString.format( value, true, maximumFractionDigits);
-	//				// hier m��ten wir auf -0 testen, was bei kleinen negativen Werten rauskommen kann und bei QuotePrecision(BigDecimal) nicht.
-	//				if ( "-0".equals( s))
-	//					return "0";
-	//				return s;
-	//			}
 			};
 
 			public abstract String getStringValue( double value);
@@ -181,7 +170,7 @@ public class DoubleFormatTest {
 						}
 						sDS = QuotePrecision.stripZerosAndPeriod( sDS, false);
 						String sBD = PrintMode.BD.formatDoubleRounded( num, prec);
-						if ( ! sDS.equals( sBD)) {	// gib s�mtliche Abweichungen aus
+						if ( ! sDS.equals( sBD)) {	// gib sämtliche Abweichungen aus
 							BenchLogger.sysout( "Round mismatch for " + num + " with " + prec + " digits: " + sDS + " != " +sBD);
 						}
 						int	precBD = mag + prec;	// wenn das gr��er als 13 wird, weichen sie immer ab, weil unsere BD-Methode auf 13 Stellen begrenzt ist
@@ -189,8 +178,7 @@ public class DoubleFormatTest {
 							assertEquals( "Round mismatch for " + num + " with " + prec + " digits" , sBD, sDS);
 						}
 					} catch ( Exception e) {
-						BenchLogger.sysout( "Exception for " + num + " with " + prec + " digits");
-						e.printStackTrace();
+						BenchLogger.syserr( "Exception for " + num + " with " + prec + " digits", e);
 					}
 				}
 			}
@@ -220,7 +208,7 @@ public class DoubleFormatTest {
 		// endet in "." -> Punkt weg auch bei false
 		assertEquals( "Stripped mismatch", "10", QuotePrecision.stripZerosAndPeriod( "10.", true));
 		assertEquals( "Stripped mismatch", "10", QuotePrecision.stripZerosAndPeriod( "10.", false));
-		// der mu� so bleiben
+		// der muß so bleiben
 		assertEquals( "Stripped mismatch", "10.000", QuotePrecision.stripZerosAndPeriod( "10.000", false));
 		assertEquals( "Stripped mismatch", "1004", QuotePrecision.stripZerosAndPeriod( "1004", true));
 		// der nicht
@@ -254,14 +242,13 @@ public class DoubleFormatTest {
 						String	nf = RunMode.NF.getStringValue( value);
 						String	ds = RunMode.DS.getStringValue( value);
 						// Vergleiche
-						boolean printed = false;
+						StringBuilder	sb = new StringBuilder();
 						if ( ! bd.equals( nf)) {
-							System.err.print( value + ": BD " + bd + " != NF " + nf + " ");
-							printed = true;
+							sb.append( value + ": BD " + bd + " != NF " + nf + " ");
 						} else if ( ! bd.equals( ds)) {
 							misMatches.incrementAndGet();
-							if ( ! printed) {
-								System.err.print( value + ": ");
+							if ( sb.length() == 0) {
+								sb.append( value + ": ");
 							}
 							double dsD;
 							try {
@@ -273,24 +260,22 @@ public class DoubleFormatTest {
 							DoubleToString.debug = true;
 							RunMode.DS.getStringValue( value);
 							DoubleToString.debug = false;
-							System.err.print( "BD " + bd + " != DS " + ds + " " + " bdD: " + bdD + " dsD: " + dsD);
-							printed = true;
+							sb.append( "BD " + bd + " != DS " + ds + " " + " bdD: " + bdD + " dsD: " + dsD);
 						} else if ( ! nf.equals( ds)) {
-							if ( ! printed) {
-								System.err.print( value + ": ");
+							if ( sb.length() == 0) {
+								sb.append( value + ": ");
 							}
-							System.err.print( "NF " + nf + " != DS " + ds + " ");
-							printed = true;
+							sb.append( "NF " + nf + " != DS " + ds + " ");
 						}
 						testParse();
 						// Runden: teste nur noch BD gegen DS
 						testRound();
 
-						if ( printed)
-							System.err.println();
+						if ( sb.length() != 0) {
+							BenchLogger.syserr( sb.toString());
+						}
 					} catch ( Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						BenchLogger.syserr( "" + value, e);
 					}
 				}
 
@@ -298,8 +283,7 @@ public class DoubleFormatTest {
 					// Gegenprobe: Parsen
 					double v = Double.parseDouble( s);
 					if ( v != value) {
-						System.err.print( value + ": ");
-						System.err.print( "SC " + v + " V " + value + " ");
+						BenchLogger.syserr( value + ": SC " + v + " V " + value + " ");
 					}
 				}
 
@@ -310,8 +294,7 @@ public class DoubleFormatTest {
 						double rDS = RunMode.DS.round( value, dp);
 						if ( rBD != rDS) {
 							misMatches.incrementAndGet();
-							System.err.print( value + "/" + dp + ": ");
-							System.err.print( "rBD " + rBD + " != rDS " + rDS + " ");
+							BenchLogger.syserr( value + "/" + dp + ": rBD " + rBD + " != rDS " + rDS + " ");
 							noMismatch = false;
 						}
 					}
@@ -336,8 +319,7 @@ public class DoubleFormatTest {
 			double rBD = RunMode.BD.round( value, dp);
 			double rDS = RunMode.DS.round( value, dp);
 			if ( rBD != rDS) {
-				System.err.print( value + "/" + dp + ": ");
-				System.err.print( "rBD " + rBD + " != rDS " + rDS + " ");
+				BenchLogger.syserr( value + "/" + dp + ": rBD " + rBD + " != rDS " + rDS + " ");
 				noMismatch = false;
 				RunMode.DS.round( value, 100);
 			}

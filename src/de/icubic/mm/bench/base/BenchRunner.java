@@ -98,7 +98,7 @@ public class BenchRunner implements IBenchRunner {
 			double relPerf = re.runsPerSecond / worstOrBase;
 			double relTime = bestOrBase / re.runsPerSecond;
 			sb.append( re.name + ": " + nf.format( 100 * relPerf) + "% Performance / " + nf.format( 100 * relTime) + "% Time");
-			System.out.println( sb.toString());
+			BenchLogger.sysout( sb.toString());
 		}
 	}
 
@@ -163,8 +163,7 @@ public class BenchRunner implements IBenchRunner {
 					csvWriter.write( '\n');
 					csvWriter.flush();
 				} catch ( IOException e) {
-					System.err.println( "Can not write " + csvLine + "to " + csvWriter);
-					e.printStackTrace();
+					BenchLogger.syserr( "Can not write " + csvLine + "to " + csvWriter, e);
 				}
 			}
 		}
@@ -183,11 +182,11 @@ public class BenchRunner implements IBenchRunner {
 			benchRunnable.run( nruns);
 			long	end = System.nanoTime();
 			long	nanos = end - start;
-//			System.out.println( Thread.currentThread() + " run " + benchRunnable.getName() + " " + nruns + " times in " + lnf.format( nanos) + " ns");
+//			BenchLogger.sysout( Thread.currentThread() + " run " + benchRunnable.getName() + " " + nruns + " times in " + lnf.format( nanos) + " ns");
 			if ( nanos >= 0) {
 				return nanos;
 			}
-			System.out.println( "Nanotime Rollover: " + runs + " of " + maxruns);
+			BenchLogger.sysout( "Nanotime Rollover: " + runs + " of " + maxruns);
 		}
 		return 0;
 	}
@@ -238,7 +237,7 @@ public class BenchRunner implements IBenchRunner {
 			runit = "m" + runit;
 			rrps *= 1000;
 		}
-		System.out.println( resultString + nf.format( rps) + "/" + unit + " = " +
+		BenchLogger.sysout( resultString + nf.format( rps) + "/" + unit + " = " +
 				nf.format( rrps) + runit + "/Run (" + benchRunnable.getName() + ")");
 	}
 
@@ -267,12 +266,10 @@ public class BenchRunner implements IBenchRunner {
 			if ( csvWriter != null) {
 				try {
 					csvWriter.close();
-					System.err.println( "Error opening " + csvName);
-					ioe.printStackTrace();
+					BenchLogger.syserr( "Error opening " + csvName, ioe);
 				} catch ( IOException ioe2) {
 					csvWriter = null;
-					System.err.println( "Error closing " + csvName);
-					ioe2.printStackTrace();
+					BenchLogger.syserr( "Error closing " + csvName, ioe2);
 				}
 			}
 		}
@@ -284,8 +281,7 @@ public class BenchRunner implements IBenchRunner {
 			try {
 				csvWriter.close();
 			} catch ( IOException e) {
-				System.err.println( "Error closing " + csvWriter);
-				e.printStackTrace();
+				BenchLogger.syserr( "Error closing " + csvWriter, e);
 			}
 		}
 	}

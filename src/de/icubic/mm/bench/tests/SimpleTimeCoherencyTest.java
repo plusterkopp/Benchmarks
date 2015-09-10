@@ -1,5 +1,7 @@
 package de.icubic.mm.bench.tests;
 
+import de.icubic.mm.bench.base.*;
+
 public class SimpleTimeCoherencyTest {
 	public static void main( String[] args) {
 		final long anchorNanos = System.nanoTime();
@@ -25,9 +27,9 @@ public class SimpleTimeCoherencyTest {
 			numCallsSinceAnchor += testRun.numCallsToNanoTime;
 		}
 
-		System.out.println( numCallsSinceAnchor);
-		System.out.println( accumulatedNanos);
-		System.out.println( lastNanoTime - anchorNanos);
+		BenchLogger.sysout( "" + numCallsSinceAnchor);
+		BenchLogger.sysout( "" + accumulatedNanos);
+		BenchLogger.sysout( "" + ( lastNanoTime - anchorNanos));
 	}
 
 	static class TestRun implements Runnable {
