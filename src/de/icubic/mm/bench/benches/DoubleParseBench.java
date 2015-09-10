@@ -33,7 +33,8 @@ public class DoubleParseBench {
 				0.001234567, 0.00123456, 0.0012345, 0.001234, 0.00123, 0.0015, 0.001,
 			};
 		valueL = new ArrayList<String>();
-		NumberFormat	nf = BenchLogger.LNF;
+		NumberFormat	nf = DecimalFormat.getNumberInstance( Locale.US);
+		nf.setGroupingUsed( false);
 		nf.setMaximumFractionDigits( 3);
 		for ( double d : values) {
 			valueL.add( nf.format( d));
