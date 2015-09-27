@@ -51,7 +51,7 @@ public abstract class AWorkQueue implements IWorkQueue {
 				if ( useAffinity) {
 					al = setAffinityFor( queue);
 					if ( maxQueues > 1) {
-						BenchLogger.sysinfo( al.dumpLock());
+						BenchLogger.sysinfo( AffinityLock.dumpLocks());
 					}
 				}
 				workersReady.countDown();
@@ -147,8 +147,8 @@ public abstract class AWorkQueue implements IWorkQueue {
 		synchronized ( mapQueueToLock) {
 			AffinityLock	al = mapQueueToLock.get( key);
 			if ( al != null) {
-				AffinityLock	result = al.acquireLock( AffinityStrategies.SAME_SOCKET_OR_CORE, AffinityStrategies.ANY);
-				final String lockInfo = result.dumpLock() + " for " + al.dumpLock();
+				AffinityLock	result = al.acquireLock( AffinityStrategies.SAME_CORE, AffinityStrategies.SAME_SOCKET, AffinityStrategies.ANY);
+				final String lockInfo = result.toString() + " for " + al.toString();
 				if ( result.cpuId() > -1) {
 					int socketAl = AffinityLock.cpuLayout().socketId( al.cpuId());
 					int socketResult = AffinityLock.cpuLayout().socketId( result.cpuId());
@@ -185,7 +185,7 @@ public abstract class AWorkQueue implements IWorkQueue {
 					away.add( qi);
 				}
 			}
-			BenchLogger.sysinfo( "Reserved new Socket: " + al.dumpLock() + " away from " + away + ", sharing " + sharing);
+			BenchLogger.sysinfo( "Reserved new Socket: " + al.toString() + " away from " + away + ", sharing " + sharing);
 			return al;
 		}
 	}

@@ -179,7 +179,7 @@ public class DisruptorQueue implements IWorkQueue {
 				protected void beforeRun( AffinityLock al, Thread currentThread) {
 					super.beforeRun( al, currentThread);
 					workersReady.countDown();
-					BenchLogger.sysinfo( al.dumpLock());
+					// BenchLogger.sysinfo( AffinityLock.dumpLocks());
 				}
 			};
 		} else {

@@ -21,7 +21,7 @@ public class MainClass {
 
 		if ( args.length !=5) {
 			BenchLogger.sysout( "Incorrect usage");
-			BenchLogger.sysout( " Usage -> java MainClass " + "<number of threads> <number of queues> <number of task> <job size in NS> <machine name>");
+			BenchLogger.sysout( "Usage -> java MainClass " + "<number of threads> <number of queues> <number of task> <job size in NS> <machine name>");
 			System.exit( - 1);
 		}
 
