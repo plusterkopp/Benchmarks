@@ -7,6 +7,8 @@ package de.icubic.mm.bench.benches;
 import java.util.*;
 import java.util.concurrent.*;
 
+import org.apache.commons.collections4.map.*;
+
 import de.icubic.mm.bench.base.*;
 import gnu.trove.map.hash.*;
 import net.openhft.koloboke.collect.map.hash.*;
@@ -18,7 +20,6 @@ import net.openhft.koloboke.collect.map.hash.*;
 public class MapBench {
 
 	private static int RunSize = 100;
-	private static final int ReadFactor = 1000;
 
 	/**
 	 * @param args
@@ -44,6 +45,8 @@ public class MapBench {
 		};
 
 		abstract class MapRunnable extends AbstractBenchRunnable {
+
+			 int ReadFactor = 1000;
 
 			public MapRunnable( String string) {
 				super( string);
@@ -145,14 +148,14 @@ public class MapBench {
 			}
 		};
 
-		final MapRunnable koloHashMapBench = new UtilMapRunnable( "KoloHashMap IntInt") {
+		final MapRunnable koloHashMapBenchII = new UtilMapRunnable( "KoloHashMap IntInt") {
 			@Override
 			void createMap() {
 				map = HashIntIntMaps.newMutableMap();
 			}
 		};
 
-		final MapRunnable koloHashMapBench4 = new UtilMapRunnable( "KoloHashMap IntInt Imm") {
+		final MapRunnable koloHashMapBenchII_Imm = new UtilMapRunnable( "KoloHashMap IntInt Imm") {
 			@Override
 			void createMap() {
 				map = new HashMap<Integer, Integer>( RunSize);
@@ -167,7 +170,12 @@ public class MapBench {
 
 		};
 
-		final MapRunnable koloHashMapBench2 = new UtilMapRunnable( "KoloHashMap ObjObj") {
+		final MapRunnable koloHashMapBenchOO = new UtilMapRunnable( "KoloHashMap ObjObj") {
+			@Override
+			public void init() {
+				super.init();
+				ReadFactor = 10;
+			}
 			@Override
 			void createMap() {
 				map = HashObjObjMaps.newMutableMap();
@@ -175,29 +183,69 @@ public class MapBench {
 		};
 
 		final MapRunnable tIntIntHashMapBench = new MapRunnable( "TIntIntHashMap") {
-
 			private TIntIntHashMap map;
-
 			@Override
 			void createMap() {
 				map = new TIntIntHashMap();
 			}
-
 			@Override
 			int getValue( int i) {
 				return map.get( i);
 			}
-
 			@Override
 			void putValueAt( int value, int key) {
 				map.put( key, value);
 			}
-
 			@Override
 			Object getMap() {
 				return map;
 			}
+		};
 
+		final MapRunnable tObjObjHashMapBench = new MapRunnable( "THashMapObjObj") {
+			private THashMap<Integer, Integer> map;
+			@Override
+			void createMap() {
+				map = new THashMap<Integer, Integer>();
+			}
+			@Override
+			int getValue( int i) {
+				final Integer value = map.get( i);
+				if ( value != null)
+					return value.intValue();
+				return 0;
+			}
+			@Override
+			void putValueAt( int value, int key) {
+				map.put( key, value);
+			}
+			@Override
+			Object getMap() {
+				return map;
+			}
+		};
+
+		final MapRunnable tObjObjFlatMapBench = new MapRunnable( "Flat3MapObjObj") {
+			private Flat3Map<Integer, Integer> map;
+			@Override
+			void createMap() {
+				map = new Flat3Map<Integer, Integer>();
+			}
+			@Override
+			int getValue( int i) {
+				final Integer value = map.get( i);
+				if ( value != null)
+					return value.intValue();
+				return 0;
+			}
+			@Override
+			void putValueAt( int value, int key) {
+				map.put( key, value);
+			}
+			@Override
+			Object getMap() {
+				return map;
+			}
 		};
 
 
@@ -212,7 +260,8 @@ public class MapBench {
 				double lruns = runner.getRunsPerSecond();
 				runner.setEmptyLoops( lruns);
 
-				MapRunnable[] benches = { hashMapBench, concHashMapBench, koloHashMapBench, koloHashMapBench2, tIntIntHashMapBench, koloHashMapBench4};
+				MapRunnable[] benches = { hashMapBench, concHashMapBench, koloHashMapBenchII, koloHashMapBenchOO,
+						 tIntIntHashMapBench, tObjObjHashMapBench, tObjObjFlatMapBench };
 				int secs = 5;
 				BenchLogger.sysinfo( "Warmup " + secs + " s");
 				runner.setRuntime( TimeUnit.SECONDS, secs);
@@ -222,7 +271,7 @@ public class MapBench {
 					runner.printResults();
 				}
 
-				int[] runSizes = { 10, 100, 1000, 10000};
+				int[] runSizes = { 2, 5, 30, 300, 3000, 30000, 30000};
 				for ( int i : runSizes) {
 					RunSize = i;
 					secs = 5;

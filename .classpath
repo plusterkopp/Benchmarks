@@ -12,7 +12,10 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/affinity-rh"/>
-	<classpathentry kind="lib" path="/affinity-rh/src/main/c"/>
+	<classpathentry kind="lib" path="lib/affinity-3.0.jar" sourcepath="lib/affinity-3.0-sources.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Benchmarks/lib"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

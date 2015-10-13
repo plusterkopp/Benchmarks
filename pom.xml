@@ -20,6 +20,21 @@
   	<groupId>net.sf.trove4j</groupId>
   	<artifactId>trove4j</artifactId>
   </dependency>
+  <dependency>
+  	<groupId>org.slf4j</groupId>
+  	<artifactId>slf4j-simple</artifactId>
+  	<version>1.7.12</version>
+  </dependency>
+  <dependency>
+  	<groupId>net.java.dev.jna</groupId>
+  	<artifactId>jna-platform</artifactId>
+  	<version>4.1.0</version>
+  </dependency>
+  <dependency>
+  	<groupId>org.apache.commons</groupId>
+  	<artifactId>commons-collections4</artifactId>
+  	<version>4.0</version>
+  </dependency>
   </dependencies>
   <scm>
   	<url>https://github.com/plusterkopp/Benchmarks.git</url>
