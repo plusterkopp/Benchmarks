@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.*;
 
 import de.icubic.mm.bench.base.*;
 import net.openhft.affinity.*;
+import net.openhft.affinity.impl.*;
 
 
 public abstract class AWorkQueue implements IWorkQueue {
@@ -50,9 +51,10 @@ public abstract class AWorkQueue implements IWorkQueue {
 			try {
 				if ( useAffinity) {
 					al = setAffinityFor( queue);
-					if ( maxQueues > 1) {
-						BenchLogger.sysinfo( AffinityLock.dumpLocks());
-					}
+					int cpu = Affinity.getCpu();
+					WindowsJNAAffinity waff = ( WindowsJNAAffinity) Affinity.getAffinityImpl();
+					WindowsCpuLayout layout = ( WindowsCpuLayout) waff.getDefaultLayout();
+					BenchLogger.sysinfo( "bound to: " + layout.lCpu( cpu));
 				}
 				workersReady.countDown();
 
