@@ -1,24 +1,37 @@
 package de.icubic.mm.bench.benches;
 
 
+import java.util.IllegalFormatFlagsException;
+import java.util.List;
 import java.util.concurrent.*;
+import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
 import java.util.concurrent.atomic.*;
+import java.util.function.IntBinaryOperator;
 
 import de.icubic.mm.bench.base.*;
+import net.openhft.affinity.Affinity;
+import net.openhft.affinity.AffinityManager;
+import net.openhft.affinity.AffinityManager.LayoutEntity;
+import net.openhft.affinity.CpuLayout;
+import net.openhft.affinity.GroupedCpuLayout;
+import net.openhft.affinity.IAffinity;
+import net.openhft.affinity.IDefaultLayoutAffinity;
+import net.openhft.affinity.impl.WindowsCpuLayout;
 
-public class FibonacciFork extends RecursiveTask<Long> {
+public class FibonacciForkAff extends RecursiveTask<Long> {
 
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public FibonacciFork( long n) {
+	public FibonacciForkAff( long n) {
 		super();
 		this.n = n;
 	}
 
-	static ForkJoinPool	fjp = new ForkJoinPool( Runtime.getRuntime().availableProcessors());
+	
+	static ForkJoinPool	fjp = new ForkJoinPool( getCPUCount(), createFJThreadFactory(), null, false);
 
 	static long	fibonacci0( long n) {
 		if ( n < 2) {
@@ -26,6 +39,61 @@ public class FibonacciFork extends RecursiveTask<Long> {
 		}
 		return fibonacci0( n - 1) + fibonacci0( n - 2);
 	}
+
+	private static ForkJoinWorkerThreadFactory createFJThreadFactory() {
+		int	bound = 1;
+		IAffinity aff = Affinity.getAffinityImpl();
+		if ( aff instanceof IDefaultLayoutAffinity) {
+			IDefaultLayoutAffinity idla = (IDefaultLayoutAffinity) aff;
+			CpuLayout cpuLayout = idla.getDefaultLayout();
+			if ( cpuLayout instanceof GroupedCpuLayout) {
+				GroupedCpuLayout gCpuLayout = (GroupedCpuLayout) cpuLayout;
+				bound = gCpuLayout.groups();
+			}
+		}
+		if ( bound == 1) {
+			return ForkJoinPool.defaultForkJoinWorkerThreadFactory;
+		}
+
+		final int thresh = bound;
+		IntBinaryOperator cycleCounter = ( a,  b) -> {
+			int	sum = a+b;
+			while ( sum >= thresh) {
+				sum -= thresh;
+			}
+			return sum;
+		};
+		AtomicInteger	threadCounter = new AtomicInteger(0);
+		AtomicInteger groupCounter = new AtomicInteger( 0);
+		ForkJoinWorkerThreadFactory	factory = new ForkJoinWorkerThreadFactory() {
+			@Override
+			public ForkJoinWorkerThread newThread(ForkJoinPool pool) {
+				ForkJoinWorkerThread t = new ForkJoinWorkerThread( pool) {
+					@Override
+					protected void onStart() {
+						super.onStart();
+						int	group = groupCounter.getAndAccumulate( 1, cycleCounter);
+						AffinityManager.INSTANCE.bindToGroup(group);
+						List<LayoutEntity> boundTo = AffinityManager.INSTANCE.getBoundTo( Thread.currentThread());
+						BenchLogger.sysinfo( Thread.currentThread()  + " #" + threadCounter.incrementAndGet() + " bound to: " + boundTo.get( 0));
+					}
+				};
+				return t;
+			}
+		};
+		return factory;
+	}
+
+	private static int getCPUCount() {
+		IAffinity aff = Affinity.getAffinityImpl();
+		if ( aff instanceof IDefaultLayoutAffinity) {
+			IDefaultLayoutAffinity idla = (IDefaultLayoutAffinity) aff;
+			CpuLayout cpuLayout = idla.getDefaultLayout();
+			return cpuLayout.cpus();
+		}
+		return 0;
+	}
+
 
 	static int	rekLimit = 8;
 
@@ -45,7 +113,7 @@ public class FibonacciFork extends RecursiveTask<Long> {
 	public static void main( String[] args) {
 
 		int fiboArg = 49;
-		BenchLogger.sysinfo( "Warmup max " + Runtime.getRuntime().availableProcessors() + " Threads");
+		BenchLogger.sysinfo( "Warmup max " + getCPUCount() + " Threads (" + Runtime.getRuntime().availableProcessors() + ")");
 		long	singleNS[] = getSingleThreadNanos( 20, 5e9);
 		BenchLogger.sysinfo( "Warmup complete");
 		singleNS = getSingleThreadNanos( fiboArg, 1e9);
@@ -126,7 +194,7 @@ public class FibonacciFork extends RecursiveTask<Long> {
 	}
 
 	static long fibonacci( final long arg) {
-		FibonacciFork	task = new FibonacciFork( arg);
+		FibonacciForkAff	task = new FibonacciForkAff( arg);
 		long result = fjp.invoke( task);
 		forks.set( task.forkCount);
 		return result;
@@ -137,8 +205,8 @@ public class FibonacciFork extends RecursiveTask<Long> {
 		if ( n <= rekLimit) {
 			return fibonacci0( n);
 		}
-		FibonacciFork	ff1 = new FibonacciFork( n-1);
-		FibonacciFork	ff2 = new FibonacciFork( n-2);
+		FibonacciForkAff	ff1 = new FibonacciForkAff( n-1);
+		FibonacciForkAff	ff2 = new FibonacciForkAff( n-2);
 		ff1.fork();
 		long	r2 = ff2.compute();
 		long	r1 = ff1.join();

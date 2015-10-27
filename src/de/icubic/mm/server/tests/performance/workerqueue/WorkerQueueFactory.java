@@ -7,8 +7,9 @@ import de.icubic.mm.server.utils.*;
 public class WorkerQueueFactory {
 
 	static enum EWorkQueueType {
+		Multi_LBQ_A,
 		DIS, DIS_A, B_DIS, B_DIS_A,
-		LBQ, LBQ_A, Multi_LBQ, Multi_LBQ_A, C_Multi_LBQ, C_Multi_LBQ_A,
+		LBQ, LBQ_A, Multi_LBQ, C_Multi_LBQ, C_Multi_LBQ_A,
 		B1_DIS, B1_DIS_A, DIS_Bo, DIS_Bo_A,
 		// Steal_LBQ, C_Steal_LBQ,
 		CLBQ, CLBQ_A, B_CLBQ, B_CLBQ_A, B1_CLBQ, B1_CLBQ_A,

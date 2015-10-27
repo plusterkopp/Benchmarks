@@ -6,11 +6,17 @@ import java.util.*;
 import java.util.concurrent.atomic.*;
 
 import de.icubic.mm.bench.base.*;
+import de.icubic.mm.server.utils.*;
+import net.openhft.affinity.*;
+import net.openhft.affinity.AffinityManager.*;
+import net.openhft.affinity.impl.*;
 
 /*
  * Assigns task to worker queue
  */
 public class WorkAssignerThread extends Thread {
+
+	static NumaNode createdOnNode;
 
 	protected final IWorkQueue workQ;
 
@@ -25,9 +31,9 @@ public class WorkAssignerThread extends Thread {
 
 	private long enqueueStartNano;
 
-	class AssignerThread extends Thread {
-		public AssignerThread( Runnable runnable, String string) {
-			super( runnable, string);
+	class AssignerThread extends AffinityThread {
+		public AssignerThread( Runnable runnable, String string, LayoutEntity bindTo) {
+			super( runnable, string, bindTo);
 		}
 
 		AtomicInteger	queuedJobCount = new AtomicInteger( 0);
@@ -49,6 +55,7 @@ public class WorkAssignerThread extends Thread {
 		threads = new AssignerThread[ numThreads];
 		final long	sizes[] = new long[ numThreads];
 		final int	block = totalTasks / numThreads;
+		NumaNode node = createdOnNode;
 		enqueueStartNano = BenchRunner.getNow();
 		for ( int t = 0;  t < numThreads;  t++) {
 			final int	ft = t;
@@ -63,7 +70,7 @@ public class WorkAssignerThread extends Thread {
 						BenchLogger.syserr( "", e);
 					}
 				}
-			}, "Assigner-" + t);
+			}, "Assigner-" + t, node);
 			threads[ t] = thread;
 			thread.start();
 		}
@@ -156,6 +163,7 @@ public class WorkAssignerThread extends Thread {
 	}
 
 	public static Task[] createTasks( int total) {
+		recordCPU();
 		Random random = new Random( 0);
 		Task[]	tasks = new Task[ total];
 		int tSize;
@@ -169,6 +177,19 @@ public class WorkAssignerThread extends Thread {
 			tasks[ i] = t;
 		}
 		return tasks;
+	}
+
+	private static void recordCPU() {
+		createdOnNode = null;
+		IAffinity aff = Affinity.getAffinityImpl();
+		if ( ! ( aff instanceof WindowsJNAAffinity)) {
+			return;
+		}
+		WindowsJNAAffinity	waff = ( WindowsJNAAffinity) aff;
+		WindowsCpuLayout layout = ( WindowsCpuLayout) waff.getDefaultLayout();
+		int cpuID = waff.getCpu();
+		int nodeId = layout.numaNodeId( cpuID);
+		createdOnNode = layout.nodes.get( nodeId);
 	}
 
 	public int getNumQueued() {
