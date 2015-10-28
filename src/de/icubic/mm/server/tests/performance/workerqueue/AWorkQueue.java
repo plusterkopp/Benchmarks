@@ -55,7 +55,7 @@ public abstract class AWorkQueue implements IWorkQueue {
 				int cpu = Affinity.getCpu();
 				WindowsJNAAffinity waff = ( WindowsJNAAffinity) Affinity.getAffinityImpl();
 				WindowsCpuLayout layout = ( WindowsCpuLayout) waff.getDefaultLayout();
-				BenchLogger.sysinfo( "bound to: " + layout.lCpu( cpu));
+				BenchLogger.sysinfo( "running on: " + layout.lCpu( cpu));
 			}
 			workersReady.countDown();
 
@@ -168,7 +168,7 @@ public abstract class AWorkQueue implements IWorkQueue {
 		}
 		if ( useAffinity) {
 			// limit to number of threads per socket if using affinity
-			int	tps = AffinityThread.getCoresPerSocket() * AffinityThread.getThreadsPerCore();
+			int	tps = AffinityThread.getThreadsPerSocket();
 			nThreads = Math.min( nThreads, tps * maxQueues);
 		}
 	}
@@ -184,7 +184,7 @@ public abstract class AWorkQueue implements IWorkQueue {
 			return am.getSocket( 0);
 		}
 		int	queueIndex = getQueueIndex( key);
-		int tps = AffinityThread.getCoresPerSocket() * AffinityThread.getThreadsPerCore();
+		int tps = AffinityThread.getThreadsPerSocket();
 		synchronized ( mapQueueToLock) {
 			AffinityManager.Socket socket  = mapQueueToLock.get( queueIndex);
 			if ( socket != null) {

@@ -213,7 +213,10 @@ public class AffinityThread extends Thread {
 		return 	AffinityLock.cpuLayout().threadsPerCore();
 	}
 
-
+	public static int getThreadsPerSocket() {
+		final CpuLayout cpuLayout = AffinityLock.cpuLayout();
+		return 	cpuLayout.threadsPerCore() * cpuLayout.coresPerSocket();
+	}
 
 	public static int getNumThreadsOnNode( NumaNode node) {
 		int	sum = 0;
@@ -221,7 +224,7 @@ public class AffinityThread extends Thread {
 		for ( int i = 0;  i < am.getNumSockets();  i++) {
 			Socket s = am.getSocket( i);
 			if ( s.getNode() == node) {
-				sum += getCoresPerSocket() * getThreadsPerCore();
+				sum += getThreadsPerSocket();
 			}
 		}
 		return sum;
@@ -233,8 +236,6 @@ public class AffinityThread extends Thread {
 		if ( ! ( aff instanceof WindowsJNAAffinity)) {
 			return collected;
 		}
-		WindowsJNAAffinity waff = ( WindowsJNAAffinity) aff;
-		WindowsCpuLayout layout = ( WindowsCpuLayout) waff.getDefaultLayout();
 		Consumer<LayoutEntity> collector = ( entity) -> {
 			Collection<Thread> threads = entity.getThreads();
 			if ( threads != null && ! threads.isEmpty()) {
@@ -243,9 +244,7 @@ public class AffinityThread extends Thread {
 				collected.put( entity, sorted);
 			}
 		};
-		layout.nodes.forEach( collector);
-		layout.packages.forEach( collector);
-		layout.cores.forEach( collector);
+		AffinityManager.INSTANCE.visitEntities( collector);
 		return collected;
 	}
 
@@ -254,6 +253,29 @@ public class AffinityThread extends Thread {
 		Map<String, Collection<Thread>> result = new HashMap<>();
 		affinities.forEach( ( entity, threads) -> result.put( entity.getLocation(), threads));
 		return result;
+	}
+
+
+
+	public static int getNumNodes() {
+		IAffinity aff = Affinity.getAffinityImpl();
+		if ( ! ( aff instanceof WindowsJNAAffinity)) {
+			return 1;
+		}
+		WindowsJNAAffinity waff = ( WindowsJNAAffinity) aff;
+		WindowsCpuLayout layout = ( WindowsCpuLayout) waff.getDefaultLayout();
+		return layout.numaNodes();
+	}
+
+	public static NumaNode getOtherNode( NumaNode node) {
+		NumaNode[] nodeA = new NumaNode[ 1];
+		nodeA[ 0] = null;
+		AffinityManager.INSTANCE.visitEntities( ( entity) -> {
+			if ( ( entity instanceof NumaNode) && node != entity) {
+				nodeA[ 0] = ( NumaNode) entity;
+			}
+		});
+		return nodeA[ 0];
 	}
 
 }

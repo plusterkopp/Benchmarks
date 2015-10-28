@@ -302,7 +302,7 @@ public class DisruptorQueue implements IWorkQueue {
 
 	@Override
 	public int getNumAssignerThreads() {
-		int	cores = AffinityManager.INSTANCE.getNumSockets() * AffinityThread.getCoresPerSocket();
+		int	cores = AffinityManager.INSTANCE.getNumSockets() * AffinityThread.getThreadsPerSocket();
 		if ( cores > 1) {
 			int	nt = getNumQueues();
 			nt = Math.min( nt,  cores / 2);

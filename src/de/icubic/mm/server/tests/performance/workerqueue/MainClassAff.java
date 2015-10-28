@@ -63,7 +63,7 @@ public class MainClassAff {
 		tasks = WorkAssignerThread.createTasks( totalTasks);
 		BenchLogger.sysinfo( "Creating " + lnf.format( totalTasks) + " jobs finished on node " + WorkAssignerThread.createdOnNode);
 		BenchLogger.sysout( "warmup");
-		getRawSpeed( tasks, 5, 1, 100);
+		getRawSpeed( tasks, 5, 1, 100, false);
 
 		ProblemSizer	ps = new ProblemSizer( tasks);
 		ps.setProblemSize( jobSizeNS);
@@ -75,21 +75,23 @@ public class MainClassAff {
 		writer.put( "Ops/Job", String.format( Locale.GERMANY, "%e", ( double) ops / tasks.length));
 
 		BenchLogger.sysinfo( "warmup 2");
-		getRawSpeed( tasks, 20, 1, 1000);
+		getRawSpeed( tasks, 20, 1, 1000, false);
 		BenchLogger.sysout( "estimate single thread");
-		singleSpeed = getRawSpeed( tasks, 10, 1, 10000);
-		double nSpeed = getRawSpeed( tasks, 10, nThreads, 10000);
+		singleSpeed = getRawSpeed( tasks, 10, 1, 10000, false);
+		double nSpeed = getRawSpeed( tasks, 10, nThreads, 10000, false);
 		secsPerJobNSpeed = 1 / nSpeed;
 		BenchLogger.sysout( "Max Speedup: " + dnf.format( nSpeed / singleSpeed));
-		double nSocketSpeed = getRawSpeed( tasks, 10, AffinityThread.getCoresPerSocket() * AffinityThread.getThreadsPerCore(), 10000);
+		double nSocketSpeed = getRawSpeed( tasks, 10, AffinityThread.getThreadsPerSocket(), 10000, false);
 		secsPerJobSocketSpeed = 1 / nSocketSpeed;
-		BenchLogger.sysout( "Socket Speedup: " + dnf.format( nSocketSpeed / singleSpeed));
+		BenchLogger.sysout( "Node Speedup: " + dnf.format( nSocketSpeed / singleSpeed));
+		double nOtherSocketSpeed = getRawSpeed( tasks, 10, AffinityThread.getThreadsPerSocket(), 10000, true);
+		BenchLogger.sysout( "Other Node Speedup: " + dnf.format( nOtherSocketSpeed / singleSpeed));
 		if ( AffinityThread.getThreadsPerCore() > 1) {
-			double nHalfSpeed = getRawSpeed( tasks, 10, nThreads / 2, 10000);
+			double nHalfSpeed = getRawSpeed( tasks, 10, nThreads / 2, 10000, false);
 			secsPerJobNHalfSpeed = 1 / nHalfSpeed;
 			BenchLogger.sysout( "Half Speedup: " + dnf.format( nHalfSpeed / singleSpeed));
 		}
-		double nMinusOneSpeed = getRawSpeed( tasks, 10, nThreads - 1, 10000);
+		double nMinusOneSpeed = getRawSpeed( tasks, 10, nThreads - 1, 10000, false);
 		secsPerJobNMinusOneSpeed = 1 / nMinusOneSpeed;
 		BenchLogger.sysout( "MinusOne Speedup: " + dnf.format( nMinusOneSpeed / singleSpeed));
 		writer.put( "Single", String.format( Locale.GERMANY, "%e", singleSpeed));
@@ -117,7 +119,7 @@ public class MainClassAff {
 		BenchLogger.sysout( "\n" + writer.asString());
 	}
 
-	private static double getRawSpeed( final Task[] tasks, final int runTimeS, int nThreads, int batchSizeArg) {
+	private static double getRawSpeed( final Task[] tasks, final int runTimeS, int nThreads, int batchSizeArg, boolean useOtherNode) {
 		final int		width = tasks.length / nThreads;
 		final int		batchSize = Math.min( batchSizeArg, width);
 
@@ -159,7 +161,11 @@ public class MainClassAff {
 			};
 			AffinityManager.NumaNode node = null;
 			if ( nThreads <= AffinityThread.getNumThreadsOnNode( WorkAssignerThread.createdOnNode)) {
-				node = WorkAssignerThread.createdOnNode;
+				if ( useOtherNode && AffinityThread.getNumNodes() > 1) {
+					node = AffinityThread.getOtherNode( node);
+				} else {
+					node = WorkAssignerThread.createdOnNode;
+				}
 			}
 			threads[ t] = new AffinityThread( r, "RawSpeed " + t + "/" + nThreads, node);
 			threads[ t].start();
@@ -235,7 +241,7 @@ public class MainClassAff {
 			double secsPerJobExpected;
 			if ( numThreadsActual == nThreads) {
 				secsPerJobExpected = secsPerJobNSpeed;
-			} else if ( numThreadsActual == AffinityThread.getCoresPerSocket() * AffinityThread.getThreadsPerCore()) {
+			} else if ( numThreadsActual == AffinityThread.getThreadsPerSocket()) {
 				secsPerJobExpected = secsPerJobSocketSpeed;
 			} else if ( numThreadsActual == nThreads / 2) {
 				secsPerJobExpected = secsPerJobNHalfSpeed;

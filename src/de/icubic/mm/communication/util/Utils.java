@@ -1,4 +1,4 @@
-﻿package de.icubic.mm.communication.util;
+package de.icubic.mm.communication.util;
 
 import java.io.*;
 import java.net.*;
