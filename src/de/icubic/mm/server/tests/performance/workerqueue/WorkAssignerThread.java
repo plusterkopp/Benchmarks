@@ -58,19 +58,19 @@ public class WorkAssignerThread extends Thread {
 		NumaNode node = createdOnNode;
 		enqueueStartNano = BenchRunner.getNow();
 		for ( int t = 0;  t < numThreads;  t++) {
-			final int	ft = t;
+			final int	threadIndex = t;
 			AssignerThread	thread = new AssignerThread( new Runnable() {
-				final int	start = block * ft;
+				final int	start = block * threadIndex;
 				@Override
 				public void run() {
 					try {
 						workQ.waitForWorkersCreated();
-						assignBlock( start, start+block, ft, sizes, jobsPerSecond / numThreads);
+						assignBlock( start, start+block, threadIndex, sizes, jobsPerSecond / numThreads);
 					} catch ( InterruptedException e) {
 						BenchLogger.syserr( "", e);
 					}
 				}
-			}, "Assigner-" + t, node);
+			}, "Assigner-" + t, workQ.getLayoutEntityFor( threadIndex));
 			threads[ t] = thread;
 			thread.start();
 		}

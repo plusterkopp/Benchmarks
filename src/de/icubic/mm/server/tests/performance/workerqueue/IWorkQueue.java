@@ -2,9 +2,11 @@ package de.icubic.mm.server.tests.performance.workerqueue;
 
 import java.util.concurrent.*;
 
+import net.openhft.affinity.AffinityManager.*;
+
 public interface IWorkQueue {
 
-	public abstract void startAllThreads(String id) throws InterruptedException;
+	public  void startAllThreads(String id) throws InterruptedException;
 
 	public int stopWhenAllTaskFinished( String id);
 
@@ -12,16 +14,18 @@ public interface IWorkQueue {
 
 	public BlockingQueue<Runnable> createQueue();
 
-	public abstract int getBatchCount();
+	public  int getBatchCount();
 
-	public abstract int getNumQueues();
+	public  int getNumQueues();
 
-	public abstract WorkAssignerThread newAssignerThread( Task[] tasks, long assignJobsPerSec);
+	public  WorkAssignerThread newAssignerThread( Task[] tasks, long assignJobsPerSec);
 
-	public abstract int getNumAssignerThreads();
+	public  int getNumAssignerThreads();
 
-	public abstract int getNumThreads();
+	public  int getNumThreads();
 
-	public abstract void waitForWorkersCreated() throws InterruptedException;
+	public  void waitForWorkersCreated() throws InterruptedException;
+
+	public  LayoutEntity getLayoutEntityFor( int threadIndex);
 
 }

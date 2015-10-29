@@ -8,8 +8,7 @@ import org.apache.commons.math3.analysis.solvers.*;
 import org.apache.commons.math3.exception.*;
 
 import de.icubic.mm.bench.base.*;
-import de.icubic.mm.communication.util.Utils.MutableInteger;
-import de.icubic.mm.communication.util.Utils.MutableLong;
+import de.icubic.mm.communication.util.Utils.*;
 
 public class ProblemSizer {
 
@@ -60,7 +59,7 @@ public class ProblemSizer {
 			public double value( double pSize) {
 				// setup tasks, using pSize as upper bound for random to pseudo random get Matrix Size
 				fillTasks( tasks, pSize);
-				System.gc();
+//				System.gc();
 				double runTimeMS;
 				if ( Math.abs( mResult.longValue()) > avgNS * 0.8) {
 					runTimeMS = 0.1;

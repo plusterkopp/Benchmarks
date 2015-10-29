@@ -3,6 +3,7 @@ package de.icubic.mm.server.tests.performance.workerqueue;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
+import java.util.stream.*;
 
 import de.icubic.mm.bench.base.*;
 import de.icubic.mm.server.utils.*;
@@ -48,15 +49,14 @@ public abstract class AWorkQueue implements IWorkQueue {
 		@Override
 		public void run() {
 			BlockingQueue<Runnable> queue = getQueue();
-			AffinityManager.LayoutEntity boundTo = null;
 
 			if ( useAffinity) {
-				boundTo = setAffinityFor( queue);
-				int cpu = Affinity.getCpu();
-				WindowsJNAAffinity waff = ( WindowsJNAAffinity) Affinity.getAffinityImpl();
-				WindowsCpuLayout layout = ( WindowsCpuLayout) waff.getDefaultLayout();
-				BenchLogger.sysinfo( "running on: " + layout.lCpu( cpu));
+				setAffinityFor( queue);
 			}
+			int cpu = Affinity.getCpu();
+			WindowsJNAAffinity waff = ( WindowsJNAAffinity) Affinity.getAffinityImpl();
+			WindowsCpuLayout layout = ( WindowsCpuLayout) waff.getDefaultLayout();
+			BenchLogger.sysinfo( Thread.currentThread().getName() + " running on: " + layout.lCpu( cpu));
 			workersReady.countDown();
 
 			if ( isBatched()) {
@@ -185,43 +185,16 @@ public abstract class AWorkQueue implements IWorkQueue {
 		}
 		int	queueIndex = getQueueIndex( key);
 		int tps = AffinityThread.getThreadsPerSocket();
-		synchronized ( mapQueueToLock) {
-			AffinityManager.Socket socket  = mapQueueToLock.get( queueIndex);
-			if ( socket != null) {
-				if ( socket.getThreads().size() - 1 > tps) {
-					am.bindToSocket( socket);
-					List<LayoutEntity> boundTo = am.getBoundTo( Thread.currentThread());
-//					final String lockInfo = boundTo.toString() + " for " + key;
-					LayoutEntity first = boundTo.size() == 1 ? boundTo.get( 0) : null;
-					if ( first != null) {
-						String loc = first.getLocation();
-						BenchLogger.sysinfo( "Q " + queueIndex + " Bound To " + loc);
-					} else {
-						BenchLogger.sysinfo( "Q " + queueIndex + " Did not bind: Q" + queueIndex);
-					}
-					return socket;
-				}
-				BenchLogger.sysinfo( "Q " + queueIndex + " Did not bind: Q" + queueIndex + " (socket " + socket + " full)");
-				return null;
-			}
-			// none found for queue or found, but full: find another one
-			Socket nextFree = null;
-			for ( int i = 0;  nextFree == null && i < am.getNumSockets();  i++) {
-				Socket s = am.getSocket( i);
-				if ( s.getThreads().isEmpty()) {
-					nextFree = s;
-				}
-			}
-			if ( nextFree == null) {
-				// no socket free: so not bind
-				BenchLogger.sysinfo( "No Free Socket for Q " + queueIndex + " Did not bind: Q" + queueIndex + " bound: " + AffinityThread.getBoundLocations());
-				return null;
-			}
-			am.bindToSocket( nextFree);
-			mapQueueToLock.put( key, nextFree);
-			BenchLogger.sysinfo( "Reserved new Socket: " + nextFree + " for Q" + queueIndex);
-			return nextFree;
+		LayoutEntity socket = getLayoutEntityFor( queueIndex);
+		final List<Thread> threadsOnSocket = socket.getThreads();
+		if ( threadsOnSocket.size() < tps) {
+			socket.bind();
+			BenchLogger.sysinfo( "Q " + queueIndex + " Bound To " + AffinityThread.getBoundTo());
+			return socket;
 		}
+		final List<String> threadList = threadsOnSocket.stream().map( ( t) ->  t.getName()).collect( Collectors.toList());
+		BenchLogger.sysinfo( "Q " + queueIndex + " Did not bind: Q" + queueIndex + ", socket " + socket + " full: " + threadList);
+		return null;
 	}
 
 	@Override
@@ -401,6 +374,13 @@ public abstract class AWorkQueue implements IWorkQueue {
 			workersReady.await();
 		}
 	}
+
+	@Override
+	public LayoutEntity getLayoutEntityFor( int threadIndex) {
+		int socketIndex = threadIndex % AffinityManager.INSTANCE.getNumSockets();
+		return AffinityManager.INSTANCE.getSocket( socketIndex);
+	}
+
 
 
 }

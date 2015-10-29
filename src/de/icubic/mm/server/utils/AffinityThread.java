@@ -5,7 +5,9 @@ package de.icubic.mm.server.utils;
 
 import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
+import de.icubic.mm.bench.base.*;
 import net.openhft.affinity.*;
 import net.openhft.affinity.AffinityManager.*;
 import net.openhft.affinity.impl.*;
@@ -111,6 +113,7 @@ public class AffinityThread extends Thread {
 			@Override
 			public void run() {
 				bindTo.bind();
+				BenchLogger.sysinfo( "bound " + Thread.currentThread().getName() + " to " + bindTo.getLocation());
 				target.run();
 			}
 		};
@@ -248,10 +251,15 @@ public class AffinityThread extends Thread {
 		return collected;
 	}
 
-	public static Map<String, Collection<Thread>> getBoundLocations() {
+	public static Map<String, Collection<String>> getBoundLocations() {
 		Map<LayoutEntity, Collection<Thread>> affinities = getAffinities();
-		Map<String, Collection<Thread>> result = new HashMap<>();
-		affinities.forEach( ( entity, threads) -> result.put( entity.getLocation(), threads));
+		Map<String, Collection<String>> result = new HashMap<>();
+		Function<Thread, String> mapper = ( t) -> t.getName();
+		affinities.forEach( ( entity, threads) ->
+			result.put( entity.getLocation(),
+					threads.stream()
+						.map( mapper)
+						.collect( Collectors.toList())));
 		return result;
 	}
 
@@ -276,6 +284,18 @@ public class AffinityThread extends Thread {
 			}
 		});
 		return nodeA[ 0];
+	}
+
+
+
+	public static String getBoundTo() {
+		List<LayoutEntity> boundTo = AffinityManager.INSTANCE .getBoundTo( Thread.currentThread());
+		LayoutEntity first = boundTo.size() == 1 ? boundTo.get( 0) : null;
+		if ( first != null) {
+			String loc = first.getLocation();
+			return loc;
+		}
+		return "none";
 	}
 
 }

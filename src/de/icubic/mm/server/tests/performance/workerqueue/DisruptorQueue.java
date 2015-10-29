@@ -361,4 +361,9 @@ public class DisruptorQueue implements IWorkQueue {
 		}
 	}
 
+	@Override
+	public LayoutEntity getLayoutEntityFor( int threadIndex) {
+		return null;
+	}
+
 }
