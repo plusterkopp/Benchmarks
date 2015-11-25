@@ -7,7 +7,6 @@ import java.util.*;
 import java.util.function.*;
 import java.util.stream.*;
 
-import de.icubic.mm.bench.base.*;
 import net.openhft.affinity.*;
 import net.openhft.affinity.AffinityManager.*;
 import net.openhft.affinity.impl.*;
@@ -109,11 +108,15 @@ public class AffinityThread extends Thread {
 		if ( bindTo == null) {
 			return target;
 		}
+		if ( ( bindTo instanceof Socket) && AffinityManager.INSTANCE.getNumSockets() == 1) {
+			return target;
+		}
+
 		Runnable	bindingRunnable = new Runnable() {
 			@Override
 			public void run() {
 				bindTo.bind();
-				BenchLogger.sysinfo( "bound " + Thread.currentThread().getName() + " to " + bindTo.getLocation());
+//				BenchLogger.sysinfo( "bound " + Thread.currentThread().getName() + " to " + bindTo.getLocation());
 				target.run();
 			}
 		};

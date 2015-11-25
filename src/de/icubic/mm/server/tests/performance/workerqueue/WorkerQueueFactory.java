@@ -7,16 +7,19 @@ import de.icubic.mm.server.utils.*;
 public class WorkerQueueFactory {
 
 	static enum EWorkQueueType {
-		Multi_LBQ_A,
-		DIS, DIS_A, B_DIS, B_DIS_A,
-		LBQ, LBQ_A, Multi_LBQ, C_Multi_LBQ, C_Multi_LBQ_A,
-		B1_DIS, B1_DIS_A, DIS_Bo, DIS_Bo_A,
+		LTQ, LTQ_A, LTQ_B, LTQ_AB, LTQ_B1, LTQ_AB1,
+		LTQ_M, LTQ_AM, LTQ_MC, LTQ_AMC,
+		LTQ_BM, LTQ_ABM, LTQ_BMC, LTQ_ABMC,
+
+		DIS, DIS_A, DIS_B, DIS_AB,
+		LBQ, LBQ_A, LBQ_M, LBQ_AM, LBQ_MC, LBQ_AMC,
+		DIS_B1, DIS_AB1, DIS_Bo, DIS_ABo,
 		// Steal_LBQ, C_Steal_LBQ,
-		CLBQ, CLBQ_A, B_CLBQ, B_CLBQ_A, B1_CLBQ, B1_CLBQ_A,
-		Multi_CLBQ, Multi_CLBQ_A, C_Multi_CLBQ, C_Multi_CLBQ_A,
-		B_Multi_CLBQ, B_Multi_CLBQ_A, CB_Multi_CLBQ, CB_Multi_CLBQ_A,
-		ABQ, ABQ_A, B_ABQ, B_ABQ_A, B1_ABQ, B1_ABQ_A, Multi_ABQ, Multi_ABQ_A,
-		C_Multi_ABQ, C_Multi_ABQ_A, B_Multi_ABQ, B_Multi_ABQ_A, CB_Multi_ABQ, CB_Multi_ABQ_A,
+		CLBQ, CLBQ_A, CLBQ_B, CLBQ_AB, CLBQ_B1, CLBQ_AB1,
+		CLBQ_M, CLBQ_AM, CLBQ_MC, CLBQ_AMC,
+		CLBQ_BM, CLBQ_ABM, CLBQ_BMC, CLBQ_ABMC,
+		ABQ, ABQ_A, B_ABQ, B_ABQ_A, B1_ABQ, B1_ABQ_A, ABQ_M, ABQ_AM,
+		ABQ_MC, ABQ_AMC, ABQ_BM, ABQ_ABM, ABQ_BMC, ABQ_ABMC,
 	}
 
 	public static IWorkQueue getWorkQueue( EWorkQueueType type, int nthreads, final int nQueues, final int totalTasks) {
@@ -28,17 +31,17 @@ public class WorkerQueueFactory {
 			return new DisruptorQueue( nthreads, nQueues, totalTasks, false, totalTasks);
 		case DIS_A:
 			return new DisruptorQueue( nthreads, nQueues, totalTasks, false, totalTasks, true);
-		case B_DIS:
+		case DIS_B:
 			return new DisruptorQueue( nthreads, nQueues, totalTasks, true, totalTasks);
-		case B_DIS_A:
+		case DIS_AB:
 			return new DisruptorQueue( nthreads, nQueues, totalTasks, true, totalTasks, true);
-		case B1_DIS:
+		case DIS_B1:
 			return new DisruptorQueue( 1, nQueues, totalTasks, true, totalTasks);
-		case B1_DIS_A:
+		case DIS_AB1:
 			return new DisruptorQueue( 1, nQueues, totalTasks, true, totalTasks, true);
 		case DIS_Bo:
 			return new DisruptorQueue( nthreads, nQueues, totalTasks, false, 100000);
-		case DIS_Bo_A:
+		case DIS_ABo:
 			return new DisruptorQueue( nthreads, nQueues, totalTasks, false, 100000, true);
 		case LBQ:
 			return new SimpleWorkQueue( nthreads, totalTasks, false, false) {
@@ -54,21 +57,21 @@ public class WorkerQueueFactory {
 					return new LinkedBlockingQueue<Runnable>();
 				}
 			};
-		case Multi_LBQ:
+		case LBQ_M:
 			return new MultiWorkQueue( nthreads, nQueues, totalTasks, false, false) {
 				@Override
 				public BlockingQueue<Runnable> createQueue() {
 					return new LinkedBlockingQueue<Runnable>();
 				}
 			};
-		case Multi_LBQ_A:
+		case LBQ_AM:
 			return new MultiWorkQueue( nthreads, nQueues, totalTasks, false, true) {
 				@Override
 				public BlockingQueue<Runnable> createQueue() {
 					return new LinkedBlockingQueue<Runnable>();
 				}
 			};
-		case C_Multi_LBQ:
+		case LBQ_MC:
 			if ( nQ1pCore == nQueues)
 				return null;
 			return new MultiWorkQueue( nthreads, nQ1pCore, totalTasks, false, false) {
@@ -77,7 +80,7 @@ public class WorkerQueueFactory {
 					return new LinkedBlockingQueue<Runnable>();
 				}
 			};
-		case C_Multi_LBQ_A:
+		case LBQ_AMC:
 			if ( nQ1pCore == nQueues)
 				return null;
 			return new MultiWorkQueue( nthreads, nQ1pCore, totalTasks, false, true) {
@@ -106,21 +109,21 @@ public class WorkerQueueFactory {
 					return new ConcurrentLinkedBlockingQueue<Runnable>();
 				}
 			};
-		case Multi_CLBQ:
+		case CLBQ_M:
 			return new MultiWorkQueue( nthreads, nQueues, totalTasks, false, false) {
 				@Override
 				public BlockingQueue<Runnable> createQueue() {
 					return new ConcurrentLinkedBlockingQueue<Runnable>();
 				}
 			};
-		case Multi_CLBQ_A:
+		case CLBQ_AM:
 			return new MultiWorkQueue( nthreads, nQueues, totalTasks, false, true) {
 				@Override
 				public BlockingQueue<Runnable> createQueue() {
 					return new ConcurrentLinkedBlockingQueue<Runnable>();
 				}
 			};
-		case C_Multi_CLBQ:
+		case CLBQ_MC:
 			if ( nQ1pCore == nQueues)
 				return null;
 			return new MultiWorkQueue( nthreads, nQ1pCore, totalTasks, false, false) {
@@ -129,13 +132,179 @@ public class WorkerQueueFactory {
 					return new ConcurrentLinkedBlockingQueue<Runnable>();
 				}
 			};
-		case C_Multi_CLBQ_A:
+		case CLBQ_AMC:
 			if ( nQ1pCore == nQueues)
 				return null;
 			return new MultiWorkQueue( nthreads, nQ1pCore, totalTasks, false, true) {
 				@Override
 				public BlockingQueue<Runnable> createQueue() {
 					return new ConcurrentLinkedBlockingQueue<Runnable>();
+				}
+			};
+		case CLBQ_B:
+			return new SimpleWorkQueue( nthreads, totalTasks, true, false) {
+				@Override
+				public BlockingQueue<Runnable> createQueue() {
+					return new ConcurrentLinkedBlockingQueue<Runnable>();
+				}
+			};
+		case CLBQ_AB:
+			return new SimpleWorkQueue( nthreads, totalTasks, true, true) {
+				@Override
+				public BlockingQueue<Runnable> createQueue() {
+					return new ConcurrentLinkedBlockingQueue<Runnable>();
+				}
+			};
+		case CLBQ_B1:
+			return new SimpleWorkQueue( 1, totalTasks, true, false) {
+				@Override
+				public BlockingQueue<Runnable> createQueue() {
+					return new ConcurrentLinkedBlockingQueue<Runnable>();
+				}
+			};
+		case CLBQ_AB1:
+			return new SimpleWorkQueue( 1, totalTasks, true, true) {
+				@Override
+				public BlockingQueue<Runnable> createQueue() {
+					return new ConcurrentLinkedBlockingQueue<Runnable>();
+				}
+			};
+		case CLBQ_BM:
+			return new MultiWorkQueue( nthreads, nQueues, totalTasks, true, false) {
+				@Override
+				public BlockingQueue<Runnable> createQueue() {
+					return new ConcurrentLinkedBlockingQueue<Runnable>();
+				}
+			};
+		case CLBQ_ABM:
+			return new MultiWorkQueue( nthreads, nQueues, totalTasks, true, true) {
+				@Override
+				public BlockingQueue<Runnable> createQueue() {
+					return new ConcurrentLinkedBlockingQueue<Runnable>();
+				}
+			};
+		case CLBQ_BMC:
+			if ( nQ1pCore == nQueues)
+				return null;
+			return new MultiWorkQueue( nthreads, nQ1pCore, totalTasks, true, false) {
+				@Override
+				public BlockingQueue<Runnable> createQueue() {
+					return new ConcurrentLinkedBlockingQueue<Runnable>();
+				}
+			};
+		case CLBQ_ABMC:
+			if ( nQ1pCore == nQueues)
+				return null;
+			return new MultiWorkQueue( nthreads, nQ1pCore, totalTasks, true, true) {
+				@Override
+				public BlockingQueue<Runnable> createQueue() {
+					return new ConcurrentLinkedBlockingQueue<Runnable>();
+				}
+			};
+		case LTQ:
+			return new SimpleWorkQueue( nthreads, totalTasks, false, false) {
+				@Override
+				public BlockingQueue<Runnable> createQueue() {
+					return new LinkedTransferQueue<Runnable>();
+				}
+			};
+		case LTQ_A:
+			return new SimpleWorkQueue( nthreads, totalTasks, false, true) {
+				@Override
+				public BlockingQueue<Runnable> createQueue() {
+					return new LinkedTransferQueue<Runnable>();
+				}
+			};
+		case LTQ_M:
+			return new MultiWorkQueue( nthreads, nQueues, totalTasks, false, false) {
+				@Override
+				public BlockingQueue<Runnable> createQueue() {
+					return new LinkedTransferQueue<Runnable>();
+				}
+			};
+		case LTQ_AM:
+			return new MultiWorkQueue( nthreads, nQueues, totalTasks, false, true) {
+				@Override
+				public BlockingQueue<Runnable> createQueue() {
+					return new LinkedTransferQueue<Runnable>();
+				}
+			};
+		case LTQ_MC:
+			if ( nQ1pCore == nQueues)
+				return null;
+			return new MultiWorkQueue( nthreads, nQ1pCore, totalTasks, false, false) {
+				@Override
+				public BlockingQueue<Runnable> createQueue() {
+					return new LinkedTransferQueue<Runnable>();
+				}
+			};
+		case LTQ_AMC:
+			if ( nQ1pCore == nQueues)
+				return null;
+			return new MultiWorkQueue( nthreads, nQ1pCore, totalTasks, false, true) {
+				@Override
+				public BlockingQueue<Runnable> createQueue() {
+					return new LinkedTransferQueue<Runnable>();
+				}
+			};
+		case LTQ_B:
+			return new SimpleWorkQueue( nthreads, totalTasks, true, false) {
+				@Override
+				public BlockingQueue<Runnable> createQueue() {
+					return new LinkedTransferQueue<Runnable>();
+				}
+			};
+		case LTQ_AB:
+			return new SimpleWorkQueue( nthreads, totalTasks, true, true) {
+				@Override
+				public BlockingQueue<Runnable> createQueue() {
+					return new LinkedTransferQueue<Runnable>();
+				}
+			};
+		case LTQ_B1:
+			return new SimpleWorkQueue( 1, totalTasks, true, false) {
+				@Override
+				public BlockingQueue<Runnable> createQueue() {
+					return new LinkedTransferQueue<Runnable>();
+				}
+			};
+		case LTQ_AB1:
+			return new SimpleWorkQueue( 1, totalTasks, true, true) {
+				@Override
+				public BlockingQueue<Runnable> createQueue() {
+					return new LinkedTransferQueue<Runnable>();
+				}
+			};
+		case LTQ_BM:
+			return new MultiWorkQueue( nthreads, nQueues, totalTasks, true, false) {
+				@Override
+				public BlockingQueue<Runnable> createQueue() {
+					return new LinkedTransferQueue<Runnable>();
+				}
+			};
+		case LTQ_ABM:
+			return new MultiWorkQueue( nthreads, nQueues, totalTasks, true, true) {
+				@Override
+				public BlockingQueue<Runnable> createQueue() {
+					return new LinkedTransferQueue<Runnable>();
+				}
+			};
+		case LTQ_BMC:
+			if ( nQ1pCore == nQueues)
+				return null;
+			return new MultiWorkQueue( nthreads, nQ1pCore, totalTasks, true, false) {
+				@Override
+				public BlockingQueue<Runnable> createQueue() {
+					return new LinkedTransferQueue<Runnable>();
+				}
+			};
+		case LTQ_ABMC:
+			if ( nQ1pCore == nQueues)
+				return null;
+			return new MultiWorkQueue( nthreads, nQ1pCore, totalTasks, true, true) {
+				@Override
+				public BlockingQueue<Runnable> createQueue() {
+					return new LinkedTransferQueue<Runnable>();
 				}
 			};
 		case ABQ:
@@ -152,21 +321,21 @@ public class WorkerQueueFactory {
 					return new ArrayBlockingQueue<Runnable>( totalTasks);
 				}
 			};
-		case Multi_ABQ:
+		case ABQ_M:
 			return new MultiWorkQueue( nthreads, nQueues, totalTasks, false, false) {
 				@Override
 				public BlockingQueue<Runnable> createQueue() {
 					return new ArrayBlockingQueue<Runnable>( totalTasks / nQueues);
 				}
 			};
-		case Multi_ABQ_A:
+		case ABQ_AM:
 			return new MultiWorkQueue( nthreads, nQueues, totalTasks, false, true) {
 				@Override
 				public BlockingQueue<Runnable> createQueue() {
 					return new ArrayBlockingQueue<Runnable>( totalTasks / nQueues);
 				}
 			};
-		case C_Multi_ABQ:
+		case ABQ_MC:
 			if ( nQ1pCore == nQueues)
 				return null;
 			return new MultiWorkQueue( nthreads, nQ1pCore, totalTasks, false, false) {
@@ -175,73 +344,13 @@ public class WorkerQueueFactory {
 					return new ArrayBlockingQueue<Runnable>( totalTasks / nQueues);
 				}
 			};
-		case C_Multi_ABQ_A:
+		case ABQ_AMC:
 			if ( nQ1pCore == nQueues)
 				return null;
 			return new MultiWorkQueue( nthreads, nQ1pCore, totalTasks, false, true) {
 				@Override
 				public BlockingQueue<Runnable> createQueue() {
 					return new ArrayBlockingQueue<Runnable>( totalTasks / nQueues);
-				}
-			};
-		case B_CLBQ:
-			return new SimpleWorkQueue( nthreads, totalTasks, true, false) {
-				@Override
-				public BlockingQueue<Runnable> createQueue() {
-					return new ConcurrentLinkedBlockingQueue<Runnable>();
-				}
-			};
-		case B_CLBQ_A:
-			return new SimpleWorkQueue( nthreads, totalTasks, true, true) {
-				@Override
-				public BlockingQueue<Runnable> createQueue() {
-					return new ConcurrentLinkedBlockingQueue<Runnable>();
-				}
-			};
-		case B1_CLBQ:
-			return new SimpleWorkQueue( 1, totalTasks, true, false) {
-				@Override
-				public BlockingQueue<Runnable> createQueue() {
-					return new ConcurrentLinkedBlockingQueue<Runnable>();
-				}
-			};
-		case B1_CLBQ_A:
-			return new SimpleWorkQueue( 1, totalTasks, true, true) {
-				@Override
-				public BlockingQueue<Runnable> createQueue() {
-					return new ConcurrentLinkedBlockingQueue<Runnable>();
-				}
-			};
-		case B_Multi_CLBQ:
-			return new MultiWorkQueue( nthreads, nQueues, totalTasks, true, false) {
-				@Override
-				public BlockingQueue<Runnable> createQueue() {
-					return new ConcurrentLinkedBlockingQueue<Runnable>();
-				}
-			};
-		case B_Multi_CLBQ_A:
-			return new MultiWorkQueue( nthreads, nQueues, totalTasks, true, true) {
-				@Override
-				public BlockingQueue<Runnable> createQueue() {
-					return new ConcurrentLinkedBlockingQueue<Runnable>();
-				}
-			};
-		case CB_Multi_CLBQ:
-			if ( nQ1pCore == nQueues)
-				return null;
-			return new MultiWorkQueue( nthreads, nQ1pCore, totalTasks, true, false) {
-				@Override
-				public BlockingQueue<Runnable> createQueue() {
-					return new ConcurrentLinkedBlockingQueue<Runnable>();
-				}
-			};
-		case CB_Multi_CLBQ_A:
-			if ( nQ1pCore == nQueues)
-				return null;
-			return new MultiWorkQueue( nthreads, nQ1pCore, totalTasks, true, true) {
-				@Override
-				public BlockingQueue<Runnable> createQueue() {
-					return new ConcurrentLinkedBlockingQueue<Runnable>();
 				}
 			};
 		case B_ABQ:
@@ -272,21 +381,21 @@ public class WorkerQueueFactory {
 					return new ArrayBlockingQueue<Runnable>( totalTasks);
 				}
 			};
-		case B_Multi_ABQ:
+		case ABQ_BM:
 			return new MultiWorkQueue( nthreads, nQueues, totalTasks, true, false) {
 				@Override
 				public BlockingQueue<Runnable> createQueue() {
 					return new ArrayBlockingQueue<Runnable>( totalTasks / nQueues);
 				}
 			};
-		case B_Multi_ABQ_A:
+		case ABQ_ABM:
 			return new MultiWorkQueue( nthreads, nQueues, totalTasks, true, true) {
 				@Override
 				public BlockingQueue<Runnable> createQueue() {
 					return new ArrayBlockingQueue<Runnable>( totalTasks / nQueues);
 				}
 			};
-		case CB_Multi_ABQ:
+		case ABQ_BMC:
 			if ( nQ1pCore == nQueues)
 				return null;
 			return new MultiWorkQueue( nthreads, nQ1pCore, totalTasks, true, false) {
@@ -295,7 +404,7 @@ public class WorkerQueueFactory {
 					return new ArrayBlockingQueue<Runnable>( totalTasks / nQueues);
 				}
 			};
-		case CB_Multi_ABQ_A:
+		case ABQ_ABMC:
 			if ( nQ1pCore == nQueues)
 				return null;
 			return new MultiWorkQueue( nthreads, nQ1pCore, totalTasks, true, true) {

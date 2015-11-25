@@ -28,4 +28,6 @@ public interface IWorkQueue {
 
 	public  LayoutEntity getLayoutEntityFor( int threadIndex);
 
+	public void createQueue(int threadIndex);
+
 }

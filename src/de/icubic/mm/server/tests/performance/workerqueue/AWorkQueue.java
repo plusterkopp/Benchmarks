@@ -37,17 +37,20 @@ public abstract class AWorkQueue implements IWorkQueue {
 
 		AtomicInteger taskDoneW = new AtomicInteger( 0);
 		AtomicBoolean stopNow = new AtomicBoolean( false);
+		private int queueIndex;
 
 		abstract BlockingQueue<Runnable> getQueue();
 
 		public APoolWorker( int qIndex, int index, String queueName) {
 			super( "Worker-" + queueName + "-Q" + qIndex + "-" + index);
+			queueIndex = qIndex;
 		}
 
 		/* Method to retrieve task from worker queue and start executing it. This thread will wait for a task if there
 		 * is no task in the queue. */
 		@Override
 		public void run() {
+			createQueue( queueIndex);
 			BlockingQueue<Runnable> queue = getQueue();
 
 			if ( useAffinity) {
@@ -74,8 +77,8 @@ public abstract class AWorkQueue implements IWorkQueue {
 							return;
 						}
 					} else {
-						//						r = queue.take();
-						r = queue.poll( 1, TimeUnit.SECONDS);
+						r = queue.take();
+//						r = queue.poll( 1, TimeUnit.SECONDS);
 					}
 				} catch ( InterruptedException e1) {
 					break;
@@ -115,6 +118,9 @@ public abstract class AWorkQueue implements IWorkQueue {
 						runList.clear();
 					} else {
 						Runnable r = queue.take();
+						if ( r == null) {
+							continue;
+						}
 						try {
 							r.run();
 							taskDoneW.incrementAndGet();
@@ -189,7 +195,7 @@ public abstract class AWorkQueue implements IWorkQueue {
 		final List<Thread> threadsOnSocket = socket.getThreads();
 		if ( threadsOnSocket.size() < tps) {
 			socket.bind();
-			BenchLogger.sysinfo( "Q " + queueIndex + " Bound To " + AffinityThread.getBoundTo());
+//			BenchLogger.sysinfo( "Q " + queueIndex + " Bound To " + AffinityThread.getBoundTo());
 			return socket;
 		}
 		final List<String> threadList = threadsOnSocket.stream().map( ( t) ->  t.getName()).collect( Collectors.toList());
@@ -377,6 +383,9 @@ public abstract class AWorkQueue implements IWorkQueue {
 
 	@Override
 	public LayoutEntity getLayoutEntityFor( int threadIndex) {
+		if ( ! useAffinity) {
+			return null;
+		}
 		int socketIndex = threadIndex % AffinityManager.INSTANCE.getNumSockets();
 		return AffinityManager.INSTANCE.getSocket( socketIndex);
 	}

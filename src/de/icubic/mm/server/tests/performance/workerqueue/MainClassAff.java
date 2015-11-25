@@ -58,15 +58,20 @@ public class MainClassAff {
 
 		Task[]	tasks;
 
-		BenchLogger.sysinfo( AffinityLock.dumpLocks());
+		BenchLogger.sysinfo( layout.toString());
 		BenchLogger.sysinfo( "Creating " + lnf.format( totalTasks) + " jobs ");
 		tasks = WorkAssignerThread.createTasks( totalTasks);
 		BenchLogger.sysinfo( "Creating " + lnf.format( totalTasks) + " jobs finished on node " + WorkAssignerThread.createdOnNode);
 		BenchLogger.sysout( "warmup");
 		getRawSpeed( tasks, 5, 1, 100, false);
 
+		final Task[] fTasks = tasks;
 		ProblemSizer	ps = new ProblemSizer( tasks);
-		ps.setProblemSize( jobSizeNS);
+		ps.setProblemSize( jobSizeNS, ( pSize) -> {
+			// setup tasks, using pSize as upper bound for random to pseudo random get Matrix Size
+			ProblemSizer.fillTasks( fTasks, pSize);
+			return ( double) ProblemSizer.getRawSpeed( fTasks, ps.getBatchSize(), ps.getRunTimeMS() / 1000.0);
+		});
 		long ops = 0;
 		for ( Task task : tasks) {
 			ops += task.getSize();

@@ -64,6 +64,7 @@ public class WorkAssignerThread extends Thread {
 				@Override
 				public void run() {
 					try {
+						workQ.createQueue( threadIndex);
 						workQ.waitForWorkersCreated();
 						assignBlock( start, start+block, threadIndex, sizes, jobsPerSecond / numThreads);
 					} catch ( InterruptedException e) {

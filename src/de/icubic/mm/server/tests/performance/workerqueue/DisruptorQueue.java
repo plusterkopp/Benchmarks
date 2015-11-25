@@ -366,4 +366,9 @@ public class DisruptorQueue implements IWorkQueue {
 		return null;
 	}
 
+	@Override
+	public void createQueue(int threadIndex) {
+		// TODO Auto-generated method stub
+	}
+
 }
