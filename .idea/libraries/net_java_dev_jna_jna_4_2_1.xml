@@ -3,11 +3,14 @@
     <properties maven-id="net.java.dev.jna:jna:4.2.1" />
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/jna-4.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jna-4.2.1.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$PROJECT_DIR$/lib/jna-4.2.1-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jna-4.2.1-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/jna-4.2.1-sources.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jna-4.2.1-sources.jar!/" />
     </SOURCES>
   </library>
