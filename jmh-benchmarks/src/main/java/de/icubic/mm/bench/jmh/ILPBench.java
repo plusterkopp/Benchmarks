@@ -153,8 +153,9 @@ public class ILPBench {
         Options opt = new OptionsBuilder()
                 .include( ILPBench.class.getSimpleName())
 		        .warmupIterations(5)
-		        .measurementIterations(5)
-		        .forks(1)
+		        .measurementIterations(12)
+				.measurementTime(TimeValue.seconds(5))
+				.forks(1)
                 .build();
         new Runner(opt).run();
     }

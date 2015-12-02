@@ -58,8 +58,8 @@ public class ArrayCopy {
         Options opt = new OptionsBuilder()
                 .include( ArrayCopy.class.getSimpleName())
 		        .warmupIterations(5)
-		        .measurementTime(TimeValue.seconds( 100))
-				.measurementIterations( 5)
+		        .measurementTime(TimeValue.seconds( 60))
+				.measurementIterations( 3)
 		        .forks(1)
                 .build();
         new Runner(opt).run();
