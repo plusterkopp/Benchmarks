@@ -31,6 +31,11 @@ public class WorkStealingQueue extends AWorkQueue {
 		return null;
 	}
 
+	@Override
+	public void createQueue(int threadIndex) {
+		// TODO Auto-generated method stub		
+	}
+
 	/* Executes the given task in the future. Queues the task and notifies the waiting thread. Also it makes the Work
 	 * assigner to wait if the queued task reaches to threshold */
 	@Override

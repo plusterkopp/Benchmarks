@@ -10,7 +10,9 @@ import com.lmax.disruptor.dsl.*;
 
 import de.icubic.mm.bench.base.*;
 import de.icubic.mm.communication.util.*;
+import de.icubic.mm.server.utils.*;
 import net.openhft.affinity.*;
+import net.openhft.affinity.AffinityManager.*;
 
 public class DisruptorQueue implements IWorkQueue {
 
@@ -92,6 +94,9 @@ public class DisruptorQueue implements IWorkQueue {
 		} else {
 			nThreads = Math.max( 1, nthreads - numAT);
 		}
+		// if affinity, use only threads of the same node
+		int	threadsOnNode = AffinityThread.getNumThreadsOnNode( WorkAssignerThread.createdOnNode);
+		nThreads = Math.min( nThreads, threadsOnNode);
 		workersReady = new CountDownLatch( nThreads);
 		createRingBuffer( bufSize, numAT > 1, useAffinity);
 		thArray = new TaskHandler[ nThreads];
@@ -172,28 +177,30 @@ public class DisruptorQueue implements IWorkQueue {
 			pot *= 2;
 		}
 		executor = AddThreadBeforeQueuingThreadPoolExecutor.getExecutor( nThreads, "Disruptor", new LinkedBlockingQueue<Runnable>());
+		final AtomicInteger threadNumber = new AtomicInteger( 0);
 		ThreadFactory	tf;
 		if ( useAffinity) {
-			tf = new AffinityThreadFactory( "Disruptor", AffinityStrategies.SAME_SOCKET, AffinityStrategies.ANY) {
+			tf = new ThreadFactory() {
 				@Override
-				protected void beforeRun( AffinityLock al, Thread currentThread) {
-					super.beforeRun( al, currentThread);
-					workersReady.countDown();
-					// BenchLogger.sysinfo( AffinityLock.dumpLocks());
+				public Thread newThread( final Runnable r) {
+					NumaNode node = WorkAssignerThread.createdOnNode;
+					Thread t = new AffinityThread( () ->  {
+							workersReady.countDown();
+							r.run();
+						},
+					"Disruptor-" + threadNumber.incrementAndGet(), node);
+					return t;
 				}
 			};
 		} else {
 			tf = new ThreadFactory() {
-				final AtomicInteger threadNumber = new AtomicInteger( 0);
 				@Override
 				public Thread newThread( final Runnable r) {
-					Thread t = new Thread( new Runnable() {
-						@Override
-						public void run() {
+					Thread t = new Thread( () ->  {
 							workersReady.countDown();
 							r.run();
-						}
-					}, "Disruptor-" + threadNumber.incrementAndGet());
+						},
+					"Disruptor-" + threadNumber.incrementAndGet());
 					return t;
 				}
 			};
@@ -295,7 +302,7 @@ public class DisruptorQueue implements IWorkQueue {
 
 	@Override
 	public int getNumAssignerThreads() {
-		int	cores = Runtime.getRuntime().availableProcessors();
+		int	cores = AffinityManager.INSTANCE.getNumSockets() * AffinityThread.getThreadsPerSocket();
 		if ( cores > 1) {
 			int	nt = getNumQueues();
 			nt = Math.min( nt,  cores / 2);
@@ -352,6 +359,16 @@ public class DisruptorQueue implements IWorkQueue {
 		if ( workersReady != null) {
 			workersReady.await();
 		}
+	}
+
+	@Override
+	public LayoutEntity getLayoutEntityFor( int threadIndex) {
+		return null;
+	}
+
+	@Override
+	public void createQueue(int threadIndex) {
+		// TODO Auto-generated method stub
 	}
 
 }

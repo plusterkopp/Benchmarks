@@ -1,0 +1,28 @@
+112.352.608.209: Watcher Steal_LBQ - 1T - 1Q stuck at 0 finished tasks, qStat: empty: 1 , filled: 0 (215773)  
+112.555.451.867: Assigner-0 dead with 0 jobs to assign while queue stuck
+122.353.263.039: Watcher Steal_LBQ - 1T - 1Q stuck at 0 finished tasks, qStat: empty: 1 , filled: 0 (1000000)  
+132.353.863.954: Watcher Steal_LBQ - 1T - 1Q stuck at 0 finished tasks, qStat: empty: 1 , filled: 0 (1000000)  
+142.354.454.531: Watcher Steal_LBQ - 1T - 1Q stuck at 0 finished tasks, qStat: empty: 1 , filled: 0 (1000000)  
+153.183.690.927: Watcher Steal_LBQ - 1T - 1Q stuck at 0 finished tasks, qStat: empty: 1 , filled: 0 (30588)  
+156.600.058.929: Assigner-0 dead with 0 jobs to assign while queue stuck
+163.184.158.862: Watcher Steal_LBQ - 1T - 1Q stuck at 0 finished tasks, qStat: empty: 1 , filled: 0 (1000000)  
+173.185.153.679: Watcher Steal_LBQ - 1T - 1Q stuck at 0 finished tasks, qStat: empty: 1 , filled: 0 (1000000)  
+183.185.889.807: Watcher Steal_LBQ - 1T - 1Q stuck at 0 finished tasks, qStat: empty: 1 , filled: 0 (1000000)  
+194.494.109.425: Watcher C_Steal_LBQ - 1T - 1Q stuck at 0 finished tasks, qStat: empty: , filled: 0 (292628)  
+194.647.669.724: Assigner-0 dead with 0 jobs to assign while queue stuck
+204.494.599.430: Watcher C_Steal_LBQ - 1T - 1Q stuck at 0 finished tasks, qStat: empty: , filled: 0 (1000000)  
+214.495.138.044: Watcher C_Steal_LBQ - 1T - 1Q stuck at 0 finished tasks, qStat: empty: , filled: 0 (1000000)  
+224.495.725.269: Watcher C_Steal_LBQ - 1T - 1Q stuck at 0 finished tasks, qStat: empty: , filled: 0 (1000000)  
+235.323.670.719: Watcher C_Steal_LBQ - 1T - 1Q stuck at 0 finished tasks, qStat: empty: , filled: 0 (26986)  
+238.741.141.375: Assigner-0 dead with 0 jobs to assign while queue stuck
+245.324.098.146: Watcher C_Steal_LBQ - 1T - 1Q stuck at 0 finished tasks, qStat: empty: , filled: 0 (1000000)  
+255.324.723.085: Watcher C_Steal_LBQ - 1T - 1Q stuck at 0 finished tasks, qStat: empty: , filled: 0 (1000000)  
+265.325.374.842: Watcher C_Steal_LBQ - 1T - 1Q stuck at 0 finished tasks, qStat: empty: , filled: 0 (1000000)  
+394.455.042.146: Watcher Multi_ABQ - 1T - 1Q stuck at 560.367 finished tasks, qStat: empty: 0 , filled: 
+404.460.825.840: Watcher Multi_ABQ - 1T - 1Q stuck at 560.367 finished tasks, qStat: empty: 0 , filled: 
+414.395.575.368: Watcher C_Multi_ABQ - 1T - 1Q stuck at 562.328 finished tasks, qStat: empty: 0 , filled: 
+424.396.345.855: Watcher C_Multi_ABQ - 1T - 1Q stuck at 562.328 finished tasks, qStat: empty: 0 , filled: 
+434.636.219.638: Watcher B_Multi_ABQ - 1T - 1Q stuck at 563.292 finished tasks, qStat: empty: 0 , filled: 
+444.636.954.647: Watcher B_Multi_ABQ - 1T - 1Q stuck at 563.292 finished tasks, qStat: empty: 0 , filled: 
+454.625.931.176: Watcher CB_Multi_ABQ - 1T - 1Q stuck at 561.418 finished tasks, qStat: empty: 0 , filled: 
+464.626.661.995: Watcher CB_Multi_ABQ - 1T - 1Q stuck at 561.418 finished tasks, qStat: empty: 0 , filled: 

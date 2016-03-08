@@ -45,7 +45,7 @@ public class FibonacciFork extends RecursiveTask<Long> {
 	public static void main( String[] args) {
 
 		int fiboArg = 49;
-		BenchLogger.sysinfo( "Warmup");
+		BenchLogger.sysinfo( "Warmup max " + Runtime.getRuntime().availableProcessors() + " Threads");
 		long	singleNS[] = getSingleThreadNanos( 20, 5e9);
 		BenchLogger.sysinfo( "Warmup complete");
 		singleNS = getSingleThreadNanos( fiboArg, 1e9);

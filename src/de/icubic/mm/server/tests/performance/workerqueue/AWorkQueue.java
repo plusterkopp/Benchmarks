@@ -3,9 +3,13 @@ package de.icubic.mm.server.tests.performance.workerqueue;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
+import java.util.stream.*;
 
 import de.icubic.mm.bench.base.*;
+import de.icubic.mm.server.utils.*;
 import net.openhft.affinity.*;
+import net.openhft.affinity.AffinityManager.*;
+import net.openhft.affinity.impl.*;
 
 
 public abstract class AWorkQueue implements IWorkQueue {
@@ -26,73 +30,70 @@ public abstract class AWorkQueue implements IWorkQueue {
 	public final AtomicBoolean isStuck = new AtomicBoolean( false);
 	private WorkAssignerThread workAssignerThread;
 	public final boolean useAffinity;
-	private Map<Object, AffinityLock> mapQueueToLock = new HashMap<Object, AffinityLock>();
+	private Map<Object, Socket> mapQueueToLock = new HashMap<Object, Socket>();
 	CountDownLatch	workersReady;
 
-	abstract class APoolWorker extends Thread {
+	abstract class APoolWorker extends AffinityThread {
 
 		AtomicInteger taskDoneW = new AtomicInteger( 0);
 		AtomicBoolean stopNow = new AtomicBoolean( false);
+		private int queueIndex;
 
 		abstract BlockingQueue<Runnable> getQueue();
 
 		public APoolWorker( int qIndex, int index, String queueName) {
 			super( "Worker-" + queueName + "-Q" + qIndex + "-" + index);
+			queueIndex = qIndex;
 		}
 
 		/* Method to retrieve task from worker queue and start executing it. This thread will wait for a task if there
 		 * is no task in the queue. */
 		@Override
 		public void run() {
+			createQueue( queueIndex);
 			BlockingQueue<Runnable> queue = getQueue();
-			AffinityLock al = null;
 
-			try {
-				if ( useAffinity) {
-					al = setAffinityFor( queue);
-					if ( maxQueues > 1) {
-						// BenchLogger.sysinfo( AffinityLock.dumpLocks());
-					}
-				}
-				workersReady.countDown();
+			if ( useAffinity) {
+				setAffinityFor( queue);
+			}
+			int cpu = Affinity.getCpu();
+			WindowsJNAAffinity waff = ( WindowsJNAAffinity) Affinity.getAffinityImpl();
+			WindowsCpuLayout layout = ( WindowsCpuLayout) waff.getDefaultLayout();
+			BenchLogger.sysinfo( Thread.currentThread().getName() + " running on: " + layout.lCpu( cpu));
+			workersReady.countDown();
 
-				if ( isBatched()) {
-					runBatched( queue);
-					return;
-				}
+			if ( isBatched()) {
+				runBatched( queue);
+				return;
+			}
 
-				Runnable r = null;
-				while ( stopNow.get() == false) {
-					try {
-						if ( workAssignerThread.getNumQueued() >= totalTasks) {	// assign finished, no point in waiting for more jobs indefinitely
-							r = queue.poll( 100, TimeUnit.SECONDS);
-							if ( r == null) {
-								BenchLogger.syserr( Thread.currentThread().getName() + ": no more jobs after " + taskDoneW.get());
-								return;
-							}
-						} else {
-							//						r = queue.take();
-							r = queue.poll( 1, TimeUnit.SECONDS);
+			Runnable r = null;
+			while ( stopNow.get() == false) {
+				try {
+					if ( workAssignerThread.getNumQueued() >= totalTasks) {	// assign finished, no point in waiting for more jobs indefinitely
+						r = queue.poll( 100, TimeUnit.SECONDS);
+						if ( r == null) {
+							BenchLogger.syserr( Thread.currentThread().getName() + ": no more jobs after " + taskDoneW.get());
+							return;
 						}
-					} catch ( InterruptedException e1) {
-						break;
+					} else {
+						r = queue.take();
+//						r = queue.poll( 1, TimeUnit.SECONDS);
 					}
-					try {
-						if ( r != null) {
-							r.run();
-							taskDoneW.incrementAndGet();
-						} else {
-							int	s = queue.size();
-							if ( s > 0)
-								BenchLogger.syserr( Thread.currentThread().getName() + ": got no job out of " + s + " in queue");
-						}
-					} catch ( java.lang.Throwable e) {
-						BenchLogger.syserr( "", e);
-					}
+				} catch ( InterruptedException e1) {
+					break;
 				}
-			} finally {
-				if ( al != null) {
-					al.release();
+				try {
+					if ( r != null) {
+						r.run();
+						taskDoneW.incrementAndGet();
+					} else {
+						int	s = queue.size();
+						if ( s > 0)
+							BenchLogger.syserr( Thread.currentThread().getName() + ": got no job out of " + s + " in queue");
+					}
+				} catch ( java.lang.Throwable e) {
+					BenchLogger.syserr( "", e);
 				}
 			}
 		}
@@ -117,6 +118,9 @@ public abstract class AWorkQueue implements IWorkQueue {
 						runList.clear();
 					} else {
 						Runnable r = queue.take();
+						if ( r == null) {
+							continue;
+						}
 						try {
 							r.run();
 							taskDoneW.incrementAndGet();
@@ -136,58 +140,6 @@ public abstract class AWorkQueue implements IWorkQueue {
 
 	public AWorkQueue( int nThreads, int nQueues, int totalTasks, boolean useAffinity) {
 		this( nThreads, nQueues, totalTasks, false, useAffinity);
-	}
-
-	public AffinityLock setAffinityFor( Object key) {
-		// binde alle Threads eines key an den gleichen Sockel
-		if ( AffinityLock.cpuLayout().sockets() < 2) {	// gibt nur einen Sockel, binde den Thread an einen Kern
-			return AffinityLock.acquireLock();
-		}
-		int	queueIndex = getQueueIndex( key);
-		synchronized ( mapQueueToLock) {
-			AffinityLock	al = mapQueueToLock.get( key);
-			if ( al != null) {
-				AffinityLock	result = al.acquireLock( AffinityStrategies.SAME_CORE, AffinityStrategies.SAME_SOCKET, AffinityStrategies.ANY);
-				final String lockInfo = result.toString() + " for " + al.toString();
-				if ( result.cpuId() > -1) {
-					int socketAl = AffinityLock.cpuLayout().socketId( al.cpuId());
-					int socketResult = AffinityLock.cpuLayout().socketId( result.cpuId());
-					BenchLogger.sysinfo( "Q " + queueIndex + " Found " + ( socketAl == socketResult ? "Same" : "Different") + " Socket " + lockInfo);
-				} else {
-					BenchLogger.sysinfo( "Q " + queueIndex + " Did not bind: " + lockInfo);
-				}
-				return result;
-			}
-			// finde alle vergebenen sockets
-			Collection<AffinityLock> locks = mapQueueToLock.values();
-			int[]	cpuIds = new int[ locks.size()];
-			int	index = 0;
-			for ( AffinityLock affinityLock : locks) {
-				cpuIds[ index] = affinityLock.cpuId();
-				index++;
-			}
-			al = AffinityLock.acquireLock( true, AffinityStrategies.DIFFERENT_SOCKET, cpuIds);
-			mapQueueToLock.put( key, al);
-			SortedSet<Integer> away = new TreeSet<Integer>();
-			SortedSet<Integer> sharing = new TreeSet<Integer>();
-			for ( Object queue : mapQueueToLock.keySet()) {
-				int qi = getQueueIndex( queue);
-				AffinityLock	lock = mapQueueToLock.get( queue);
-				if ( al.cpuId() > -1 &&  lock.cpuId() > -1) {
-					int	lockSocket = AffinityLock.cpuLayout().socketId( lock.cpuId());
-					int	mySocket = AffinityLock.cpuLayout().socketId( al.cpuId());
-					if ( lockSocket == mySocket) {
-						sharing.add( qi);
-					} else {
-						away.add( qi);
-					}
-				} else {
-					away.add( qi);
-				}
-			}
-			BenchLogger.sysinfo( "Reserved new Socket: " + al.toString() + " away from " + away + ", sharing " + sharing);
-			return al;
-		}
 	}
 
 	abstract int getQueueIndex( Object key);
@@ -220,11 +172,35 @@ public abstract class AWorkQueue implements IWorkQueue {
 				}
 			}
 		}
+		if ( useAffinity) {
+			// limit to number of threads per socket if using affinity
+			int	tps = AffinityThread.getThreadsPerSocket();
+			nThreads = Math.min( nThreads, tps * maxQueues);
+		}
 	}
 
 	@Override
 	public int getNumThreads() {
 		return nThreads;
+	}
+
+	public AffinityManager.LayoutEntity setAffinityFor( Object key) { // binde alle Threads eines key an den gleichen Sockel
+		final AffinityManager am = AffinityManager.INSTANCE;
+		if ( AffinityLock.cpuLayout().sockets() < 2) {	// gibt nur einen Sockel, binde den Thread an einen Kern
+			return am.getSocket( 0);
+		}
+		int	queueIndex = getQueueIndex( key);
+		int tps = AffinityThread.getThreadsPerSocket();
+		LayoutEntity socket = getLayoutEntityFor( queueIndex);
+		final List<Thread> threadsOnSocket = socket.getThreads();
+		if ( threadsOnSocket.size() < tps) {
+			socket.bind();
+//			BenchLogger.sysinfo( "Q " + queueIndex + " Bound To " + AffinityThread.getBoundTo());
+			return socket;
+		}
+		final List<String> threadList = threadsOnSocket.stream().map( ( t) ->  t.getName()).collect( Collectors.toList());
+		BenchLogger.sysinfo( "Q " + queueIndex + " Did not bind: Q" + queueIndex + ", socket " + socket + " full: " + threadList);
+		return null;
 	}
 
 	@Override
@@ -404,6 +380,16 @@ public abstract class AWorkQueue implements IWorkQueue {
 			workersReady.await();
 		}
 	}
+
+	@Override
+	public LayoutEntity getLayoutEntityFor( int threadIndex) {
+		if ( ! useAffinity) {
+			return null;
+		}
+		int socketIndex = threadIndex % AffinityManager.INSTANCE.getNumSockets();
+		return AffinityManager.INSTANCE.getSocket( socketIndex);
+	}
+
 
 
 }

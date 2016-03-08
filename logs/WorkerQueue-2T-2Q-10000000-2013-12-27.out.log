@@ -1,0 +1,328 @@
+10.999: Creating 10.000.000 jobs 
+2.124.717.104: warmup
+7.163.890.413: Single Thread Speed: 4.360.000 jobs in 5.000ms, total size 0 M in 5.004 ms (0 ops/ms, 871.303 jobs/s
+7.164.111.121: estimate single thread
+12.180.017.063: Single Thread Speed: 4.220.000 jobs in 5.000ms, total size 0 M in 5.010 ms (0 ops/ms, 842.315,4 jobs/s
+13.612.400.586: building DIS-2T-2Q
+15.955.812.021: Assigning tasks finished?
+15.956.768.174: assigning 10000000 tasks started in 1 threads
+40.375.621.839: assigning 10000000 tasks finished 409.537 jobs/s
+40.377.100.796: Main waiting for DIS - 1T - 1Q
+40.384.102.197: Main resuming from DIS - 1T - 1Q
+40.384.388.896: DIS: 10.000.000 jobs,  total size: 0M in 24403 ms (0 ops/ms, 409.785,7 jobs/s
+41.913.701.694: Mean: 77.346.103, 90%: 381.220.906, 99%: 454.402.538, 99,9%: 513.736.450, 99,99%: 526.701.709, 99,999%: 526.867.422, 99,9999%: 526.876.221, 99,99999%: 526.877.688
+43.625.704.604: building DIS-2T-2Q (throtteled)
+45.328.044.062: Assigning tasks finished?
+45.328.448.081: assigning 10000000 tasks started in 1 threads (throtteled)
+71.273.602.369: assigning 10000000 tasks finished 385.432 jobs/s (throtteled)
+71.274.436.070: Main waiting for DIS - 1T - 1Q
+81.378.060.249: Main resuming from DIS - 1T - 1Q
+81.378.418.806: DIS (throtteled): 10.000.000 jobs,  total size: 0M in 36009 ms (0 ops/ms, 277.708,4 jobs/s
+82.620.307.912: Mean: 1.630.250.363, 90%: 10.699.550.190, 99%: 11.465.353.203, 99,9%: 11.467.014.372, 99,99%: 11.467.209.049, 99,999%: 11.467.232.512, 99,9999%: 11.467.236.913, 99,99999%: 11.467.237.646
+84.082.356.008: building B_DIS-2T-2Q
+85.784.211.891: Assigning tasks finished?
+86.212.162.207: assigning 10000000 tasks started in 1 threads
+100.899.065.368: assigning 10000000 tasks finished 680.892 jobs/s
+100.939.045.614: Main waiting for B_DIS - 1T - 1Q
+114.867.771.889: Main resuming from B_DIS - 1T - 1Q
+114.868.362.518: B_DIS: 10.000.000 jobs,  in 3 batches, (3.333.333,3 t/b), total size: 0M in 29061 ms (0 ops/ms, 344.103,8 jobs/s
+115.461.989.803: Mean: 12.921.163.940, 90%: 14.112.541.919, 99%: 14.545.831.368, 99,9%: 14.600.326.221, 99,99%: 14.601.475.951, 99,999%: 14.601.646.064, 99,9999%: 14.601.650.464, 99,99999%: 14.601.651.564
+116.932.160.433: building B_DIS-2T-2Q (throtteled)
+118.736.259.059: Assigning tasks finished?
+118.736.785.896: assigning 10000000 tasks started in 1 threads (throtteled)
+142.951.613.820: assigning 10000000 tasks finished 412.974 jobs/s (throtteled)
+142.951.866.423: Main waiting for B_DIS - 1T - 1Q
+148.962.895.545: Main resuming from B_DIS - 1T - 1Q
+148.963.980.016: B_DIS (throtteled): 10.000.000 jobs,  in 28.891 batches, (346,1 t/b), total size: 0M in 30194 ms (0 ops/ms, 331.191,6 jobs/s
+149.531.380.186: Mean: 4.855.377.462, 90%: 7.252.545.738, 99%: 8.240.233.436, 99,9%: 8.259.812.575, 99,99%: 8.260.597.148, 99,999%: 8.260.691.003, 99,9999%: 8.260.700.169, 99,99999%: 8.260.700.902
+151.146.464.085: building B1_DIS-2T-2Q
+152.943.098.999: Assigning tasks finished?
+153.317.542.877: assigning 10000000 tasks started in 1 threads
+174.214.747.633: assigning 10000000 tasks finished 478.539 jobs/s
+174.214.985.572: Main waiting for B1_DIS - 1T - 1Q
+181.389.525.285: Main resuming from B1_DIS - 1T - 1Q
+181.389.938.103: B1_DIS: 10.000.000 jobs,  in 109.434 batches, (91,4 t/b), total size: 0M in 28428 ms (0 ops/ms, 351.765,9 jobs/s
+181.951.571.658: Mean: 7.145.969.878, 90%: 8.967.814.526, 99%: 9.253.799.590, 99,9%: 9.267.289.486, 99,99%: 9.268.356.359, 99,999%: 9.268.392.655, 99,9999%: 9.268.397.421, 99,99999%: 9.268.398.155
+183.373.466.828: building B1_DIS-2T-2Q (throtteled)
+185.175.669.646: Assigning tasks finished?
+185.176.302.071: assigning 10000000 tasks started in 1 threads (throtteled)
+204.641.388.006: assigning 10000000 tasks finished 513.745 jobs/s (throtteled)
+204.641.618.612: Main waiting for B1_DIS - 1T - 1Q
+217.526.964.577: Main resuming from B1_DIS - 1T - 1Q
+217.527.766.749: B1_DIS (throtteled): 10.000.000 jobs,  in 4.334 batches, (2.307,3 t/b), total size: 0M in 32319 ms (0 ops/ms, 309.415,5 jobs/s
+218.090.004.132: Mean: 11.901.945.192, 90%: 12.613.070.406, 99%: 12.855.537.676, 99,9%: 12.883.776.452, 99,99%: 12.885.205.916, 99,999%: 12.885.525.611, 99,9999%: 12.885.527.077, 99,99999%: 12.885.527.445
+219.565.769.797: building DIS_Bo-2T-2Q
+219.568.126.083: Assigning tasks finished?
+219.568.235.337: assigning 10000000 tasks started in 1 threads
+234.686.762.744: assigning 10000000 tasks finished 661.449 jobs/s
+234.688.098.352: Main waiting for DIS_Bo - 1T - 1Q
+234.696.250.582: Main resuming from DIS_Bo - 1T - 1Q
+234.696.726.459: DIS_Bo: 10.000.000 jobs,  total size: 0M in 15111 ms (0 ops/ms, 661.769,6 jobs/s
+235.315.702.796: Mean: 32.911.020, 90%: 59.791.824, 99%: 81.831.737, 99,9%: 84.746.757, 99,99%: 85.257.096, 99,999%: 85.351.318, 99,9999%: 85.356.817, 99,99999%: 310.077.332
+236.534.923.964: building DIS_Bo-2T-2Q (throtteled)
+236.536.985.119: Assigning tasks finished?
+236.537.207.293: assigning 10000000 tasks started in 1 threads (throtteled)
+251.009.642.920: assigning 10000000 tasks finished 690.979 jobs/s (throtteled)
+251.010.033.007: Main waiting for DIS_Bo - 1T - 1Q
+251.108.385.513: Main resuming from DIS_Bo - 1T - 1Q
+251.108.632.984: DIS_Bo (throtteled): 10.000.000 jobs,  total size: 0M in 14555 ms (0 ops/ms, 687.049,1 jobs/s
+251.632.247.726: Mean: 22.009.850, 90%: 58.516.709, 99%: 72.123.191, 99,9%: 99.621.022, 99,99%: 101.240.762, 99,999%: 101.378.613, 99,9999%: 101.393.644, 99,99999%: 101.394.744
+252.861.843.593: building LBQ-2T-2Q
+252.888.805.054: assigning 10000000 tasks started in 1 threads
+252.889.405.950: Main waiting for LBQ - 1T - 1Q
+268.045.703.599: assigning 10000000 tasks finished 659.776 jobs/s
+268.150.102.453: Main notified
+268.150.647.621: Main resuming from LBQ - 1T - 1Q
+268.150.800.503: LBQ: 10.000.000 jobs,  total size: 0M in 15245 ms (0 ops/ms, 655.952,8 jobs/s
+268.258.783.097: closed threads after 10000000 Tasks, Watcher LBQ - 1T - 1Q finished
+268.773.034.653: Mean: 37.330.295, 90%: 146.730.987, 99%: 186.691.436, 99,9%: 188.926.004, 99,99%: 197.815.147, 99,999%: 202.424.699, 99,9999%: 202.434.231, 99,99999%: 202.434.598
+270.188.846.080: building LBQ-2T-2Q (throtteled)
+270.189.452.474: assigning 10000000 tasks started in 1 threads (throtteled)
+270.189.476.671: Main waiting for LBQ - 1T - 1Q
+285.336.125.535: assigning 10000000 tasks finished 660.226 jobs/s (throtteled)
+285.536.567.535: Main notified
+285.536.951.023: Main resuming from LBQ - 1T - 1Q
+285.537.110.504: LBQ (throtteled): 10.000.000 jobs,  total size: 0M in 15330 ms (0 ops/ms, 652.315,7 jobs/s
+285.636.908.238: closed threads after 10000000 Tasks, Watcher LBQ - 1T - 1Q finished
+286.136.961.215: Mean: 132.937.527, 90%: 186.102.273, 99%: 199.372.195, 99,9%: 204.508.584, 99,99%: 204.822.780, 99,999%: 204.863.842, 99,9999%: 204.864.209, 99,99999%: 204.864.575
+287.366.996.664: building Multi_LBQ-2T-2Q
+287.369.385.580: assigning 10000000 tasks started in 1 threads
+287.369.532.596: Main waiting for Multi_LBQ - 1T - 1Q
+302.273.831.508: assigning 10000000 tasks finished 670.953 jobs/s
+302.387.622.878: Main notified
+302.387.947.706: Main resuming from Multi_LBQ - 1T - 1Q
+302.388.177.212: Multi_LBQ: 10.000.000 jobs,  total size: 0M in 14989 ms (0 ops/ms, 667.155,9 jobs/s
+302.488.251.380: closed threads after 10000000 Tasks, Watcher Multi_LBQ - 1T - 1Q finished
+302.939.271.821: Mean: 27.769.865, 90%: 63.092.165, 99%: 83.063.590, 99,9%: 104.117.654, 99,99%: 105.489.558, 99,999%: 105.673.235, 99,9999%: 105.680.568, 99,99999%: 105.682.035
+304.150.840.465: building Multi_LBQ-2T-2Q (throtteled)
+304.151.435.494: Main waiting for Multi_LBQ - 1T - 1Q
+304.151.589.109: assigning 10000000 tasks started in 1 threads (throtteled)
+318.616.566.157: assigning 10000000 tasks finished 691.334 jobs/s (throtteled)
+318.717.521.687: Main notified
+318.717.850.914: Main resuming from Multi_LBQ - 1T - 1Q
+318.718.086.286: Multi_LBQ (throtteled): 10.000.000 jobs,  total size: 0M in 14549 ms (0 ops/ms, 687.332,5 jobs/s
+318.817.792.364: closed threads after 10000000 Tasks, Watcher Multi_LBQ - 1T - 1Q finished
+319.280.575.173: Mean: 26.211.717, 90%: 49.957.527, 99%: 61.717.329, 99,9%: 69.196.072, 99,99%: 69.846.462, 99,999%: 69.870.659, 99,9999%: 69.871.026, 99,99999%: 69.871.392
+320.526.549.560: building C_Multi_LBQ-2T-2Q
+321.075.525.820: Mean: 26.211.717, 90%: 49.957.527, 99%: 61.717.329, 99,9%: 69.196.072, 99,99%: 69.846.462, 99,999%: 69.870.659, 99,9999%: 69.871.026, 99,99999%: 69.871.392
+322.313.436.332: building C_Multi_LBQ-2T-2Q (throtteled)
+322.861.307.591: Mean: 26.211.717, 90%: 49.957.527, 99%: 61.717.329, 99,9%: 69.196.072, 99,99%: 69.846.462, 99,999%: 69.870.659, 99,9999%: 69.871.026, 99,99999%: 69.871.392
+324.092.108.915: building Steal_LBQ-2T-2Q
+324.119.019.782: assigning 10000000 tasks started in 1 threads
+324.119.184.396: Main waiting for Steal_LBQ - 1T - 1Q
+337.467.355.331: assigning 10000000 tasks finished 749.167 jobs/s
+366.984.541.705: Main resuming from Steal_LBQ - 1T - 1Q
+366.985.035.179: Steal_LBQ: 10.000.000 jobs,  total size: 0M in 42848 ms (0 ops/ms, 233.383,1 jobs/s
+367.178.823.338: closed threads after 10000000 Tasks, Watcher Steal_LBQ - 1T - 1Q finished
+367.612.604.795: Mean: 30.094.457.869, 90%: 30.130.344.402, 99%: 30.140.411.505, 99,9%: 30.141.515.774, 99,99%: 30.141.587.999, 99,999%: 30.141.604.130, 99,9999%: 30.141.605.963, 99,99999%: 30.141.605.963
+369.156.634.576: building Steal_LBQ-2T-2Q (throtteled)
+369.157.240.604: Main waiting for Steal_LBQ - 1T - 1Q
+369.158.810.117: assigning 10000000 tasks started in 1 threads (throtteled)
+382.743.132.875: assigning 10000000 tasks finished 736.151 jobs/s (throtteled)
+412.031.767.156: Main resuming from Steal_LBQ - 1T - 1Q
+412.032.106.283: Steal_LBQ (throtteled): 10.000.000 jobs,  total size: 0M in 42862 ms (0 ops/ms, 233.306,9 jobs/s
+412.131.852.323: closed threads after 10000000 Tasks, Watcher Steal_LBQ - 1T - 1Q finished
+412.664.351.442: Mean: 29.899.578.640, 90%: 30.050.173.834, 99%: 30.098.655.336, 99,9%: 30.161.286.656, 99,99%: 30.162.360.129, 99,999%: 30.162.687.890, 99,9999%: 30.162.705.854, 99,99999%: 30.162.708.054
+413.941.749.826: building C_Steal_LBQ-2T-2Q
+414.470.563.650: Mean: 29.899.578.640, 90%: 30.050.173.834, 99%: 30.098.655.336, 99,9%: 30.161.286.656, 99,99%: 30.162.360.129, 99,999%: 30.162.687.890, 99,9999%: 30.162.705.854, 99,99999%: 30.162.708.054
+415.689.933.300: building C_Steal_LBQ-2T-2Q (throtteled)
+416.219.788.334: Mean: 29.899.578.640, 90%: 30.050.173.834, 99%: 30.098.655.336, 99,9%: 30.161.286.656, 99,99%: 30.162.360.129, 99,999%: 30.162.687.890, 99,9999%: 30.162.705.854, 99,99999%: 30.162.708.054
+417.443.939.116: building CLBQ-2T-2Q
+417.463.329.443: Main waiting for CLBQ - 1T - 1Q
+417.463.361.706: assigning 10000000 tasks started in 1 threads
+432.317.411.260: assigning 10000000 tasks finished 673.227 jobs/s
+432.482.991.806: Main notified
+432.483.237.076: Main resuming from CLBQ - 1T - 1Q
+432.483.390.692: CLBQ: 10.000.000 jobs,  total size: 0M in 14997 ms (0 ops/ms, 666.800 jobs/s
+432.583.199.791: closed threads after 10000000 Tasks, Watcher CLBQ - 1T - 1Q finished
+433.060.305.463: Mean: 73.898.380, 90%: 157.163.980, 99%: 212.788.033, 99,9%: 229.053.999, 99,99%: 229.714.287, 99,999%: 229.765.247, 99,9999%: 229.779.912, 99,99999%: 229.780.280
+434.495.093.667: building CLBQ-2T-2Q (throtteled)
+434.495.558.178: assigning 10000000 tasks started in 1 threads (throtteled)
+434.495.638.469: Main waiting for CLBQ - 1T - 1Q
+450.229.006.338: assigning 10000000 tasks finished 635.597 jobs/s (throtteled)
+450.314.059.225: Main notified
+450.314.410.083: Main resuming from CLBQ - 1T - 1Q
+450.314.551.600: CLBQ (throtteled): 10.000.000 jobs,  total size: 0M in 15803 ms (0 ops/ms, 632.791,2 jobs/s
+450.414.611.836: closed threads after 10000000 Tasks, Watcher CLBQ - 1T - 1Q finished
+450.896.039.628: Mean: 28.354.629, 90%: 64.761.767, 99%: 149.202.759, 99,9%: 213.384.162, 99,99%: 215.184.648, 99,999%: 215.195.280, 99,9999%: 215.198.213, 99,99999%: 215.198.580
+452.124.519.495: building B_CLBQ-2T-2Q
+452.125.815.874: Main waiting for B_CLBQ - 1T - 1Q
+452.125.972.788: assigning 10000000 tasks started in 1 threads
+466.790.575.734: assigning 10000000 tasks finished 681.921 jobs/s
+467.396.343.008: Main notified
+467.397.589.160: Main resuming from B_CLBQ - 1T - 1Q
+467.398.066.137: B_CLBQ: 10.000.000 jobs,  in 10.003 batches, (999,7 t/b), total size: 0M in 15251 ms (0 ops/ms, 655.694,7 jobs/s
+467.496.930.815: closed threads after 10000000 Tasks, Watcher B_CLBQ - 1T - 1Q finished
+467.961.590.367: Mean: 369.456.705, 90%: 608.833.343, 99%: 654.227.513, 99,9%: 657.519.054, 99,99%: 657.822.618, 99,999%: 657.839.116, 99,9999%: 657.840.949, 99,99999%: 657.841.683
+469.200.905.412: building B_CLBQ-2T-2Q (throtteled)
+469.201.496.409: assigning 10000000 tasks started in 1 threads (throtteled)
+469.201.817.204: Main waiting for B_CLBQ - 1T - 1Q
+483.929.918.166: assigning 10000000 tasks finished 678.970 jobs/s (throtteled)
+484.434.159.445: Main notified
+484.435.380.667: Main resuming from B_CLBQ - 1T - 1Q
+484.435.866.442: B_CLBQ (throtteled): 10.000.000 jobs,  in 10.441 batches, (957,8 t/b), total size: 0M in 15213 ms (0 ops/ms, 657.332,5 jobs/s
+484.534.620.767: closed threads after 10000000 Tasks, Watcher B_CLBQ - 1T - 1Q finished
+485.033.202.852: Mean: 213.563.807, 90%: 430.792.745, 99%: 469.075.893, 99,9%: 470.722.764, 99,99%: 470.916.708, 99,999%: 471.564.898, 99,9999%: 471.579.930, 99,99999%: 471.581.396
+486.264.310.673: building B1_CLBQ-2T-2Q
+486.265.419.708: assigning 10000000 tasks started in 1 threads
+486.265.502.565: Main waiting for B1_CLBQ - 1T - 1Q
+501.404.308.261: assigning 10000000 tasks finished 660.561 jobs/s
+501.698.201.750: Main notified
+501.698.895.035: Main resuming from B1_CLBQ - 1T - 1Q
+501.699.378.244: B1_CLBQ: 10.000.000 jobs,  in 10.002 batches, (999,8 t/b), total size: 0M in 15415 ms (0 ops/ms, 648.718,8 jobs/s
+501.798.413.035: closed threads after 10000000 Tasks, Watcher B1_CLBQ - 1T - 1Q finished
+502.267.347.412: Mean: 136.451.976, 90%: 239.033.846, 99%: 302.958.612, 99,9%: 310.956.494, 99,99%: 311.973.506, 99,999%: 312.023.367, 99,9999%: 312.023.734, 99,99999%: 312.023.734
+503.560.176.962: building B1_CLBQ-2T-2Q (throtteled)
+503.561.467.108: Main waiting for B1_CLBQ - 1T - 1Q
+503.561.712.746: assigning 10000000 tasks started in 1 threads (throtteled)
+518.332.542.161: assigning 10000000 tasks finished 677.019 jobs/s (throtteled)
+519.134.829.669: Main notified
+519.134.981.451: Main resuming from B1_CLBQ - 1T - 1Q
+519.135.128.833: B1_CLBQ (throtteled): 10.000.000 jobs,  in 10.002 batches, (999,8 t/b), total size: 0M in 15554 ms (0 ops/ms, 642.921,4 jobs/s
+519.275.821.538: closed threads after 10000000 Tasks, Watcher B1_CLBQ - 1T - 1Q finished
+519.692.889.015: Mean: 686.692.352, 90%: 908.783.079, 99%: 938.127.957, 99,9%: 941.768.524, 99,99%: 943.253.714, 99,999%: 943.298.075, 99,9999%: 943.310.907, 99,99999%: 943.312.373
+520.920.670.466: building Multi_CLBQ-2T-2Q
+520.922.419.258: Main waiting for Multi_CLBQ - 1T - 1Q
+520.922.562.974: assigning 10000000 tasks started in 1 threads
+535.880.573.633: assigning 10000000 tasks finished 668.544 jobs/s
+536.003.350.568: Main notified
+536.003.595.839: Main resuming from Multi_CLBQ - 1T - 1Q
+536.003.721.957: Multi_CLBQ: 10.000.000 jobs,  total size: 0M in 15802 ms (0 ops/ms, 632.831,3 jobs/s
+536.103.485.229: closed threads after 10000000 Tasks, Watcher Multi_CLBQ - 1T - 1Q finished
+536.602.334.582: Mean: 38.028.345, 90%: 75.095.404, 99%: 92.522.099, 99,9%: 105.718.330, 99,99%: 111.183.214, 99,999%: 111.923.426, 99,9999%: 111.924.159, 99,99999%: 111.924.159
+537.859.109.685: building Multi_CLBQ-2T-2Q (throtteled)
+537.859.816.534: Main waiting for Multi_CLBQ - 1T - 1Q
+537.860.752.157: assigning 10000000 tasks started in 1 threads (throtteled)
+552.757.920.617: assigning 10000000 tasks finished 671.275 jobs/s (throtteled)
+552.900.884.185: Main notified
+552.901.482.514: Main resuming from Multi_CLBQ - 1T - 1Q
+552.901.916.962: Multi_CLBQ (throtteled): 10.000.000 jobs,  total size: 0M in 15022 ms (0 ops/ms, 665.690,3 jobs/s
+553.001.241.019: closed threads after 10000000 Tasks, Watcher Multi_CLBQ - 1T - 1Q finished
+553.522.764.910: Mean: 160.984.192, 90%: 192.985.254, 99%: 219.116.314, 99,9%: 223.812.388, 99,99%: 230.175.132, 99,999%: 230.261.655, 99,9999%: 230.262.755, 99,99999%: 230.262.755
+554.789.795.193: building C_Multi_CLBQ-2T-2Q
+555.375.374.735: Mean: 160.984.192, 90%: 192.985.254, 99%: 219.116.314, 99,9%: 223.812.388, 99,99%: 230.175.132, 99,999%: 230.261.655, 99,9999%: 230.262.755, 99,99999%: 230.262.755
+556.596.748.713: building C_Multi_CLBQ-2T-2Q (throtteled)
+557.184.808.460: Mean: 160.984.192, 90%: 192.985.254, 99%: 219.116.314, 99,9%: 223.812.388, 99,99%: 230.175.132, 99,999%: 230.261.655, 99,9999%: 230.262.755, 99,99999%: 230.262.755
+558.432.904.128: building B_Multi_CLBQ-2T-2Q
+558.434.291.429: Main waiting for B_Multi_CLBQ - 1T - 1Q
+558.434.421.581: assigning 10000000 tasks started in 1 threads
+573.419.317.810: assigning 10000000 tasks finished 667.346 jobs/s
+573.927.726.127: Main notified
+573.928.289.260: Main resuming from B_Multi_CLBQ - 1T - 1Q
+573.928.854.592: B_Multi_CLBQ: 10.000.000 jobs,  in 10.020 batches, (998 t/b), total size: 0M in 15476 ms (0 ops/ms, 646.161,8 jobs/s
+574.036.250.590: closed threads after 10000000 Tasks, Watcher B_Multi_CLBQ - 1T - 1Q finished
+574.497.275.074: Mean: 293.048.790, 90%: 400.453.586, 99%: 536.614.830, 99,9%: 548.205.985, 99,99%: 550.235.244, 99,999%: 550.318.100, 99,9999%: 550.332.032, 99,99999%: 550.333.499
+575.740.481.457: building B_Multi_CLBQ-2T-2Q (throtteled)
+575.741.006.094: assigning 10000000 tasks started in 1 threads (throtteled)
+575.741.055.222: Main waiting for B_Multi_CLBQ - 1T - 1Q
+590.854.916.984: assigning 10000000 tasks finished 661.650 jobs/s (throtteled)
+591.489.741.703: Main notified
+591.489.953.245: Main resuming from B_Multi_CLBQ - 1T - 1Q
+591.490.103.927: B_Multi_CLBQ (throtteled): 10.000.000 jobs,  in 11.346 batches, (881,4 t/b), total size: 0M in 15735 ms (0 ops/ms, 635.525,9 jobs/s
+591.593.793.365: closed threads after 10000000 Tasks, Watcher B_Multi_CLBQ - 1T - 1Q finished
+592.070.998.392: Mean: 434.786.738, 90%: 531.344.990, 99%: 593.085.782, 99,9%: 601.005.573, 99,99%: 601.198.784, 99,999%: 601.254.877, 99,9999%: 601.270.276, 99,99999%: 601.272.108
+593.300.428.912: building CB_Multi_CLBQ-2T-2Q
+593.837.439.328: Mean: 434.786.738, 90%: 531.344.990, 99%: 593.085.782, 99,9%: 601.005.573, 99,99%: 601.198.784, 99,999%: 601.254.877, 99,9999%: 601.270.276, 99,99999%: 601.272.108
+595.077.162.792: building CB_Multi_CLBQ-2T-2Q (throtteled)
+595.606.729.293: Mean: 434.786.738, 90%: 531.344.990, 99%: 593.085.782, 99,9%: 601.005.573, 99,99%: 601.198.784, 99,999%: 601.254.877, 99,9999%: 601.270.276, 99,99999%: 601.272.108
+596.819.949.941: building ABQ-2T-2Q
+596.854.066.785: assigning 10000000 tasks started in 1 threads
+596.854.174.205: Main waiting for ABQ - 1T - 1Q
+611.587.697.156: assigning 10000000 tasks finished 678.734 jobs/s
+611.635.427.814: Main notified
+611.635.596.461: Main resuming from ABQ - 1T - 1Q
+611.635.720.013: ABQ: 10.000.000 jobs,  total size: 0M in 14763 ms (0 ops/ms, 677.369,1 jobs/s
+611.753.442.316: closed threads after 10000000 Tasks, Watcher ABQ - 1T - 1Q finished
+612.169.032.302: Mean: 25.157.308, 90%: 67.163.148, 99%: 82.422.367, 99,9%: 114.794.817, 99,99%: 117.067.148, 99,999%: 117.241.659, 99,9999%: 117.246.426, 99,99999%: 117.246.793
+613.417.984.768: building ABQ-2T-2Q (throtteled)
+613.432.368.491: Main waiting for ABQ - 1T - 1Q
+613.432.564.635: assigning 10000000 tasks started in 1 threads (throtteled)
+627.515.206.975: assigning 10000000 tasks finished 710.101 jobs/s (throtteled)
+627.632.020.786: Main notified
+627.632.596.751: Main resuming from ABQ - 1T - 1Q
+627.633.032.666: ABQ (throtteled): 10.000.000 jobs,  total size: 0M in 14187 ms (0 ops/ms, 704.870,7 jobs/s
+627.732.055.359: closed threads after 10000000 Tasks, Watcher ABQ - 1T - 1Q finished
+628.229.135.389: Mean: 50.993.603, 90%: 82.717.498, 99%: 101.378.980, 99,9%: 104.729.914, 99,99%: 104.839.901, 99,999%: 104.856.399, 99,9999%: 104.857.499, 99,99999%: 104.857.500
+629.492.119.254: building B_ABQ-2T-2Q
+629.506.225.077: assigning 10000000 tasks started in 1 threads
+629.506.288.136: Main waiting for B_ABQ - 1T - 1Q
+644.450.424.311: assigning 10000000 tasks finished 669.173 jobs/s
+644.616.273.592: Main notified
+644.616.518.129: Main resuming from B_ABQ - 1T - 1Q
+644.616.717.572: B_ABQ: 10.000.000 jobs,  in 10.006 batches, (999,4 t/b), total size: 0M in 15090 ms (0 ops/ms, 662.690,5 jobs/s
+644.716.542.070: closed threads after 10000000 Tasks, Watcher B_ABQ - 1T - 1Q finished
+645.190.732.355: Mean: 204.273.945, 90%: 243.644.130, 99%: 299.275.517, 99,9%: 306.894.677, 99,99%: 307.015.296, 99,999%: 307.222.071, 99,9999%: 307.225.005, 99,99999%: 307.286.964
+646.415.964.308: building B_ABQ-2T-2Q (throtteled)
+646.423.924.795: assigning 10000000 tasks started in 1 threads (throtteled)
+646.423.996.287: Main waiting for B_ABQ - 1T - 1Q
+661.331.599.573: assigning 10000000 tasks finished 670.805 jobs/s (throtteled)
+661.365.229.908: Main notified
+661.365.383.156: Main resuming from B_ABQ - 1T - 1Q
+661.365.563.901: B_ABQ (throtteled): 10.000.000 jobs,  in 22.758 batches, (439,4 t/b), total size: 0M in 14929 ms (0 ops/ms, 669.837,2 jobs/s
+661.466.191.670: closed threads after 10000000 Tasks, Watcher B_ABQ - 1T - 1Q finished
+661.924.219.744: Mean: 29.523.423, 90%: 62.391.182, 99%: 92.678.280, 99,9%: 96.992.701, 99,99%: 97.577.464, 99,999%: 97.585.163, 99,9999%: 97.598.362, 99,99999%: 97.598.729
+663.135.962.167: building B1_ABQ-2T-2Q
+663.145.291.991: assigning 10000000 tasks started in 1 threads
+663.145.501.333: Main waiting for B1_ABQ - 1T - 1Q
+677.765.216.416: assigning 10000000 tasks finished 684.006 jobs/s
+677.904.236.220: Main notified
+677.904.821.717: Main resuming from B1_ABQ - 1T - 1Q
+677.905.550.197: B1_ABQ: 10.000.000 jobs,  in 14.399 batches, (694,5 t/b), total size: 0M in 14744 ms (0 ops/ms, 678.242 jobs/s
+678.008.971.267: closed threads after 10000000 Tasks, Watcher B1_ABQ - 1T - 1Q finished
+678.470.342.210: Mean: 104.892.328, 90%: 133.967.372, 99%: 151.840.980, 99,9%: 154.673.509, 99,99%: 155.045.998, 99,999%: 155.099.525, 99,9999%: 155.107.957, 99,99999%: 155.108.325
+679.694.674.836: building B1_ABQ-2T-2Q (throtteled)
+679.703.707.329: assigning 10000000 tasks started in 1 threads (throtteled)
+679.703.749.124: Main waiting for B1_ABQ - 1T - 1Q
+694.447.581.149: assigning 10000000 tasks finished 678.255 jobs/s (throtteled)
+694.520.054.099: Main notified
+694.520.560.039: Main resuming from B1_ABQ - 1T - 1Q
+694.521.046.914: B1_ABQ (throtteled): 10.000.000 jobs,  in 23.260 batches, (429,9 t/b), total size: 0M in 14803 ms (0 ops/ms, 675.538,7 jobs/s
+694.620.039.544: closed threads after 10000000 Tasks, Watcher B1_ABQ - 1T - 1Q finished
+695.080.970.173: Mean: 23.094.687, 90%: 41.239.963, 99%: 62.068.553, 99,9%: 65.390.892, 99,99%: 65.581.536, 99,999%: 65.722.686, 99,9999%: 65.730.385, 99,99999%: 65.731.485
+696.311.201.398: building Multi_ABQ-2T-2Q
+696.316.353.186: Main waiting for Multi_ABQ - 1T - 1Q
+696.316.547.862: assigning 10000000 tasks started in 1 threads
+710.551.318.248: assigning 10000000 tasks finished 702.512 jobs/s
+710.594.971.691: Main notified
+710.595.151.337: Main resuming from Multi_ABQ - 1T - 1Q
+710.595.290.287: Multi_ABQ: 10.000.000 jobs,  total size: 0M in 14260 ms (0 ops/ms, 701.262,3 jobs/s
+710.694.985.366: closed threads after 10000000 Tasks, Watcher Multi_ABQ - 1T - 1Q finished
+711.154.218.530: Mean: 18.808.497, 90%: 62.835.529, 99%: 75.550.383, 99,9%: 78.600.321, 99,99%: 78.757.602, 99,999%: 78.775.934, 99,9999%: 78.776.667, 99,99999%: 78.777.033
+712.540.958.213: building Multi_ABQ-2T-2Q (throtteled)
+712.545.443.480: assigning 10000000 tasks started in 1 threads (throtteled)
+712.545.511.305: Main waiting for Multi_ABQ - 1T - 1Q
+726.997.985.406: assigning 10000000 tasks finished 691.930 jobs/s (throtteled)
+727.078.388.046: Main notified
+727.078.609.120: Main resuming from Multi_ABQ - 1T - 1Q
+727.078.753.570: Multi_ABQ (throtteled): 10.000.000 jobs,  total size: 0M in 14517 ms (0 ops/ms, 688.847,6 jobs/s
+727.178.396.222: closed threads after 10000000 Tasks, Watcher Multi_ABQ - 1T - 1Q finished
+727.618.247.857: Mean: 46.493.305, 90%: 74.651.791, 99%: 87.912.914, 99,9%: 89.292.516, 99,99%: 89.571.883, 99,999%: 89.582.149, 99,9999%: 89.583.248, 99,99999%: 89.583.615
+728.847.243.929: building C_Multi_ABQ-2T-2Q
+729.392.306.855: Mean: 46.493.305, 90%: 74.651.791, 99%: 87.912.914, 99,9%: 89.292.516, 99,99%: 89.571.883, 99,999%: 89.582.149, 99,9999%: 89.583.248, 99,99999%: 89.583.615
+730.607.355.119: building C_Multi_ABQ-2T-2Q (throtteled)
+731.147.133.539: Mean: 46.493.305, 90%: 74.651.791, 99%: 87.912.914, 99,9%: 89.292.516, 99,99%: 89.571.883, 99,999%: 89.582.149, 99,9999%: 89.583.248, 99,99999%: 89.583.615
+732.375.096.468: building B_Multi_ABQ-2T-2Q
+732.379.820.406: assigning 10000000 tasks started in 1 threads
+732.379.920.861: Main waiting for B_Multi_ABQ - 1T - 1Q
+747.395.339.194: assigning 10000000 tasks finished 665.986 jobs/s
+747.496.068.517: Main notified
+747.496.347.884: Main resuming from B_Multi_ABQ - 1T - 1Q
+747.496.581.790: B_Multi_ABQ: 10.000.000 jobs,  in 15.897 batches, (629 t/b), total size: 0M in 15102 ms (0 ops/ms, 662.164 jobs/s
+747.596.117.755: closed threads after 10000000 Tasks, Watcher B_Multi_ABQ - 1T - 1Q finished
+748.081.496.277: Mean: 53.778.839, 90%: 81.319.931, 99%: 99.845.395, 99,9%: 104.343.494, 99,99%: 106.824.065, 99,999%: 107.004.078, 99,9999%: 107.011.410, 99,99999%: 107.012.143
+749.301.287.910: building B_Multi_ABQ-2T-2Q (throtteled)
+749.305.589.865: assigning 10000000 tasks started in 1 threads (throtteled)
+749.305.669.056: Main waiting for B_Multi_ABQ - 1T - 1Q
+764.423.883.734: assigning 10000000 tasks finished 661.457 jobs/s (throtteled)
+764.511.671.996: Main notified
+764.512.371.512: Main resuming from B_Multi_ABQ - 1T - 1Q
+764.512.790.929: B_Multi_ABQ (throtteled): 10.000.000 jobs,  in 43.337 batches, (230,7 t/b), total size: 0M in 15194 ms (0 ops/ms, 658.154,5 jobs/s
+764.611.816.922: closed threads after 10000000 Tasks, Watcher B_Multi_ABQ - 1T - 1Q finished
+765.077.694.395: Mean: 19.055.601, 90%: 38.479.291, 99%: 56.322.470, 99,9%: 63.694.160, 99,99%: 64.657.645, 99,999%: 64.672.677, 99,9999%: 64.689.175, 99,99999%: 64.689.542
+766.305.930.458: building CB_Multi_ABQ-2T-2Q
+766.873.657.289: Mean: 19.055.601, 90%: 38.479.291, 99%: 56.322.470, 99,9%: 63.694.160, 99,99%: 64.657.645, 99,999%: 64.672.677, 99,9999%: 64.689.175, 99,99999%: 64.689.542
+768.082.801.822: building CB_Multi_ABQ-2T-2Q (throtteled)
+768.649.022.565: Mean: 19.055.601, 90%: 38.479.291, 99%: 56.322.470, 99,9%: 63.694.160, 99,99%: 64.657.645, 99,999%: 64.672.677, 99,9999%: 64.689.175, 99,99999%: 64.689.542
+768.649.600.363: 
+Conf	Hardware	Takt (G)	OS	Threads	Queues	Jobs	MOps	Ops/Job	Single	DIS	B DIS	B1 DIS	DIS Bo	LBQ	Multi LBQ	C Multi LBQ	Steal LBQ	C Steal LBQ	CLBQ	B CLBQ	B1 CLBQ	Multi CLBQ	C Multi CLBQ	B Multi CLBQ	CB Multi CLBQ	ABQ	B ABQ	B1 ABQ	Multi ABQ	C Multi ABQ	B Multi ABQ	CB Multi ABQ	
+null	null	null	null	2	2	10000000	0,000000e+00	0,000000e+00	8,423154e+05	2,777084e+05	3,311916e+05	3,094155e+05	6,870491e+05	6,523157e+05	6,873325e+05	0,000000e+00	2,333069e+05	0,000000e+00	6,327912e+05	6,573325e+05	6,429214e+05	6,656903e+05	0,000000e+00	6,355259e+05	0,000000e+00	7,048707e+05	6,698372e+05	6,755387e+05	6,888476e+05	0,000000e+00	6,581545e+05	0,000000e+00	

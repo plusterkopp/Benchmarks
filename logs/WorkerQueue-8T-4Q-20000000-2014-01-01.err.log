@@ -1,0 +1,25 @@
+42.749.624.207: Assigner-0 NanoOrigin jump by 2.435 ms
+312.147.352.956: Watcher Steal_LBQ - 4T - 4Q stuck at 176 finished tasks, qStat: empty: , filled: 0 (25658)  1 (25658)  2 (25658)  3 (25657)  
+322.148.097.925: Watcher Steal_LBQ - 4T - 4Q stuck at 176 finished tasks, qStat: empty: , filled: 0 (2525880)  1 (2525880)  2 (2525879)  3 (2525879)  
+332.044.578.040: Assigner-0 dead with 0 jobs to assign while queue stuck
+332.044.865.978: Assigner-1 dead with 0 jobs to assign while queue stuck
+332.044.941.498: Assigner-2 dead with 0 jobs to assign while queue stuck
+332.045.029.354: Assigner-3 dead with 0 jobs to assign while queue stuck
+332.148.450.250: Watcher Steal_LBQ - 4T - 4Q stuck at 176 finished tasks, qStat: empty: , filled: 0 (4999956)  1 (4999956)  2 (4999956)  3 (4999956)  
+342.148.861.848: Watcher Steal_LBQ - 4T - 4Q stuck at 176 finished tasks, qStat: empty: , filled: 0 (4999956)  1 (4999956)  2 (4999956)  3 (4999956)  
+359.017.958.065: Watcher C_Steal_LBQ - 4T - 4Q stuck at 0 finished tasks, qStat: empty: 4 5 6 7 , filled: 0 (368123)  1 (368303)  2 (368316)  3 (368336)  
+360.180.940.309: Assigner-0 dead with 0 jobs to assign while queue stuck
+360.181.022.749: Assigner-1 dead with 0 jobs to assign while queue stuck
+360.181.050.429: Assigner-2 dead with 0 jobs to assign while queue stuck
+360.181.076.305: Assigner-3 dead with 0 jobs to assign while queue stuck
+369.017.987.551: Watcher C_Steal_LBQ - 4T - 4Q stuck at 0 finished tasks, qStat: empty: 4 5 6 7 , filled: 0 (5000000)  1 (5000000)  2 (5000000)  3 (5000000)  
+379.018.364.549: Watcher C_Steal_LBQ - 4T - 4Q stuck at 0 finished tasks, qStat: empty: 4 5 6 7 , filled: 0 (5000000)  1 (5000000)  2 (5000000)  3 (5000000)  
+389.018.845.348: Watcher C_Steal_LBQ - 4T - 4Q stuck at 0 finished tasks, qStat: empty: 4 5 6 7 , filled: 0 (5000000)  1 (5000000)  2 (5000000)  3 (5000000)  
+403.866.572.774: Watcher C_Steal_LBQ - 4T - 4Q stuck at 897 finished tasks, qStat: empty: 4 5 6 7 , filled: 0 (24875)  1 (24876)  2 (24876)  3 (24875)  
+413.866.858.906: Watcher C_Steal_LBQ - 4T - 4Q stuck at 897 finished tasks, qStat: empty: 4 5 6 7 , filled: 0 (2524820)  1 (2524828)  2 (2524830)  3 (2524833)  
+423.766.340.558: Assigner-0 dead with 0 jobs to assign while queue stuck
+423.766.450.377: Assigner-1 dead with 0 jobs to assign while queue stuck
+423.766.478.359: Assigner-2 dead with 0 jobs to assign while queue stuck
+423.766.503.332: Assigner-3 dead with 0 jobs to assign while queue stuck
+423.867.254.859: Watcher C_Steal_LBQ - 4T - 4Q stuck at 897 finished tasks, qStat: empty: 4 5 6 7 , filled: 0 (4999775)  1 (4999776)  2 (4999776)  3 (4999776)  
+433.867.704.969: Watcher C_Steal_LBQ - 4T - 4Q stuck at 897 finished tasks, qStat: empty: 4 5 6 7 , filled: 0 (4999775)  1 (4999776)  2 (4999776)  3 (4999776)  

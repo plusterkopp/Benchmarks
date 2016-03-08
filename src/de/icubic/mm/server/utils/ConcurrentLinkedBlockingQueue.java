@@ -8,9 +8,9 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
 /**
- * Soll als Ersatz für {@link LinkedBlockingQueue} dienen. Erweitert die {@link ConcurrentLinkedQueue} um das
+ * Soll als Ersatz fÃ¼r {@link LinkedBlockingQueue} dienen. Erweitert die {@link ConcurrentLinkedQueue} um das
  * {@link BlockingQueue} Interface, wobei aber bei {@link BlockingQueue#take()} keine so schnelle Reaktion auf das
- * Nachfüllen der Queue bei vormals leerer Queue erfolgen kann. Verzichtet auf das Locking und vermeidet damit die bei
+ * NachfÃ¼llen der Queue bei vormals leerer Queue erfolgen kann. Verzichtet auf das Locking und vermeidet damit die bei
  * {@link LinkedBlockingQueue} aufgetretenen Probleme (Bug 38717).
  *
  * @author rhelbing
@@ -20,7 +20,7 @@ public class ConcurrentLinkedBlockingQueue<E> extends ConcurrentLinkedQueue<E> i
 
 	static	long	SleepLogIntervalMS = 10000;
 
-	// ist zwar alles lahmgelegt, aber für etwaige Nachforschungen später man noch drin gelassen
+	// ist zwar alles lahmgelegt, aber fÃ¼r etwaige Nachforschungen spÃ¤ter man noch drin gelassen
 	static class Stats {
 		long	totalSleepMS = 0;
 		long	totalSleeps = 0;
@@ -59,7 +59,7 @@ public class ConcurrentLinkedBlockingQueue<E> extends ConcurrentLinkedQueue<E> i
 //	private AtomicLong outCounter = new AtomicLong( 0);
 
 	/**
-	 * maximale Wartezeit für die {@link #poll()} Schleife in {@link #take()}. Wir beginnen mit 1ms, und verdoppeln bis maximal {@link #maxSleepDurationMS}.
+	 * maximale Wartezeit fÃ¼r die {@link #poll()} Schleife in {@link #take()}. Wir beginnen mit 1ms, und verdoppeln bis maximal {@link #maxSleepDurationMS}.
 	 */
 	private int	maxSleepDurationMS = 10;
 
@@ -97,7 +97,7 @@ public class ConcurrentLinkedBlockingQueue<E> extends ConcurrentLinkedQueue<E> i
 		e = take1ms( 1);
 		if ( e != null)
 			return e;
-		// letzter Versuch: polle mit länger werdenden Sleeps
+		// letzter Versuch: polle mit lÃ¤nger werdenden Sleeps
 		e = takeSleep();
 		return e;
 	}
@@ -162,7 +162,7 @@ public class ConcurrentLinkedBlockingQueue<E> extends ConcurrentLinkedQueue<E> i
 //				nf.setMaximumFractionDigits( 2);
 //				String	avg = nf.format( ( double) stats.totalSleepMS / stats.totalSleeps);
 //				IQLog.logTest.system( Thread.currentThread().getName() +
-//						" CLBQ Sleep: " + stats.lastSleep + " Tot: " + stats.totalSleepMS + " ms, " + stats.totalSleeps + " sleeps, Ø: " + avg +
+//						" CLBQ Sleep: " + stats.lastSleep + " Tot: " + stats.totalSleepMS + " ms, " + stats.totalSleeps + " sleeps, Ã˜: " + avg +
 //						" T: " + stats.takes0 + "/" + stats.takes1 + "/" + stats.takes2 +
 //						" P: " + stats.polls0 + "/" + stats.polls1 + "/" + stats.pollsU +
 //						" QS: " + fastSize() + "/" + size());

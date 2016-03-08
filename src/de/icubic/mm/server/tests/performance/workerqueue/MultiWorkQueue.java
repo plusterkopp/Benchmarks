@@ -3,6 +3,8 @@ package de.icubic.mm.server.tests.performance.workerqueue;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
+import de.icubic.mm.bench.base.BenchLogger;
+
 public abstract class MultiWorkQueue extends AWorkQueue {
 	private AtomicInteger queue_no = new AtomicInteger();
 	private BlockingQueue<Runnable>[] queues;
@@ -17,9 +19,9 @@ public abstract class MultiWorkQueue extends AWorkQueue {
 		super( nThreads, nQueues, totalTasks, isBatched, useAffinity);
 
 		queues = new BlockingQueue[ maxQueues];
-		for ( int i = 0; i < maxQueues; i++) {
-			queues[ i] = createQueue();
-		}
+//		for ( int i = 0; i < maxQueues; i++) {
+//			queues[ i] = createQueue();
+//		}
 	}
 
 	/* Executes the given task in the future. Queues the task and notifies the waiting thread. Also it makes the Work
@@ -49,6 +51,16 @@ public abstract class MultiWorkQueue extends AWorkQueue {
 	}
 
 	@Override
+	public void createQueue(int threadIndex) {
+		synchronized (queues) {
+			if ( queues[ threadIndex] == null) {
+				queues[ threadIndex] = createQueue();
+				BenchLogger.sysinfo( Thread.currentThread().getName() + " create queue " + threadIndex);
+			}
+		}
+	}
+
+	@Override
 	PoolWorker createPoolWorker( int threadIndex, String queueName) {
 		return new PoolWorker( threadIndex % maxQueues, threadIndex, queueName);
 	}
@@ -65,7 +77,7 @@ public abstract class MultiWorkQueue extends AWorkQueue {
 		StringBuilder	sbNotEmpty = new StringBuilder( "filled: ");
 		for ( int i = 0;  i < queues.length;  i++) {
 			BlockingQueue<Runnable>	q = queues[ i];
-			if ( q.isEmpty()) {
+			if ( q == null || q.isEmpty()) {
 				sbEmpty.append( i + " ");
 			} else {
 				sbNotEmpty.append( i + " (" + q.size() + ")  ");

@@ -1,0 +1,214 @@
+2.407: Creating 20.000.000 jobs 
+6.594.424.413: estimate: 30.231.000 jobs in 1.000ms, total size 15 M in 1.000 ms (15.114 ops/ms, 30.231.000 jobs/s, 33 ns/job
+6.594.584.479: eval for: 1.0 -> -1967.0
+9.834.230.143: estimate: 25.746.000 jobs in 1.000ms, total size 64 M in 1.000 ms (64.341 ops/ms, 25.746.000 jobs/s, 38 ns/job
+9.834.367.042: eval for: 2.0 -> -1962.0
+13.069.368.390: estimate: 15.368.000 jobs in 1.000ms, total size 261 M in 1.000 ms (261.182 ops/ms, 15.368.000 jobs/s, 65 ns/job
+13.069.509.801: eval for: 4.0 -> -1935.0
+16.267.568.431: estimate: 4.692.000 jobs in 1.000ms, total size 610 M in 1.000 ms (609.833 ops/ms, 4.692.000 jobs/s, 213 ns/job
+16.267.679.153: eval for: 8.0 -> -1787.0
+19.475.276.144: estimate: 817.000 jobs in 1.000ms, total size 840 M in 1.000 ms (840.494 ops/ms, 817.000 jobs/s, 1.223 ns/job
+19.475.376.636: eval for: 16.0 -> -777.0
+22.681.978.330: estimate: 119.000 jobs in 1.000ms, total size 976 M in 1.002 ms (973.685 ops/ms, 118.762 jobs/s, 8.420 ns/job
+22.682.063.177: eval for: 32.0 -> 6420.0
+25.818.621.616: estimate: 260.000 jobs in 1.000ms, total size 901 M in 1.000 ms (900.891 ops/ms, 260.000 jobs/s, 3.846 ns/job
+25.818.710.976: eval for: 24.0 -> 1846.0
+29.034.749.034: estimate: 816.000 jobs in 1.000ms, total size 840 M in 1.000 ms (839.506 ops/ms, 816.000 jobs/s, 1.225 ns/job
+29.034.858.251: eval for: 16.0 -> -775.0
+32.200.450.892: estimate: 563.000 jobs in 1.000ms, total size 874 M in 1.001 ms (873.199 ops/ms, 562.438 jobs/s, 1.777 ns/job
+32.200.550.482: eval for: 18.36550934757726 -> -223.0
+35.437.798.770: estimate: 500.000 jobs in 1.000ms, total size 890 M in 1.001 ms (889.162 ops/ms, 499.500 jobs/s, 2.002 ns/job
+35.437.895.050: eval for: 19.218141410084666 -> 2.0
+38.611.298.122: estimate: 499.000 jobs in 1.000ms, total size 887 M in 1.001 ms (886.407 ops/ms, 498.501 jobs/s, 2.006 ns/job
+38.611.395.606: eval for: 19.210562458417932 -> 6.0
+41.785.359.811: estimate: 528.000 jobs in 1.000ms, total size 879 M in 1.000 ms (878.712 ops/ms, 528.000 jobs/s, 1.893 ns/job
+41.785.463.914: eval for: 18.788035902997596 -> -107.0
+45.048.261.059: estimate: 501.000 jobs in 1.000ms, total size 888 M in 1.001 ms (886.835 ops/ms, 500.500 jobs/s, 1.998 ns/job
+45.048.377.799: eval for: 19.18812742007703 -> -2.0
+48.232.858.511: estimate: 500.000 jobs in 1.000ms, total size 887 M in 1.001 ms (885.890 ops/ms, 499.500 jobs/s, 2.002 ns/job
+48.232.985.180: eval for: 19.193736179662256 -> 2.0
+51.433.474.584: estimate: 498.000 jobs in 1.000ms, total size 883 M in 1.001 ms (881.918 ops/ms, 497.502 jobs/s, 2.010 ns/job
+51.433.575.378: eval for: 19.190931799869645 -> 10.0
+54.629.481.844: estimate: 499.000 jobs in 1.000ms, total size 884 M in 1.001 ms (883.440 ops/ms, 498.501 jobs/s, 2.006 ns/job
+54.629.602.796: eval for: 19.188594816709134 -> 6.0
+57.814.312.174: estimate: 500.000 jobs in 1.000ms, total size 886 M in 1.000 ms (886.032 ops/ms, 500.000 jobs/s, 2.000 ns/job
+57.814.404.844: eval for: 19.188244269235057 -> 0.0
+57.874.010.119: warmup
+62.888.807.184: Single Thread Speed: 2.620.000 jobs in 5.000ms, total size 4.637,9 M in 5.016 ms (924.627 ops/ms, 522.328,5 jobs/s
+62.888.878.793: estimate single thread
+67.905.731.742: Single Thread Speed: 2.510.000 jobs in 5.000ms, total size 4.443,5 M in 5.016 ms (885.856 ops/ms, 500.398,7 jobs/s
+70.875.275.000: building DIS-8T-4Q
+71.036.031.667: Assigning tasks finished?
+71.036.057.241: assigning 20000000 tasks started in 1 threads
+71.368.384.045: assigning 20000000 tasks finished 60.323.175 jobs/s
+71.368.757.432: Main waiting for DIS - 7T - 1Q
+82.393.032.381: Main resuming from DIS - 7T - 1Q
+82.393.289.028: DIS: 20.000.000 jobs,  total size: 35.388,7M in 11357 ms (3.116.023 ops/ms, 1.761.028,4 jobs/s
+86.278.641.258: building B_DIS-8T-4Q
+86.395.499.261: Assigning tasks finished?
+86.395.527.242: assigning 20000000 tasks started in 1 threads
+86.798.426.541: assigning 20000000 tasks finished 49.674.398 jobs/s
+86.798.550.802: Main waiting for B_DIS - 7T - 1Q
+106.813.120.406: Main resuming from B_DIS - 7T - 1Q
+106.813.308.754: B_DIS: 20.000.000 jobs,  in 24 batches, (833.333,3 t/b), total size: 35.388,7M in 20418 ms (1.733.209 ops/ms, 979.527,9 jobs/s
+109.926.563.470: building B1_DIS-8T-4Q
+110.036.238.368: Assigning tasks finished?
+110.036.308.171: assigning 20000000 tasks started in 1 threads
+110.261.778.380: assigning 20000000 tasks finished 88.786.688 jobs/s
+110.261.881.881: Main waiting for B1_DIS - 1T - 1Q
+157.173.951.569: Main resuming from B1_DIS - 1T - 1Q
+157.174.143.226: B1_DIS: 20.000.000 jobs,  in 4 batches, (5.000.000 t/b), total size: 35.388,7M in 47141 ms (750.698 ops/ms, 424.259,1 jobs/s
+159.019.642.668: building DIS_Bo-8T-4Q
+159.020.975.547: Assigning tasks finished?
+159.021.110.340: assigning 20000000 tasks started in 1 threads
+170.293.812.913: assigning 20000000 tasks finished 1.774.219 jobs/s
+170.293.973.280: Main waiting for DIS_Bo - 7T - 1Q
+170.374.424.124: Main resuming from DIS_Bo - 7T - 1Q
+170.374.634.737: DIS_Bo: 20.000.000 jobs,  total size: 35.388,7M in 11353 ms (3.117.120 ops/ms, 1.761.648,9 jobs/s
+172.412.774.338: building LBQ-8T-4Q
+172.415.398.877: assigning 20000000 tasks started in 1 threads
+172.416.424.863: Main waiting for LBQ - 7T - 1Q
+173.643.831.808: assigning 20000000 tasks finished 16.282.664 jobs/s
+182.865.488.417: Main notified
+182.865.740.551: Main resuming from LBQ - 7T - 1Q
+182.865.963.500: LBQ: 20.000.000 jobs,  total size: 35.388,7M in 10451 ms (3.386.151 ops/ms, 1.913.692,5 jobs/s
+184.898.465.895: building Multi_LBQ-8T-4Q
+184.898.486.355: closed threads after 20000000 Tasks, Watcher LBQ - 7T - 1Q finished
+184.900.874.706: assigning 20000000 tasks started in 4 threads
+184.901.564.614: Main waiting for Multi_LBQ - 4T - 4Q
+186.168.765.074: assigning 20000000 tasks finished 15.776.005 jobs/s
+198.588.171.615: Main notified
+198.588.507.091: Main resuming from Multi_LBQ - 4T - 4Q
+198.588.625.937: Multi_LBQ: 20.000.000 jobs,  total size: 35.388,7M in 13689 ms (2.585.190 ops/ms, 1.461.027,1 jobs/s
+202.661.062.657: closed threads after 20000000 Tasks, Watcher Multi_LBQ - 4T - 4Q finished
+202.661.074.692: building C_Multi_LBQ-8T-4Q
+202.662.189.135: assigning 20000000 tasks started in 4 threads
+202.662.686.784: Main waiting for C_Multi_LBQ - 4T - 4Q
+203.991.680.788: assigning 20000000 tasks finished 15.045.377 jobs/s
+216.386.004.528: Main notified
+216.386.622.827: Main resuming from C_Multi_LBQ - 4T - 4Q
+216.386.997.116: C_Multi_LBQ: 20.000.000 jobs,  total size: 35.388,7M in 13725 ms (2.578.409 ops/ms, 1.457.194,9 jobs/s
+218.399.302.329: closed threads after 20000000 Tasks, Watcher C_Multi_LBQ - 4T - 4Q finished
+218.399.309.250: building CLBQ-8T-4Q
+218.402.255.725: assigning 20000000 tasks started in 1 threads
+218.402.936.306: Main waiting for CLBQ - 7T - 1Q
+219.339.715.107: assigning 20000000 tasks finished 21.339.593 jobs/s
+228.368.883.198: Main notified
+228.369.026.114: Main resuming from CLBQ - 7T - 1Q
+228.369.136.836: CLBQ: 20.000.000 jobs,  total size: 35.388,7M in 9968 ms (3.550.228 ops/ms, 2.006.420,5 jobs/s
+232.385.133.492: closed threads after 20000000 Tasks, Watcher CLBQ - 7T - 1Q finished
+232.385.144.625: building B_CLBQ-8T-4Q
+232.386.181.442: assigning 20000000 tasks started in 1 threads
+232.390.050.403: Main waiting for B_CLBQ - 7T - 1Q
+233.257.849.846: assigning 20000000 tasks finished 22.948.101 jobs/s
+242.856.448.006: Main notified
+242.856.551.207: Main resuming from B_CLBQ - 7T - 1Q
+242.856.709.166: B_CLBQ: 20.063.751 jobs,  in 20.069 batches, (999,7 t/b), total size: 35.388,7M in 10470 ms (3.380.007 ops/ms, 1.916.308,6 jobs/s
+244.774.608.922: building B1_CLBQ-8T-4Q
+244.775.712.534: assigning 20000000 tasks started in 1 threads
+244.775.822.654: Main waiting for B1_CLBQ - 1T - 1Q
+244.777.144.702: closed threads after 20063751 Tasks, Watcher B_CLBQ - 7T - 1Q finished
+245.331.524.368: assigning 20000000 tasks finished 35.992.363 jobs/s
+285.577.213.121: Main notified
+285.577.414.106: Main resuming from B1_CLBQ - 1T - 1Q
+285.577.690.912: B1_CLBQ: 20.000.000 jobs,  in 20.001 batches, (1.000 t/b), total size: 35.388,7M in 40803 ms (867.305 ops/ms, 490.160 jobs/s
+287.482.912.368: closed threads after 20000000 Tasks, Watcher B1_CLBQ - 1T - 1Q finished
+287.482.917.182: building Multi_CLBQ-8T-4Q
+287.483.817.703: assigning 20000000 tasks started in 4 threads
+287.484.267.813: Main waiting for Multi_CLBQ - 4T - 4Q
+288.554.651.357: assigning 20000000 tasks finished 18.678.895 jobs/s
+301.177.968.861: Main notified
+301.178.404.829: Main resuming from Multi_CLBQ - 4T - 4Q
+301.178.712.023: Multi_CLBQ: 20.000.000 jobs,  total size: 35.388,7M in 13696 ms (2.583.869 ops/ms, 1.460.280,4 jobs/s
+303.209.817.152: closed threads after 20000000 Tasks, Watcher Multi_CLBQ - 4T - 4Q finished
+303.209.824.072: building C_Multi_CLBQ-8T-4Q
+303.210.717.071: assigning 20000000 tasks started in 4 threads
+303.211.249.320: Main waiting for C_Multi_CLBQ - 4T - 4Q
+304.366.471.378: assigning 20000000 tasks finished 17.306.680 jobs/s
+316.855.678.667: Main notified
+316.855.996.392: Main resuming from C_Multi_CLBQ - 4T - 4Q
+316.856.164.882: C_Multi_CLBQ: 20.000.000 jobs,  total size: 35.388,7M in 13646 ms (2.593.336 ops/ms, 1.465.631 jobs/s
+318.898.993.330: closed threads after 20000000 Tasks, Watcher C_Multi_CLBQ - 4T - 4Q finished
+318.899.005.365: building B_Multi_CLBQ-8T-4Q
+318.899.940.487: assigning 20000000 tasks started in 4 threads
+318.900.438.436: Main waiting for B_Multi_CLBQ - 4T - 4Q
+319.974.399.693: assigning 20000000 tasks finished 18.616.653 jobs/s
+334.586.608.565: Main notified
+334.586.917.866: Main resuming from B_Multi_CLBQ - 4T - 4Q
+334.587.033.402: B_Multi_CLBQ: 20.000.000 jobs,  in 20.002 batches, (999,9 t/b), total size: 35.388,7M in 15688 ms (2.255.779 ops/ms, 1.274.859,8 jobs/s
+336.624.330.251: building CB_Multi_CLBQ-8T-4Q
+336.624.324.534: closed threads after 20000000 Tasks, Watcher B_Multi_CLBQ - 4T - 4Q finished
+336.627.368.794: assigning 20000000 tasks started in 4 threads
+336.627.937.449: Main waiting for CB_Multi_CLBQ - 4T - 4Q
+337.681.164.762: assigning 20000000 tasks finished 18.981.765 jobs/s
+352.714.455.150: Main notified
+352.714.689.231: Main resuming from CB_Multi_CLBQ - 4T - 4Q
+352.714.945.578: CB_Multi_CLBQ: 20.000.000 jobs,  in 20.004 batches, (999,8 t/b), total size: 35.388,7M in 16089 ms (2.199.557 ops/ms, 1.243.085,3 jobs/s
+354.733.808.376: building ABQ-8T-4Q
+354.733.806.871: closed threads after 20000000 Tasks, Watcher CB_Multi_CLBQ - 4T - 4Q finished
+354.741.289.649: assigning 20000000 tasks started in 1 threads
+354.741.935.629: Main waiting for ABQ - 7T - 1Q
+360.366.143.424: assigning 20000000 tasks finished 3.555.720 jobs/s
+366.278.091.558: Main notified
+366.278.421.919: Main resuming from ABQ - 7T - 1Q
+366.278.523.615: ABQ: 20.000.000 jobs,  total size: 35.388,7M in 11538 ms (3.067.141 ops/ms, 1.733.402,7 jobs/s
+368.334.342.069: closed threads after 20000000 Tasks, Watcher ABQ - 7T - 1Q finished
+368.334.347.786: building B_ABQ-8T-4Q
+368.341.596.181: assigning 20000000 tasks started in 1 threads
+368.342.202.446: Main waiting for B_ABQ - 7T - 1Q
+369.212.677.577: assigning 20000000 tasks finished 22.963.885 jobs/s
+378.727.817.941: Main notified
+378.728.853.555: Main resuming from B_ABQ - 7T - 1Q
+378.729.268.463: B_ABQ: 20.000.000 jobs,  in 20.016 batches, (999,2 t/b), total size: 35.388,7M in 10388 ms (3.406.687 ops/ms, 1.925.298,4 jobs/s
+380.801.340.822: closed threads after 20000000 Tasks, Watcher B_ABQ - 7T - 1Q finished
+380.801.345.937: building B1_ABQ-8T-4Q
+380.808.184.540: assigning 20000000 tasks started in 1 threads
+380.808.280.219: Main waiting for B1_ABQ - 1T - 1Q
+381.346.580.789: assigning 20000000 tasks finished 37.159.946 jobs/s
+421.409.537.217: Main notified
+421.409.811.917: Main resuming from B1_ABQ - 1T - 1Q
+421.410.056.528: B1_ABQ: 20.000.000 jobs,  in 20.001 batches, (1.000 t/b), total size: 35.388,7M in 40603 ms (871.577 ops/ms, 492.574,4 jobs/s
+423.295.289.611: closed threads after 20000000 Tasks, Watcher B1_ABQ - 1T - 1Q finished
+423.295.294.425: building Multi_ABQ-8T-4Q
+423.304.990.444: assigning 20000000 tasks started in 4 threads
+423.305.651.468: Main waiting for Multi_ABQ - 4T - 4Q
+424.325.139.787: assigning 20000000 tasks finished 19.606.893 jobs/s
+437.507.272.165: Main notified
+437.507.525.502: Main resuming from Multi_ABQ - 4T - 4Q
+437.507.655.180: Multi_ABQ: 20.000.000 jobs,  total size: 35.388,7M in 14203 ms (2.491.633 ops/ms, 1.408.153,2 jobs/s
+439.569.171.316: closed threads after 20000000 Tasks, Watcher Multi_ABQ - 4T - 4Q finished
+439.569.176.431: building C_Multi_ABQ-8T-4Q
+439.576.249.416: assigning 20000000 tasks started in 4 threads
+439.576.809.647: Main waiting for C_Multi_ABQ - 4T - 4Q
+440.593.774.220: assigning 20000000 tasks finished 19.657.871 jobs/s
+453.777.909.528: Main notified
+453.778.373.177: Main resuming from C_Multi_ABQ - 4T - 4Q
+453.778.637.346: C_Multi_ABQ: 20.000.000 jobs,  total size: 35.388,7M in 14203 ms (2.491.633 ops/ms, 1.408.153,2 jobs/s
+455.862.998.070: building B_Multi_ABQ-8T-4Q
+455.862.996.565: closed threads after 20000000 Tasks, Watcher C_Multi_ABQ - 4T - 4Q finished
+455.870.111.673: assigning 20000000 tasks started in 4 threads
+455.870.627.675: Main waiting for B_Multi_ABQ - 4T - 4Q
+456.761.478.106: assigning 20000000 tasks finished 22.440.749 jobs/s
+470.370.590.065: Main notified
+470.370.785.935: Main resuming from B_Multi_ABQ - 4T - 4Q
+470.370.911.100: B_Multi_ABQ: 20.000.000 jobs,  in 20.006 batches, (999,7 t/b), total size: 35.388,7M in 14501 ms (2.440.429 ops/ms, 1.379.215,2 jobs/s
+472.398.387.667: closed threads after 20000000 Tasks, Watcher B_Multi_ABQ - 4T - 4Q finished
+472.398.406.021: building CB_Multi_ABQ-8T-4Q
+472.405.970.637: assigning 20000000 tasks started in 4 threads
+472.406.584.423: Main waiting for CB_Multi_ABQ - 4T - 4Q
+473.285.560.796: assigning 20000000 tasks finished 22.740.538 jobs/s
+486.709.330.636: Main notified
+486.709.716.058: Main resuming from CB_Multi_ABQ - 4T - 4Q
+486.709.835.505: CB_Multi_ABQ: 20.000.000 jobs,  in 20.007 batches, (999,7 t/b), total size: 35.388,7M in 14304 ms (2.474.040 ops/ms, 1.398.210,3 jobs/s
+486.809.306.807: closed threads after 20000000 Tasks, Watcher CB_Multi_ABQ - 4T - 4Q finished
+491.226.855.139: building DIS-8T-4Q (throttled)
+491.351.429.400: Assigning tasks finished?
+491.351.602.103: assigning 20000000 tasks started in 1 threads (throttled)
+531.319.446.617: assigning 20000000 tasks finished 500.404 jobs/s (throttled)
+531.319.538.986: Main waiting for DIS - 7T - 1Q
+531.320.090.190: Main resuming from DIS - 7T - 1Q
+531.320.173.533: DIS (throttled): 20.000.000 jobs,  total size: 0M in 39970 ms (0 ops/ms, 500.375,3 jobs/s
+531.623.739.331: Mean: 300, 90%: 301, 99%: 903, 99,9%: 46.334, 99,99%: 178.419, 99,999%: 1.079.241, 99,9999%: 4.897.354, 99,99999%: 17.869.607 Avg: 347, Avg90: 140, Min: 0, Max: 22.034.930, 20.000.000 jobs, nano res = 300,87578
+535.708.406.948: building B_DIS-8T-4Q (throttled)
+535.819.185.156: Assigning tasks finished?
+535.819.348.231: assigning 20000000 tasks started in 1 threads (throttled)

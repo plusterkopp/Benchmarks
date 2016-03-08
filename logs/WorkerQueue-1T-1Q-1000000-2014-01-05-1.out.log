@@ -1,0 +1,6 @@
+11.174: Creating 1.000.000 jobs 
+887.494.360: warmup
+5.904.940.990: Single Thread Speed: 1.230.000 jobs in 5.000ms, total size 0 M in 5.007 ms (0 ops/ms, 245.656,1 jobs/s
+5.909.580.966: estimate single thread
+12.049.002.316: Single Thread Speed: 1.280.000 jobs in 5.000ms, total size 0 M in 6.135 ms (0 ops/ms, 208.639 jobs/s
+12.883.207.221: building DIS-1T-1Q

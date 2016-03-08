@@ -6,7 +6,7 @@ import de.icubic.mm.bench.base.*;
 public class Task implements Runnable {
 
 	public static int MatrixSize = 50;
-	public static int MatrixSizeMax = 500;
+	public static final int MatrixSizeMax = 500;
 
 	static int[][] matrix_A = null;
 	static int[][] matrix_B = null;
