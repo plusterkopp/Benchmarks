@@ -1,7 +1,0 @@
-1.159.971.690.575: Watcher LBQ - 3T - 1Q stuck at 92.125 finished tasks, qStat: size: 69665
-1.165.023.246.648: Assigner-0 dead with 0 jobs to assign while queue stuck
-1.302.447.315.052: Watcher Multi_LBQ - 2T - 2Q stuck at 0 finished tasks, qStat: empty: , filled: 0 (3972)  1 (3971)  
-1.317.740.337.322: Watcher Multi_LBQ - 2T - 2Q stuck at 1.867.176 finished tasks, qStat: empty: , filled: 0 (493)  1 (36505)  
-1.393.848.504.305: Watcher C_Multi_LBQ - 2T - 2Q stuck at 0 finished tasks, qStat: empty: , filled: 0 (294556)  1 (294572)  
-1.406.798.218.829: Watcher C_Multi_LBQ - 2T - 2Q stuck at 8.921.746 finished tasks, qStat: empty: 0 1 , filled: 
-1.409.280.296.687: Assigner-1 dead with 0 jobs to assign while queue stuck
