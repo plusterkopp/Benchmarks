@@ -145,14 +145,14 @@ public class MapBench {
 			}
 		};
 
-		final MapRunnable koloHashMapBench = new UtilMapRunnable( "KoloHashMap IntInt") {
+		final MapRunnable koloHashMapBenchII = new UtilMapRunnable( "KoloHashMap IntInt") {
 			@Override
 			void createMap() {
 				map = HashIntIntMaps.newMutableMap();
 			}
 		};
 
-		final MapRunnable koloHashMapBench4 = new UtilMapRunnable( "KoloHashMap IntInt Imm") {
+		final MapRunnable koloHashMapBenchII_Imm = new UtilMapRunnable( "KoloHashMap IntInt Imm") {
 			@Override
 			void createMap() {
 				map = new HashMap<Integer, Integer>( RunSize);
@@ -167,14 +167,14 @@ public class MapBench {
 
 		};
 
-		final MapRunnable koloHashMapBench2 = new UtilMapRunnable( "KoloHashMap ObjObj") {
+		final MapRunnable koloHashMapBenchOO = new UtilMapRunnable( "KoloHashMap ObjObj") {
 			@Override
 			void createMap() {
 				map = HashObjObjMaps.newMutableMap();
 			}
 		};
 
-		final MapRunnable tIntIntHashMapBench = new MapRunnable( "TIntIntHashMap") {
+		final MapRunnable troveHashMapBenchII = new MapRunnable( "TIntIntHashMap") {
 
 			private TIntIntHashMap map;
 
@@ -205,14 +205,15 @@ public class MapBench {
 			@Override
 			public void run() {
 				BenchRunner	runner = new BenchRunner( lbench);
-				runner.setCSVName( "MapBench-wksdrrh1.csv", "Test\tns/run");
+				runner.setCSVName( "MapBench-dagobert.csv", "Test\tns/run");
 				runner.setRuntime( TimeUnit.SECONDS, 10);
 				runner.run();
 				runner.printResults();
 				double lruns = runner.getRunsPerSecond();
 				runner.setEmptyLoops( lruns);
 
-				MapRunnable[] benches = { hashMapBench, concHashMapBench, koloHashMapBench, koloHashMapBench2, tIntIntHashMapBench, koloHashMapBench4};
+				MapRunnable[] benches = { hashMapBench, concHashMapBench, koloHashMapBenchII, koloHashMapBenchOO,
+						troveHashMapBenchII, koloHashMapBenchII_Imm };
 				int secs = 5;
 				BenchLogger.sysinfo( "Warmup " + secs + " s");
 				runner.setRuntime( TimeUnit.SECONDS, secs);
@@ -222,10 +223,10 @@ public class MapBench {
 					runner.printResults();
 				}
 
-				int[] runSizes = { 10, 100, 1000, 10000};
+				int[] runSizes = { 3, 30, 300, 3000, 30000, 300000};
 				for ( int i : runSizes) {
 					RunSize = i;
-					secs = 5;
+					secs = 10;
 					BenchLogger.sysinfo( "Runs " + secs + " s");
 					runner.setRuntime( TimeUnit.SECONDS, secs);
 					for ( MapRunnable iBenchRunnable : benches) {

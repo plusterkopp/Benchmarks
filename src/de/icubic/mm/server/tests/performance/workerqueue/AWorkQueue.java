@@ -51,7 +51,7 @@ public abstract class AWorkQueue implements IWorkQueue {
 				if ( useAffinity) {
 					al = setAffinityFor( queue);
 					if ( maxQueues > 1) {
-						BenchLogger.sysinfo( AffinityLock.dumpLocks());
+						// BenchLogger.sysinfo( AffinityLock.dumpLocks());
 					}
 				}
 				workersReady.countDown();
