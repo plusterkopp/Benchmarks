@@ -6,14 +6,17 @@ import java.util.*;
 
 import de.icubic.mm.bench.base.*;
 import de.icubic.mm.server.tests.performance.workerqueue.WorkerQueueFactory.*;
+import de.icubic.mm.server.utils.*;
 import net.openhft.affinity.*;
+import net.openhft.affinity.impl.*;
 
-public class MainClass {
+public class MainClassAff {
 
 	public static NumberFormat	lnf = new DecimalFormat();
 	public static NumberFormat	dnf = new DecimalFormat();
 	private static double secsPerJobNSpeed;
 	private static double secsPerJobNHalfSpeed;
+	private static double secsPerJobSocketSpeed;
 	private static double secsPerJobNMinusOneSpeed;
 	private static double singleSpeed;
 
@@ -21,12 +24,20 @@ public class MainClass {
 
 		if ( args.length !=5) {
 			BenchLogger.sysout( "Incorrect usage");
-			BenchLogger.sysout( "Usage -> java MainClass " + "<number of threads> <number of queues> <number of task> <job size in NS> <machine name>");
+			BenchLogger.sysout( "Usage -> java MainClass " + "<number of task> <job size in NS> <machine name>");
 			System.exit( - 1);
 		}
 
-		int nThreads = Integer.parseInt( args[ 0]);
-		int nQueues = Integer.parseInt( args[ 1]);
+		IAffinity aff = Affinity.getAffinityImpl();
+		if ( ! ( aff instanceof WindowsJNAAffinity)) {
+			BenchLogger.sysout( "Need Windows Affinity");
+			System.exit( - 1);
+			return;
+		}
+		WindowsJNAAffinity	waff = ( WindowsJNAAffinity) aff;
+		WindowsCpuLayout layout = ( WindowsCpuLayout) waff.getDefaultLayout();
+		int nThreads = layout.cpus();
+		int nQueues = layout.sockets();
 		int totalTasks = Integer.parseInt( args[ 2]);
 		long jobSizeNS = Long.parseLong( args[ 3]);
 		String	machine = args[4];
@@ -47,11 +58,12 @@ public class MainClass {
 
 		Task[]	tasks;
 
-		BenchLogger.sysinfo( AffinityLock.dumpLocks());
+		BenchLogger.sysinfo( layout.toString());
 		BenchLogger.sysinfo( "Creating " + lnf.format( totalTasks) + " jobs ");
 		tasks = WorkAssignerThread.createTasks( totalTasks);
+		BenchLogger.sysinfo( "Creating " + lnf.format( totalTasks) + " jobs finished on node " + WorkAssignerThread.createdOnNode);
 		BenchLogger.sysout( "warmup");
-		getRawSpeed( tasks, 5, 1, 100);
+		getRawSpeed( tasks, 5, 1, 100, false);
 
 		final Task[] fTasks = tasks;
 		ProblemSizer	ps = new ProblemSizer( tasks);
@@ -68,16 +80,23 @@ public class MainClass {
 		writer.put( "Ops/Job", String.format( Locale.GERMANY, "%e", ( double) ops / tasks.length));
 
 		BenchLogger.sysinfo( "warmup 2");
-		getRawSpeed( tasks, 20, 1, 1000);
+		getRawSpeed( tasks, 20, 1, 1000, false);
 		BenchLogger.sysout( "estimate single thread");
-		singleSpeed = getRawSpeed( tasks, 10, 1, 10000);
-		double nSpeed = getRawSpeed( tasks, 10, nThreads, 10000);
+		singleSpeed = getRawSpeed( tasks, 10, 1, 10000, false);
+		double nSpeed = getRawSpeed( tasks, 10, nThreads, 10000, false);
 		secsPerJobNSpeed = 1 / nSpeed;
 		BenchLogger.sysout( "Max Speedup: " + dnf.format( nSpeed / singleSpeed));
-		double nHalfSpeed = getRawSpeed( tasks, 10, nThreads / 2, 10000);
-		secsPerJobNHalfSpeed = 1 / nHalfSpeed;
-		BenchLogger.sysout( "Half Speedup: " + dnf.format( nHalfSpeed / singleSpeed));
-		double nMinusOneSpeed = getRawSpeed( tasks, 10, nThreads - 1, 10000);
+		double nSocketSpeed = getRawSpeed( tasks, 10, AffinityThread.getThreadsPerSocket(), 10000, false);
+		secsPerJobSocketSpeed = 1 / nSocketSpeed;
+		BenchLogger.sysout( "Node Speedup: " + dnf.format( nSocketSpeed / singleSpeed));
+		double nOtherSocketSpeed = getRawSpeed( tasks, 10, AffinityThread.getThreadsPerSocket(), 10000, true);
+		BenchLogger.sysout( "Other Node Speedup: " + dnf.format( nOtherSocketSpeed / singleSpeed));
+		if ( AffinityThread.getThreadsPerCore() > 1) {
+			double nHalfSpeed = getRawSpeed( tasks, 10, nThreads / 2, 10000, false);
+			secsPerJobNHalfSpeed = 1 / nHalfSpeed;
+			BenchLogger.sysout( "Half Speedup: " + dnf.format( nHalfSpeed / singleSpeed));
+		}
+		double nMinusOneSpeed = getRawSpeed( tasks, 10, nThreads - 1, 10000, false);
 		secsPerJobNMinusOneSpeed = 1 / nMinusOneSpeed;
 		BenchLogger.sysout( "MinusOne Speedup: " + dnf.format( nMinusOneSpeed / singleSpeed));
 		writer.put( "Single", String.format( Locale.GERMANY, "%e", singleSpeed));
@@ -105,7 +124,7 @@ public class MainClass {
 		BenchLogger.sysout( "\n" + writer.asString());
 	}
 
-	private static double getRawSpeed( final Task[] tasks, final int runTimeS, int nThreads, int batchSizeArg) {
+	private static double getRawSpeed( final Task[] tasks, final int runTimeS, int nThreads, int batchSizeArg, boolean useOtherNode) {
 		final int		width = tasks.length / nThreads;
 		final int		batchSize = Math.min( batchSizeArg, width);
 
@@ -120,7 +139,7 @@ public class MainClass {
 			final int lowerBound = width * t;
 			final int upperBound = lowerBound + width;
 			final int tF = t;
-			threads[ t] = new Thread( "RawSpeed " + t + "/" + nThreads) {
+			Runnable r = new Runnable() {
 				@Override
 				public void run() {
 					long	startTimeT = System.currentTimeMillis();
@@ -145,6 +164,15 @@ public class MainClass {
 					}
 				}
 			};
+			AffinityManager.NumaNode node = null;
+			if ( nThreads <= AffinityThread.getNumThreadsOnNode( WorkAssignerThread.createdOnNode)) {
+				if ( useOtherNode && AffinityThread.getNumNodes() > 1) {
+					node = AffinityThread.getOtherNode( node);
+				} else {
+					node = WorkAssignerThread.createdOnNode;
+				}
+			}
+			threads[ t] = new AffinityThread( r, "RawSpeed " + t + "/" + nThreads, node);
 			threads[ t].start();
 		}
 		long	runCount = 0;
@@ -185,6 +213,7 @@ public class MainClass {
 		String	id = "" + type + " - " + numThreadsActual + "T - " + workQueue.getNumQueues() + "Q";
 		try {
 			workQueue.startAllThreads( id);
+			BenchLogger.sysinfo( "bound: " + AffinityThread.getBoundLocations());
 		} catch ( InterruptedException ie) {
 			BenchLogger.syserr( "startAllThreads interrupted", ie);
 		}
@@ -217,6 +246,8 @@ public class MainClass {
 			double secsPerJobExpected;
 			if ( numThreadsActual == nThreads) {
 				secsPerJobExpected = secsPerJobNSpeed;
+			} else if ( numThreadsActual == AffinityThread.getThreadsPerSocket()) {
+				secsPerJobExpected = secsPerJobSocketSpeed;
 			} else if ( numThreadsActual == nThreads / 2) {
 				secsPerJobExpected = secsPerJobNHalfSpeed;
 			} else if ( numThreadsActual == nThreads - 1) {

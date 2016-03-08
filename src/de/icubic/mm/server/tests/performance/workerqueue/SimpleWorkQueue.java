@@ -2,9 +2,10 @@ package de.icubic.mm.server.tests.performance.workerqueue;
 
 import java.util.concurrent.*;
 
+import de.icubic.mm.bench.base.BenchLogger;
+
 public abstract class SimpleWorkQueue extends AWorkQueue {
-	static final int QUEUE_THRESHOLD = 300;
-	private final BlockingQueue<Runnable> queue;
+	private BlockingQueue<Runnable> queue;
 
 //	/* constructor to initiate worker threads and queue associated with it */
 //	public SimpleWorkQueue( int nThreads, int totalTasks) {
@@ -14,7 +15,7 @@ public abstract class SimpleWorkQueue extends AWorkQueue {
 	/* constructor to initiate worker threads and queue associated with it */
 	public SimpleWorkQueue( int nThreads, int totalTasks, boolean isBatched, boolean useAffinity) {
 		super( nThreads, 1, totalTasks, isBatched, useAffinity);
-		queue = createQueue();
+//		queue = createQueue();
 		threads = new PoolWorker[ nThreads];
 	}
 
@@ -38,6 +39,16 @@ public abstract class SimpleWorkQueue extends AWorkQueue {
 			return queue;
 		}
 
+	}
+
+	@Override
+	public void createQueue(int threadIndex) {
+		synchronized ( this) {
+			if ( queue == null) {
+				queue = createQueue();
+				BenchLogger.sysinfo( Thread.currentThread().getName() + " create queue " + threadIndex);
+			}
+		}
 	}
 
 	@Override
