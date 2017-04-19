@@ -9,6 +9,7 @@ import de.icubic.mm.server.tests.performance.workerqueue.WorkerQueueFactory.*;
 import de.icubic.mm.server.utils.*;
 import net.openhft.affinity.*;
 import net.openhft.affinity.impl.*;
+import net.openhft.affinity.impl.LayoutEntities.Socket;
 
 public class MainClassAff {
 
@@ -29,13 +30,13 @@ public class MainClassAff {
 		}
 
 		IAffinity aff = Affinity.getAffinityImpl();
-		if ( ! ( aff instanceof WindowsJNAAffinity)) {
-			BenchLogger.sysout( "Need Windows Affinity");
+		if ( ! ( aff instanceof IDefaultLayoutAffinity)) {
+			BenchLogger.sysout( "Need IDefaultLayoutAffinity");
 			System.exit( - 1);
 			return;
 		}
-		WindowsJNAAffinity	waff = ( WindowsJNAAffinity) aff;
-		WindowsCpuLayout layout = ( WindowsCpuLayout) waff.getDefaultLayout();
+		IDefaultLayoutAffinity	waff = ( IDefaultLayoutAffinity) aff;
+		VanillaCpuLayout layout = ( VanillaCpuLayout) waff.getDefaultLayout();
 		int nThreads = layout.cpus();
 		int nQueues = layout.sockets();
 		int totalTasks = Integer.parseInt( args[ 2]);
@@ -61,7 +62,7 @@ public class MainClassAff {
 		BenchLogger.sysinfo( layout.toString());
 		BenchLogger.sysinfo( "Creating " + lnf.format( totalTasks) + " jobs ");
 		tasks = WorkAssignerThread.createTasks( totalTasks);
-		BenchLogger.sysinfo( "Creating " + lnf.format( totalTasks) + " jobs finished on node " + WorkAssignerThread.createdOnNode);
+		BenchLogger.sysinfo( "Creating " + lnf.format( totalTasks) + " jobs finished on socket " + WorkAssignerThread.createdOnSocket);
 		BenchLogger.sysout( "warmup");
 		getRawSpeed( tasks, 5, 1, 100, false);
 
@@ -164,15 +165,15 @@ public class MainClassAff {
 					}
 				}
 			};
-			AffinityManager.NumaNode node = null;
-			if ( nThreads <= AffinityThread.getNumThreadsOnNode( WorkAssignerThread.createdOnNode)) {
-				if ( useOtherNode && AffinityThread.getNumNodes() > 1) {
-					node = AffinityThread.getOtherNode( node);
+			Socket socket = null;
+			if ( nThreads <= AffinityThread.getThreadsPerSocket()) {
+				if ( useOtherNode && AffinityThread.getNumSockets() > 1) {
+					socket = AffinityThread.getOtherSocket( socket);
 				} else {
-					node = WorkAssignerThread.createdOnNode;
+					socket = WorkAssignerThread.createdOnSocket;
 				}
 			}
-			threads[ t] = new AffinityThread( r, "RawSpeed " + t + "/" + nThreads, node);
+			threads[ t] = new AffinityThread( r, "RawSpeed " + t + "/" + nThreads, socket);
 			threads[ t].start();
 		}
 		long	runCount = 0;

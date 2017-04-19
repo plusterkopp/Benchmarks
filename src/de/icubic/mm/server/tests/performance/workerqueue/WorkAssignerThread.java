@@ -10,13 +10,15 @@ import de.icubic.mm.server.utils.*;
 import net.openhft.affinity.*;
 import net.openhft.affinity.AffinityManager.*;
 import net.openhft.affinity.impl.*;
+import net.openhft.affinity.impl.LayoutEntities.LayoutEntity;
+import net.openhft.affinity.impl.LayoutEntities.Socket;
 
 /*
  * Assigns task to worker queue
  */
 public class WorkAssignerThread extends Thread {
 
-	static NumaNode createdOnNode;
+	static Socket createdOnSocket;
 
 	protected final IWorkQueue workQ;
 
@@ -55,7 +57,7 @@ public class WorkAssignerThread extends Thread {
 		threads = new AssignerThread[ numThreads];
 		final long	sizes[] = new long[ numThreads];
 		final int	block = totalTasks / numThreads;
-		NumaNode node = createdOnNode;
+		Socket socket = createdOnSocket;
 		enqueueStartNano = BenchRunner.getNow();
 		for ( int t = 0;  t < numThreads;  t++) {
 			final int	threadIndex = t;
@@ -181,16 +183,18 @@ public class WorkAssignerThread extends Thread {
 	}
 
 	private static void recordCPU() {
-		createdOnNode = null;
+		createdOnSocket = null;
 		IAffinity aff = Affinity.getAffinityImpl();
-		if ( ! ( aff instanceof WindowsJNAAffinity)) {
-			return;
+		if (aff instanceof IDefaultLayoutAffinity) {
+			IDefaultLayoutAffinity idl = (IDefaultLayoutAffinity) aff;
+			CpuLayout layout = idl.getDefaultLayout();
+			if (layout instanceof VanillaCpuLayout) {
+				VanillaCpuLayout vl = (VanillaCpuLayout) layout;
+				int cpuID = aff.getCpu();
+				int socketID = layout.socketId( cpuID);
+				createdOnSocket = vl.packages.get( socketID);
+			}
 		}
-		WindowsJNAAffinity	waff = ( WindowsJNAAffinity) aff;
-		WindowsCpuLayout layout = ( WindowsCpuLayout) waff.getDefaultLayout();
-		int cpuID = waff.getCpu();
-		int nodeId = layout.numaNodeId( cpuID);
-		createdOnNode = layout.nodes.get( nodeId);
 	}
 
 	public int getNumQueued() {

@@ -10,6 +10,8 @@ import de.icubic.mm.server.utils.*;
 import net.openhft.affinity.*;
 import net.openhft.affinity.AffinityManager.*;
 import net.openhft.affinity.impl.*;
+import net.openhft.affinity.impl.LayoutEntities.LayoutEntity;
+import net.openhft.affinity.impl.LayoutEntities.Socket;
 
 
 public abstract class AWorkQueue implements IWorkQueue {
@@ -57,9 +59,15 @@ public abstract class AWorkQueue implements IWorkQueue {
 				setAffinityFor( queue);
 			}
 			int cpu = Affinity.getCpu();
-			WindowsJNAAffinity waff = ( WindowsJNAAffinity) Affinity.getAffinityImpl();
-			WindowsCpuLayout layout = ( WindowsCpuLayout) waff.getDefaultLayout();
-			BenchLogger.sysinfo( Thread.currentThread().getName() + " running on: " + layout.lCpu( cpu));
+			IAffinity aff = Affinity.getAffinityImpl();
+			if ( aff instanceof IDefaultLayoutAffinity) {
+				IDefaultLayoutAffinity	idla = (IDefaultLayoutAffinity) aff;
+				CpuLayout	layout = idla.getDefaultLayout();
+				if (layout instanceof VanillaCpuLayout) {
+					VanillaCpuLayout vl = (VanillaCpuLayout) layout;
+					BenchLogger.sysinfo( Thread.currentThread().getName() + " running on: " + vl.getCPUInfo(cpu));
+				}
+			}
 			workersReady.countDown();
 
 			if ( isBatched()) {
@@ -184,7 +192,7 @@ public abstract class AWorkQueue implements IWorkQueue {
 		return nThreads;
 	}
 
-	public AffinityManager.LayoutEntity setAffinityFor( Object key) { // binde alle Threads eines key an den gleichen Sockel
+	public LayoutEntity setAffinityFor( Object key) { // binde alle Threads eines key an den gleichen Sockel
 		final AffinityManager am = AffinityManager.INSTANCE;
 		if ( AffinityLock.cpuLayout().sockets() < 2) {	// gibt nur einen Sockel, binde den Thread an einen Kern
 			return am.getSocket( 0);

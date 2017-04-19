@@ -3,6 +3,7 @@ package de.icubic.mm.server.tests.performance.workerqueue;
 import java.util.concurrent.*;
 
 import net.openhft.affinity.AffinityManager.*;
+import net.openhft.affinity.impl.LayoutEntities.LayoutEntity;
 
 public interface IWorkQueue {
 
