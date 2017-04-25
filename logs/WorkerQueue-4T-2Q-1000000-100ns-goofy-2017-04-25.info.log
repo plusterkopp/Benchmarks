@@ -1,0 +1,870 @@
+4,562: 0: Reserved for this application
+1: Reserved for this application
+2: Reserved for this application
+3: General use CPU
+
+761,763: Creating 1.000.000 jobs 
+121,412,134: warmup
+5,125,716,433: No-Queue Speed in 1 Threads: 102.600 jobs in 5.000ms, total size 3.338,5 M in 5.000 ms (667.706 ops/ms, 20.520 jobs/s
+5,333,388,451: estimate: 2,911,400 jobs in 100ms, actual 109 ms (13,364 ops/ms, 26,710,091.743119 jobs/s, 37 ns/job
+5,333,863,983: eval for: 1 -> -63 (37 of 100)
+5,334,134,819: eval for: 1 -> -63 (37 of 100)
+6,380,283,016: estimate: 43,426,700 jobs in 1,000ms, actual 1,000 ms (27,929 ops/ms, 43,426,700 jobs/s, 23 ns/job
+6,380,520,211: eval for: 1.4 -> -77 (23 of 100)
+7,427,153,632: estimate: 30,416,900 jobs in 1,000ms, actual 1,000 ms (72,630 ops/ms, 30,416,900 jobs/s, 32 ns/job
+7,427,357,757: eval for: 1.96 -> -68 (32 of 100)
+9,036,432,878: estimate: 20,875,900 jobs in 1,000ms, actual 1,000 ms (118,691 ops/ms, 20,875,900 jobs/s, 47 ns/job
+9,036,684,898: eval for: 2.744 -> -53 (47 of 100)
+10,067,794,562: estimate: 13,247,600 jobs in 1,000ms, actual 1,000 ms (199,739 ops/ms, 13,247,600 jobs/s, 75 ns/job
+10,068,026,055: eval for: 3.8416 -> -25 (75 of 100)
+12,192,847,874: estimate: 14,921,100 jobs in 2,000ms, actual 2,000 ms (291,267 ops/ms, 7,460,550 jobs/s, 134 ns/job
+12,193,085,639: eval for: 5.37824 -> 34 (134 of 100)
+12,524,869,030: estimate problem size for 100, +/- 5
+14,599,298,791: estimate: 64,092,000 jobs in 2,000ms, actual 2,000 ms (59,825 ops/ms, 32,046,000 jobs/s, 31 ns/job
+14,599,501,206: eval for: 1.793 -> -69 (31 of 100)
+15,630,660,476: estimate: 3,001,000 jobs in 1,000ms, actual 1,000 ms (400,001 ops/ms, 3,001,000 jobs/s, 333 ns/job
+15,630,832,100: eval for: 8.067 -> 233 (333 of 100)
+15,637,929,147: eval for: 1.793 -> -69 (31 of 100)
+15,638,049,456: eval for: 8.067 -> 233 (333 of 100)
+15,786,936,918: estimate: 928,000 jobs in 100ms, actual 110 ms (263,372 ops/ms, 8,436,363.636 jobs/s, 118 ns/job
+15,787,130,209: eval for: 4.93 -> 18 (118 of 100)
+18,240,111,916: estimate: 20,930,000 jobs in 2,000ms, actual 2,000 ms (231,563 ops/ms, 10,465,000 jobs/s, 95 ns/job
+18,240,301,216: eval for: 4.489 -> -5 (95 of 100)
+18,577,708,875: warmup 2
+38,569,520,501: No-Queue Speed in 1 Threads: 215.979.000 jobs in 20.000ms, total size 4.779,1 M in 20.001 ms (238.941 ops/ms, 10.798.410,1 jobs/s
+38,569,810,723: estimate single thread
+48,570,847,883: No-Queue Speed in 1 Threads: 106.230.000 jobs in 10.000ms, total size 2.350,6 M in 10.001 ms (235.036 ops/ms, 10.621.937,8 jobs/s
+58,571,825,174: No-Queue Speed in 4 Threads: 196.680.000 jobs in 10.000ms, total size 4.352 M in 10.000 ms (435.198 ops/ms, 19.668.000 jobs/s
+58,575,206,349: Max Speedup: 1,852
+68,571,575,434: No-Queue Speed in 2 Threads: 143.710.000 jobs in 10.000ms, total size 3.179,9 M in 10.001 ms (317.961 ops/ms, 14.369.563 jobs/s
+68,571,804,647: Half Speedup: 1,353
+78,572,456,364: No-Queue Speed in 3 Threads: 185.250.000 jobs in 10.000ms, total size 4.099,7 M in 10.000 ms (409.973 ops/ms, 18.525.000 jobs/s
+78,572,664,481: MinusOne Speedup: 1,744
+79,014,660,503: building LTQ-4T-2Q
+79,059,366,141: assigning 1000000 tasks started in 1 threads
+79,062,538,060: starting watcher
+79,063,401,885: Worker-LTQ - 3T - 1Q-Q1-0 create queue 1
+79,063,630,528: Worker-LTQ - 3T - 1Q-Q1-1 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+79,063,631,098: Worker-LTQ - 3T - 1Q-Q1-2 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+79,063,631,098: Worker-LTQ - 3T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+79,063,991,452: Main waiting for LTQ - 3T - 1Q
+79,317,403,988: assigning 1000000 tasks finished 3,893,242.752 jobs/s
+79,384,131,740: Main notified
+79,384,480,121: Main resuming from LTQ - 3T - 1Q
+79,384,724,158: LTQ: 1.000.000 jobs,  total size: 22,1M in 328 ms (67.461 ops/ms, 3.048.780,5 jobs/s, speedup 0,287, 274,019 ns (83,542%) overhead, 16,458% of max perf
+79,571,895,876: closed threads after 1000000 Tasks, Watcher LTQ - 3T - 1Q finished
+79,571,966,009: building LTQ_A-4T-2Q
+79,578,340,636: assigning 1000000 tasks started in 1 threads
+79,578,686,166: Worker-LTQ_A - 3T - 1Q-Q1-0 create queue 1
+79,578,565,287: starting watcher
+79,580,492,500: Worker-LTQ_A - 3T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+79,580,494,211: Worker-LTQ_A - 3T - 1Q-Q1-1 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+79,580,510,746: Worker-LTQ_A - 3T - 1Q-Q1-2 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+79,581,070,664: Main waiting for LTQ_A - 3T - 1Q
+79,790,259,365: assigning 1000000 tasks finished 4,728,688.495 jobs/s
+79,899,670,322: Main notified
+79,899,966,246: Main resuming from LTQ_A - 3T - 1Q
+79,900,256,468: LTQ_A: 1.000.000 jobs,  total size: 22,1M in 328 ms (67.461 ops/ms, 3.048.780,5 jobs/s, speedup 0,287, 274,019 ns (83,542%) overhead, 16,458% of max perf
+80,103,190,849: closed threads after 1000000 Tasks, Watcher LTQ_A - 3T - 1Q finished
+80,103,687,477: building LTQ_B-4T-2Q
+80,109,556,354: assigning 1000000 tasks started in 1 threads
+80,109,681,223: Worker-LTQ_B - 3T - 1Q-Q1-0 create queue 1
+80,109,840,304: Worker-LTQ_B - 3T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+80,109,883,638: starting watcher
+80,110,144,781: Worker-LTQ_B - 3T - 1Q-Q1-2 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+80,110,090,044: Worker-LTQ_B - 3T - 1Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+80,110,303,862: Main waiting for LTQ_B - 3T - 1Q
+80,227,258,888: assigning 1000000 tasks finished 8,508,730.315 jobs/s
+80,353,028,348: Main notified
+80,353,319,140: Main resuming from LTQ_B - 3T - 1Q
+80,353,534,669: LTQ_B: 1.000.000 jobs,  in 1.004 batches, (996 t/b), total size: 22,1M in 250 ms (88.509 ops/ms, 4.000.000 jobs/s, speedup 0,377, 196,019 ns (78,408%) overhead, 21,592% of max perf
+80,492,767,820: closed threads after 1000000 Tasks, Watcher LTQ_B - 3T - 1Q finished
+80,492,853,918: building LTQ_AB-4T-2Q
+80,495,062,230: assigning 1000000 tasks started in 1 threads
+80,495,065,651: Worker-LTQ_AB - 3T - 1Q-Q1-0 create queue 1
+80,495,286,311: starting watcher
+80,495,482,454: Worker-LTQ_AB - 3T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+80,495,524,077: Worker-LTQ_AB - 3T - 1Q-Q1-2 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+80,495,486,445: Worker-LTQ_AB - 3T - 1Q-Q1-1 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+80,495,734,474: Main waiting for LTQ_AB - 3T - 1Q
+80,652,649,519: assigning 1000000 tasks finished 6,359,103.375 jobs/s
+80,744,171,037: Main notified
+80,744,758,894: Main resuming from LTQ_AB - 3T - 1Q
+80,745,171,705: LTQ_AB: 1.000.000 jobs,  in 1.009 batches, (991,1 t/b), total size: 22,1M in 250 ms (88.509 ops/ms, 4.000.000 jobs/s, speedup 0,377, 196,019 ns (78,408%) overhead, 21,592% of max perf
+80,894,097,369: closed threads after 1000000 Tasks, Watcher LTQ_AB - 3T - 1Q finished
+80,894,122,457: building LTQ_B1-4T-2Q
+80,952,165,207: assigning 1000000 tasks started in 1 threads
+80,952,257,576: starting watcher
+80,952,262,708: Worker-LTQ_B1 - 1T - 1Q-Q1-0 create queue 1
+80,952,458,280: Worker-LTQ_B1 - 1T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+80,952,548,939: Main waiting for LTQ_B1 - 1T - 1Q
+81,035,113,478: assigning 1000000 tasks finished 12,080,119.654 jobs/s
+81,165,872,595: Main notified
+81,166,524,882: Main resuming from LTQ_B1 - 1T - 1Q
+81,167,014,098: LTQ_B1: 1.000.000 jobs,  in 1.001 batches, (999 t/b), total size: 22,1M in 219 ms (101.038 ops/ms, 4.566.210 jobs/s, speedup 0,43, 124,855 ns (57,012%) overhead, 42,988% of max perf
+81,327,525,277: closed threads after 1000000 Tasks, Watcher LTQ_B1 - 1T - 1Q finished
+81,327,532,119: building LTQ_AB1-4T-2Q
+81,333,288,670: assigning 1000000 tasks started in 1 threads
+81,333,358,232: Worker-LTQ_AB1 - 1T - 1Q-Q1-0 create queue 1
+81,333,366,214: starting watcher
+81,333,553,234: Worker-LTQ_AB1 - 1T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+81,333,675,823: Main waiting for LTQ_AB1 - 1T - 1Q
+81,423,895,616: assigning 1000000 tasks finished 11,063,346.098 jobs/s
+81,540,631,123: Main notified
+81,541,126,040: Main resuming from LTQ_AB1 - 1T - 1Q
+81,541,302,796: LTQ_AB1: 1.000.000 jobs,  in 1.001 batches, (999 t/b), total size: 22,1M in 219 ms (101.038 ops/ms, 4.566.210 jobs/s, speedup 0,43, 124,855 ns (57,012%) overhead, 42,988% of max perf
+81,675,513,221: building LTQ_M-4T-2Q
+81,675,508,089: closed threads after 1000000 Tasks, Watcher LTQ_AB1 - 1T - 1Q finished
+81,683,618,348: assigning 1000000 tasks started in 2 threads
+81,683,781,420: Worker-LTQ_M - 2T - 2Q-Q0-0 create queue 0
+81,683,984,975: Worker-LTQ_M - 2T - 2Q-Q1-1 create queue 1
+81,684,078,485: starting watcher
+81,684,269,496: Worker-LTQ_M - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+81,684,063,090: Worker-LTQ_M - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+81,684,412,611: Main waiting for LTQ_M - 2T - 2Q
+81,788,123,465: assigning 1000000 tasks finished 9,587,689.008 jobs/s
+81,900,080,852: Main notified
+81,900,621,954: Main resuming from LTQ_M - 2T - 2Q
+81,900,984,590: LTQ_M: 1.000.000 jobs,  total size: 22,1M in 218 ms (101.502 ops/ms, 4.587.156 jobs/s, speedup 0,432, 148,408 ns (68,077%) overhead, 31,923% of max perf
+82,111,759,534: closed threads after 1000000 Tasks, Watcher LTQ_M - 2T - 2Q finished
+82,111,785,193: building LTQ_AM-4T-2Q
+82,117,951,704: assigning 1000000 tasks started in 2 threads
+82,118,027,538: Worker-LTQ_AM - 2T - 2Q-Q0-0 create queue 0
+82,118,521,885: Worker-LTQ_AM - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+82,118,797,853: Worker-LTQ_AM - 2T - 2Q-Q1-1 create queue 1
+82,118,968,907: Worker-LTQ_AM - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+82,119,080,093: Main waiting for LTQ_AM - 2T - 2Q
+82,118,039,512: starting watcher
+82,237,372,765: assigning 1000000 tasks finished 8,384,982.098 jobs/s
+82,337,476,081: Main notified
+82,337,670,513: Main resuming from LTQ_AM - 2T - 2Q
+82,337,818,760: LTQ_AM: 1.000.000 jobs,  total size: 22,1M in 234 ms (94.561 ops/ms, 4.273.504,3 jobs/s, speedup 0,402, 164,408 ns (70,26%) overhead, 29,74% of max perf
+82,492,390,930: closed threads after 1000000 Tasks, Watcher LTQ_AM - 2T - 2Q finished
+82,492,391,501: building LTQ_MC-4T-2Q
+82,498,668,627: assigning 1000000 tasks started in 2 threads
+82,498,793,497: Worker-LTQ_MC - 2T - 2Q-Q0-0 create queue 0
+82,498,933,191: Worker-LTQ_MC - 2T - 2Q-Q1-1 create queue 1
+82,499,014,727: Worker-LTQ_MC - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+82,499,066,043: Worker-LTQ_MC - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+82,499,155,562: Main waiting for LTQ_MC - 2T - 2Q
+82,499,175,518: starting watcher
+82,619,244,305: assigning 1000000 tasks finished 8,305,446.896 jobs/s
+82,712,601,236: Main notified
+82,712,772,291: Main resuming from LTQ_MC - 2T - 2Q
+82,712,987,249: LTQ_MC: 1.000.000 jobs,  total size: 22,1M in 219 ms (101.038 ops/ms, 4.566.210 jobs/s, speedup 0,43, 149,408 ns (68,223%) overhead, 31,777% of max perf
+82,884,103,231: closed threads after 1000000 Tasks, Watcher LTQ_MC - 2T - 2Q finished
+82,884,101,520: building LTQ_AMC-4T-2Q
+82,886,243,691: assigning 1000000 tasks started in 2 threads
+82,886,340,622: Worker-LTQ_AMC - 2T - 2Q-Q0-0 create queue 0
+82,886,419,307: starting watcher
+82,886,464,352: Worker-LTQ_AMC - 2T - 2Q-Q1-1 create queue 1
+82,886,500,843: Worker-LTQ_AMC - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+82,886,575,537: Worker-LTQ_AMC - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+82,886,667,906: Main waiting for LTQ_AMC - 2T - 2Q
+82,991,283,638: assigning 1000000 tasks finished 9,538,672.411 jobs/s
+83,103,517,563: Main notified
+83,104,011,340: Main resuming from LTQ_AMC - 2T - 2Q
+83,104,428,713: LTQ_AMC: 1.000.000 jobs,  total size: 22,1M in 219 ms (101.038 ops/ms, 4.566.210 jobs/s, speedup 0,43, 149,408 ns (68,223%) overhead, 31,777% of max perf
+83,266,417,802: building LTQ_BM-4T-2Q
+83,266,419,513: closed threads after 1000000 Tasks, Watcher LTQ_AMC - 2T - 2Q finished
+83,268,251,505: assigning 1000000 tasks started in 2 threads
+83,268,349,006: Worker-LTQ_BM - 2T - 2Q-Q0-0 create queue 0
+83,268,432,823: Worker-LTQ_BM - 2T - 2Q-Q1-1 create queue 1
+83,268,468,744: Worker-LTQ_BM - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+83,268,486,420: starting watcher
+83,268,563,394: Worker-LTQ_BM - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+83,268,675,150: Main waiting for LTQ_BM - 2T - 2Q
+83,379,959,723: assigning 1000000 tasks finished 8,964,063.518 jobs/s
+83,481,057,436: Main notified
+83,481,482,221: Main resuming from LTQ_BM - 2T - 2Q
+83,482,100,868: LTQ_BM: 1.000.000 jobs,  in 1.002 batches, (998 t/b), total size: 22,1M in 219 ms (101.038 ops/ms, 4.566.210 jobs/s, speedup 0,43, 149,408 ns (68,223%) overhead, 31,777% of max perf
+83,626,295,167: closed threads after 1000000 Tasks, Watcher LTQ_BM - 2T - 2Q finished
+83,626,303,720: building LTQ_ABM-4T-2Q
+83,631,963,340: assigning 1000000 tasks started in 2 threads
+83,632,000,402: Worker-LTQ_ABM - 2T - 2Q-Q0-0 create queue 0
+83,632,076,806: starting watcher
+83,632,195,974: Worker-LTQ_ABM - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+83,632,157,202: Worker-LTQ_ABM - 2T - 2Q-Q1-1 create queue 1
+83,632,512,995: Worker-LTQ_ABM - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+83,632,597,382: Main waiting for LTQ_ABM - 2T - 2Q
+83,730,921,733: assigning 1000000 tasks finished 10,126,203.174 jobs/s
+83,837,591,258: Main notified
+83,837,831,304: Main resuming from LTQ_ABM - 2T - 2Q
+83,838,046,833: LTQ_ABM: 1.000.000 jobs,  in 1.002 batches, (998 t/b), total size: 22,1M in 219 ms (101.038 ops/ms, 4.566.210 jobs/s, speedup 0,43, 149,408 ns (68,223%) overhead, 31,777% of max perf
+83,985,184,409: building LTQ_BMC-4T-2Q
+83,985,191,251: closed threads after 1000000 Tasks, Watcher LTQ_ABM - 2T - 2Q finished
+83,991,010,521: assigning 1000000 tasks started in 2 threads
+83,991,113,724: Worker-LTQ_BMC - 2T - 2Q-Q0-0 create queue 0
+83,991,188,988: starting watcher
+83,991,226,620: Worker-LTQ_BMC - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+83,991,315,568: Worker-LTQ_BMC - 2T - 2Q-Q1-1 create queue 1
+83,991,407,368: Worker-LTQ_BMC - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+83,991,481,491: Main waiting for LTQ_BMC - 2T - 2Q
+84,116,575,286: assigning 1000000 tasks finished 7,971,256.986 jobs/s
+84,212,312,154: Main notified
+84,212,640,009: Main resuming from LTQ_BMC - 2T - 2Q
+84,212,801,940: LTQ_BMC: 1.000.000 jobs,  in 1.898 batches, (526,9 t/b), total size: 22,1M in 234 ms (94.561 ops/ms, 4.273.504,3 jobs/s, speedup 0,402, 164,408 ns (70,26%) overhead, 29,74% of max perf
+84,395,928,792: closed threads after 1000000 Tasks, Watcher LTQ_BMC - 2T - 2Q finished
+84,395,957,871: building LTQ_ABMC-4T-2Q
+84,401,645,430: assigning 1000000 tasks started in 2 threads
+84,401,738,369: Worker-LTQ_ABMC - 2T - 2Q-Q0-0 create queue 0
+84,401,821,046: starting watcher
+84,401,843,283: Worker-LTQ_ABMC - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+84,401,807,931: Worker-LTQ_ABMC - 2T - 2Q-Q1-1 create queue 1
+84,401,991,530: Worker-LTQ_ABMC - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+84,402,067,934: Main waiting for LTQ_ABMC - 2T - 2Q
+84,501,778,396: assigning 1000000 tasks finished 10,002,440.996 jobs/s
+84,619,277,375: Main notified
+84,619,549,352: Main resuming from LTQ_ABMC - 2T - 2Q
+84,620,194,227: LTQ_ABMC: 1.000.000 jobs,  in 7.767 batches, (128,7 t/b), total size: 22,1M in 218 ms (101.502 ops/ms, 4.587.156 jobs/s, speedup 0,432, 148,408 ns (68,077%) overhead, 31,923% of max perf
+84,761,977,800: closed threads after 1000000 Tasks, Watcher LTQ_ABMC - 2T - 2Q finished
+84,761,977,800: building DIS-4T-2Q
+84,907,976,153: Assigning tasks finished?
+84,908,524,097: assigning 1000000 tasks started in 1 threads
+85,019,457,439: assigning 1000000 tasks finished 9,033,691.659 jobs/s
+85,019,865,689: Main waiting for DIS - 3T - 1Q
+85,060,236,238: Main resuming from DIS - 3T - 1Q
+85,060,455,188: DIS: 1.000.000 jobs,  total size: 22,1M in 156 ms (141.842 ops/ms, 6.410.256,4 jobs/s, speedup 0,603, 102,019 ns (65,397%) overhead, 34,603% of max perf
+85,585,984,487: building DIS_A-4T-2Q
+85,599,012,560: Assigning tasks finished?
+85,599,912,307: assigning 1000000 tasks started in 1 threads
+85,657,649,439: assigning 1000000 tasks finished 17,421,209.444 jobs/s
+85,658,323,394: Main waiting for DIS_A - 3T - 1Q
+85,707,665,176: Main resuming from DIS_A - 3T - 1Q
+85,707,925,179: DIS_A: 1.000.000 jobs,  total size: 22,1M in 110 ms (201.158 ops/ms, 9.090.909,1 jobs/s, speedup 0,856, 56,019 ns (50,926%) overhead, 49,074% of max perf
+86,214,442,922: building DIS_B-4T-2Q
+86,227,569,637: Assigning tasks finished?
+86,228,128,985: assigning 1000000 tasks started in 1 threads
+86,296,584,956: assigning 1000000 tasks finished 14,637,922.14 jobs/s
+86,296,787,941: Main waiting for DIS_B - 3T - 1Q
+86,383,332,345: Main resuming from DIS_B - 3T - 1Q
+86,383,553,576: DIS_B: 1.000.000 jobs,  in 20 batches, (50.000 t/b), total size: 22,1M in 156 ms (141.842 ops/ms, 6.410.256,4 jobs/s, speedup 0,603, 102,019 ns (65,397%) overhead, 34,603% of max perf
+86,519,898,189: building DIS_AB-4T-2Q
+86,526,100,051: Assigning tasks finished?
+86,526,539,661: assigning 1000000 tasks started in 1 threads
+86,565,339,931: assigning 1000000 tasks finished 25,852,798.509 jobs/s
+86,565,505,854: Main waiting for DIS_AB - 3T - 1Q
+86,670,100,489: Main resuming from DIS_AB - 3T - 1Q
+86,670,335,974: DIS_AB: 1.000.000 jobs,  in 11 batches, (90.909,1 t/b), total size: 22,1M in 140 ms (158.053 ops/ms, 7.142.857,1 jobs/s, speedup 0,672, 86,019 ns (61,442%) overhead, 38,558% of max perf
+86,817,306,487: building LBQ-4T-2Q
+86,822,917,071: Worker-LBQ - 3T - 1Q-Q1-0 create queue 1
+86,822,963,826: assigning 1000000 tasks started in 1 threads
+86,823,232,381: Worker-LBQ - 3T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+86,823,446,769: Worker-LBQ - 3T - 1Q-Q1-2 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+86,823,446,769: Worker-LBQ - 3T - 1Q-Q1-1 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+86,823,446,769: starting watcher
+86,823,576,771: Main waiting for LBQ - 3T - 1Q
+87,078,498,576: assigning 1000000 tasks finished 3,915,380.208 jobs/s
+87,259,324,176: Main notified
+87,259,622,951: Main resuming from LBQ - 3T - 1Q
+87,259,791,154: LBQ: 1.000.000 jobs,  total size: 22,1M in 437 ms (50.634 ops/ms, 2.288.329,5 jobs/s, speedup 0,215, 383,019 ns (87,647%) overhead, 12,353% of max perf
+87,395,770,851: closed threads after 1000000 Tasks, Watcher LBQ - 3T - 1Q finished
+87,395,776,553: building LBQ_A-4T-2Q
+87,401,640,868: assigning 1000000 tasks started in 1 threads
+87,401,807,931: Worker-LBQ_A - 3T - 1Q-Q1-0 create queue 1
+87,402,048,548: Worker-LBQ_A - 3T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+87,402,716,801: Worker-LBQ_A - 3T - 1Q-Q1-2 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+87,402,527,500: Worker-LBQ_A - 3T - 1Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+87,402,508,114: starting watcher
+87,402,948,294: Main waiting for LBQ_A - 3T - 1Q
+87,706,749,465: assigning 1000000 tasks finished 3,279,170.004 jobs/s
+87,838,069,070: Main notified
+87,839,033,247: Main resuming from LBQ_A - 3T - 1Q
+87,839,412,417: LBQ_A: 1.000.000 jobs,  total size: 22,1M in 437 ms (50.634 ops/ms, 2.288.329,5 jobs/s, speedup 0,215, 383,019 ns (87,647%) overhead, 12,353% of max perf
+88,011,961,835: closed threads after 1000000 Tasks, Watcher LBQ_A - 3T - 1Q finished
+88,011,989,204: building LBQ_M-4T-2Q
+88,017,777,114: assigning 1000000 tasks started in 2 threads
+88,017,993,783: starting watcher
+88,018,008,038: Worker-LBQ_M - 2T - 2Q-Q0-0 create queue 0
+88,018,148,302: Worker-LBQ_M - 2T - 2Q-Q1-1 create queue 1
+88,018,261,198: Worker-LBQ_M - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+88,018,268,040: Worker-LBQ_M - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+88,018,376,375: Main waiting for LBQ_M - 2T - 2Q
+88,136,310,403: assigning 1000000 tasks finished 8,445,955.505 jobs/s
+88,228,381,005: Main notified
+88,228,579,998: Main resuming from LBQ_M - 2T - 2Q
+88,228,757,895: LBQ_M: 1.000.000 jobs,  total size: 22,1M in 219 ms (101.038 ops/ms, 4.566.210 jobs/s, speedup 0,43, 149,408 ns (68,223%) overhead, 31,777% of max perf
+88,376,591,092: closed threads after 1000000 Tasks, Watcher LBQ_M - 2T - 2Q finished
+88,376,593,942: building LBQ_AM-4T-2Q
+88,378,440,190: assigning 1000000 tasks started in 2 threads
+88,378,498,348: Worker-LBQ_AM - 2T - 2Q-Q0-0 create queue 0
+88,378,587,296: starting watcher
+88,378,616,946: Worker-LBQ_AM - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+88,378,636,902: Worker-LBQ_AM - 2T - 2Q-Q1-1 create queue 1
+88,378,778,307: Worker-LBQ_AM - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+88,378,852,431: Main waiting for LBQ_AM - 2T - 2Q
+88,525,345,131: assigning 1000000 tasks finished 6,812,834.579 jobs/s
+88,603,682,916: Main notified
+88,608,215,287: Main resuming from LBQ_AM - 2T - 2Q
+88,608,630,379: LBQ_AM: 1.000.000 jobs,  total size: 22,1M in 234 ms (94.561 ops/ms, 4.273.504,3 jobs/s, speedup 0,402, 164,408 ns (70,26%) overhead, 29,74% of max perf
+88,775,003,593: building LBQ_MC-4T-2Q
+88,775,044,646: closed threads after 1000000 Tasks, Watcher LBQ_AM - 2T - 2Q finished
+88,780,965,979: assigning 1000000 tasks started in 2 threads
+88,781,021,857: Worker-LBQ_MC - 2T - 2Q-Q0-0 create queue 0
+88,781,077,734: starting watcher
+88,781,106,814: Worker-LBQ_MC - 2T - 2Q-Q1-1 create queue 1
+88,781,137,033: Worker-LBQ_MC - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+88,781,259,052: Worker-LBQ_MC - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+88,781,330,325: Main waiting for LBQ_MC - 2T - 2Q
+88,906,105,958: assigning 1000000 tasks finished 7,998,558.852 jobs/s
+88,993,786,734: Main notified
+88,994,046,737: Main resuming from LBQ_MC - 2T - 2Q
+88,994,237,178: LBQ_MC: 1.000.000 jobs,  total size: 22,1M in 219 ms (101.038 ops/ms, 4.566.210 jobs/s, speedup 0,43, 149,408 ns (68,223%) overhead, 31,777% of max perf
+89,136,953,567: closed threads after 1000000 Tasks, Watcher LBQ_MC - 2T - 2Q finished
+89,136,960,409: building LBQ_AMC-4T-2Q
+89,142,507,704: assigning 1000000 tasks started in 2 threads
+89,142,588,099: Worker-LBQ_AMC - 2T - 2Q-Q0-0 create queue 0
+89,142,686,170: Worker-LBQ_AMC - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+89,142,710,688: Worker-LBQ_AMC - 2T - 2Q-Q1-1 create queue 1
+89,142,783,671: starting watcher
+89,142,804,198: Worker-LBQ_AMC - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+89,142,909,681: Main waiting for LBQ_AMC - 2T - 2Q
+89,284,777,071: assigning 1000000 tasks finished 7,034,699.641 jobs/s
+89,369,060,136: Main notified
+89,369,224,349: Main resuming from LBQ_AMC - 2T - 2Q
+89,369,401,675: LBQ_AMC: 1.000.000 jobs,  total size: 22,1M in 235 ms (94.159 ops/ms, 4.255.319,1 jobs/s, speedup 0,401, 165,408 ns (70,387%) overhead, 29,613% of max perf
+89,545,009,545: closed threads after 1000000 Tasks, Watcher LBQ_AMC - 2T - 2Q finished
+89,545,014,677: building DIS_B1-4T-2Q
+89,550,430,829: Assigning tasks finished?
+89,550,601,314: assigning 1000000 tasks started in 1 threads
+89,587,915,121: assigning 1000000 tasks finished 26,858,420.75 jobs/s
+89,588,299,993: Main waiting for DIS_B1 - 1T - 1Q
+89,689,926,835: Main resuming from DIS_B1 - 1T - 1Q
+89,690,252,408: DIS_B1: 1.000.000 jobs,  in 6 batches, (166.666,7 t/b), total size: 22,1M in 140 ms (158.053 ops/ms, 7.142.857,1 jobs/s, speedup 0,672, 45,855 ns (32,754%) overhead, 67,246% of max perf
+89,831,901,418: building DIS_AB1-4T-2Q
+89,838,613,023: Assigning tasks finished?
+89,838,784,077: assigning 1000000 tasks started in 1 threads
+89,874,366,814: assigning 1000000 tasks finished 28,174,849.056 jobs/s
+89,874,515,061: Main waiting for DIS_AB1 - 1T - 1Q
+89,982,789,647: Main resuming from DIS_AB1 - 1T - 1Q
+89,983,029,123: DIS_AB1: 1.000.000 jobs,  in 5 batches, (200.000 t/b), total size: 22,1M in 141 ms (156.932 ops/ms, 7.092.198,6 jobs/s, speedup 0,668, 46,855 ns (33,231%) overhead, 66,769% of max perf
+90,128,804,535: building DIS_Bo-4T-2Q
+90,130,126,786: Assigning tasks finished?
+90,130,372,534: assigning 1000000 tasks started in 1 threads
+90,232,888,288: assigning 1000000 tasks finished 9,763,177.913 jobs/s
+90,233,035,965: Main waiting for DIS_Bo - 3T - 1Q
+90,242,912,076: Main resuming from DIS_Bo - 3T - 1Q
+90,243,221,685: DIS_Bo: 1.000.000 jobs,  total size: 22,1M in 109 ms (203.004 ops/ms, 9.174.311,9 jobs/s, speedup 0,864, 55,019 ns (50,476%) overhead, 49,524% of max perf
+90,430,182,436: building DIS_ABo-4T-2Q
+90,432,217,413: Assigning tasks finished?
+90,434,490,726: assigning 1000000 tasks started in 1 threads
+90,514,727,785: assigning 1000000 tasks finished 12,503,942.649 jobs/s
+90,514,898,839: Main waiting for DIS_ABo - 3T - 1Q
+90,524,676,879: Main resuming from DIS_ABo - 3T - 1Q
+90,525,111,927: DIS_ABo: 1.000.000 jobs,  total size: 22,1M in 94 ms (235.398 ops/ms, 10.638.297,9 jobs/s, speedup 1,002, 40,019 ns (42,573%) overhead, 57,427% of max perf
+90,699,963,167: building CLBQ-4T-2Q
+90,705,854,280: assigning 1000000 tasks started in 1 threads
+90,706,497,445: starting watcher
+90,708,145,269: Worker-CLBQ - 3T - 1Q-Q1-0 create queue 1
+90,708,261,016: Worker-CLBQ - 3T - 1Q-Q1-2 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+90,708,265,007: Worker-CLBQ - 3T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+90,708,267,288: Worker-CLBQ - 3T - 1Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+90,708,391,587: Main waiting for CLBQ - 3T - 1Q
+90,903,828,084: assigning 1000000 tasks finished 5,054,477.845 jobs/s
+90,925,219,007: Main notified
+90,925,447,080: Main resuming from CLBQ - 3T - 1Q
+90,925,604,450: CLBQ: 1.000.000 jobs,  total size: 22,1M in 228 ms (97.050 ops/ms, 4.385.964,9 jobs/s, speedup 0,413, 174,019 ns (76,324%) overhead, 23,676% of max perf
+91,059,260,088: closed threads after 1000000 Tasks, Watcher CLBQ - 3T - 1Q finished
+91,059,288,026: building CLBQ_A-4T-2Q
+91,061,055,589: assigning 1000000 tasks started in 1 threads
+91,061,120,589: Worker-CLBQ_A - 3T - 1Q-Q1-0 create queue 1
+91,061,391,996: starting watcher
+91,061,581,296: Worker-CLBQ_A - 3T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+91,061,621,208: Worker-CLBQ_A - 3T - 1Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+91,061,605,814: Worker-CLBQ_A - 3T - 1Q-Q1-2 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+91,061,788,272: Main waiting for CLBQ_A - 3T - 1Q
+91,271,102,412: assigning 1000000 tasks finished 4,771,360.326 jobs/s
+91,291,541,702: Main notified
+91,291,779,468: Main resuming from CLBQ_A - 3T - 1Q
+91,292,001,269: CLBQ_A: 1.000.000 jobs,  total size: 22,1M in 242 ms (91.435 ops/ms, 4.132.231,4 jobs/s, speedup 0,389, 188,019 ns (77,694%) overhead, 22,306% of max perf
+91,417,903,581: closed threads after 1000000 Tasks, Watcher CLBQ_A - 3T - 1Q finished
+91,417,920,686: building CLBQ_B-4T-2Q
+91,419,685,967: assigning 1000000 tasks started in 1 threads
+91,419,954,523: Worker-CLBQ_B - 3T - 1Q-Q1-0 create queue 1
+91,420,394,703: Worker-CLBQ_B - 3T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+91,420,429,484: starting watcher
+91,420,395,273: Worker-CLBQ_B - 3T - 1Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+91,420,399,264: Worker-CLBQ_B - 3T - 1Q-Q1-2 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+91,420,594,836: Main waiting for CLBQ_B - 3T - 1Q
+91,568,363,033: assigning 1000000 tasks finished 6,731,433.966 jobs/s
+91,689,072,133: Main notified
+91,689,376,610: Main resuming from CLBQ_B - 3T - 1Q
+91,689,532,839: CLBQ_B: 1.085.659 jobs,  in 1.091 batches, (995,1 t/b), total size: 22,1M in 272 ms (81.350 ops/ms, 3.991.393,4 jobs/s, speedup 0,376, 196,558 ns (78,454%) overhead, 21,546% of max perf
+91,838,547,452: closed threads after 1085659 Tasks, Watcher CLBQ_B - 3T - 1Q finished
+91,838,551,443: building CLBQ_AB-4T-2Q
+91,844,411,767: assigning 1000000 tasks started in 1 threads
+91,844,474,487: Worker-CLBQ_AB - 3T - 1Q-Q1-0 create queue 1
+91,844,671,200: Worker-CLBQ_AB - 3T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+91,844,900,983: Worker-CLBQ_AB - 3T - 1Q-Q1-1 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+91,844,962,562: starting watcher
+91,844,923,220: Worker-CLBQ_AB - 3T - 1Q-Q1-2 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+91,847,812,899: Main waiting for CLBQ_AB - 3T - 1Q
+92,019,392,438: assigning 1000000 tasks finished 5,719,296.504 jobs/s
+92,076,441,362: Main notified
+92,076,684,259: Main resuming from CLBQ_AB - 3T - 1Q
+92,076,886,103: CLBQ_AB: 1.146.224 jobs,  in 1.165 batches, (983,9 t/b), total size: 22,1M in 247 ms (89.584 ops/ms, 4.640.583 jobs/s, speedup 0,437, 161,509 ns (74,95%) overhead, 25,05% of max perf
+92,225,641,854: closed threads after 1146224 Tasks, Watcher CLBQ_AB - 3T - 1Q finished
+92,225,669,222: building CLBQ_B1-4T-2Q
+92,231,284,368: assigning 1000000 tasks started in 1 threads
+92,231,409,238: starting watcher
+92,231,414,370: Worker-CLBQ_B1 - 1T - 1Q-Q1-0 create queue 1
+92,231,557,485: Worker-CLBQ_B1 - 1T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+92,231,611,652: Main waiting for CLBQ_B1 - 1T - 1Q
+92,312,052,266: assigning 1000000 tasks finished 12,402,958.785 jobs/s
+92,427,695,305: Main notified
+92,427,797,937: Main resuming from CLBQ_B1 - 1T - 1Q
+92,428,108,116: CLBQ_B1: 1.000.000 jobs,  in 1.001 batches, (999 t/b), total size: 22,1M in 211 ms (104.869 ops/ms, 4.739.336,5 jobs/s, speedup 0,446, 116,855 ns (55,382%) overhead, 44,618% of max perf
+92,567,870,966: closed threads after 1000000 Tasks, Watcher CLBQ_B1 - 1T - 1Q finished
+92,567,875,528: building CLBQ_AB1-4T-2Q
+92,574,120,154: assigning 1000000 tasks started in 1 threads
+92,574,188,575: Worker-CLBQ_AB1 - 1T - 1Q-Q1-0 create queue 1
+92,574,189,716: starting watcher
+92,574,300,901: Worker-CLBQ_AB1 - 1T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+92,574,356,779: Main waiting for CLBQ_AB1 - 1T - 1Q
+92,651,982,407: assigning 1000000 tasks finished 12,859,673.659 jobs/s
+92,778,281,565: Main notified
+92,778,415,558: Main resuming from CLBQ_AB1 - 1T - 1Q
+92,778,995,432: CLBQ_AB1: 1.000.000 jobs,  in 1.001 batches, (999 t/b), total size: 22,1M in 209 ms (105.872 ops/ms, 4.784.689 jobs/s, speedup 0,45, 114,855 ns (54,955%) overhead, 45,045% of max perf
+92,912,222,294: closed threads after 1000000 Tasks, Watcher CLBQ_AB1 - 1T - 1Q finished
+92,912,226,855: building CLBQ_M-4T-2Q
+92,918,182,969: assigning 1000000 tasks started in 2 threads
+92,918,214,900: Worker-CLBQ_M - 2T - 2Q-Q0-0 create queue 0
+92,918,361,436: starting watcher
+92,918,392,226: Worker-CLBQ_M - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+92,918,443,542: Worker-CLBQ_M - 2T - 2Q-Q1-1 create queue 1
+92,918,526,789: Worker-CLBQ_M - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+92,918,624,860: Main waiting for CLBQ_M - 2T - 2Q
+93,033,581,401: assigning 1000000 tasks finished 8,674,501.175 jobs/s
+93,128,951,642: Main notified
+93,129,165,460: Main resuming from CLBQ_M - 2T - 2Q
+93,129,342,216: CLBQ_M: 1.000.000 jobs,  total size: 22,1M in 226 ms (97.909 ops/ms, 4.424.778,8 jobs/s, speedup 0,417, 156,408 ns (69,207%) overhead, 30,793% of max perf
+93,267,200,091: closed threads after 1000000 Tasks, Watcher CLBQ_M - 2T - 2Q finished
+93,267,218,907: building CLBQ_AM-4T-2Q
+93,273,741,781: assigning 1000000 tasks started in 2 threads
+93,273,998,363: Worker-CLBQ_AM - 2T - 2Q-Q0-0 create queue 0
+93,274,114,680: Worker-CLBQ_AM - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+93,274,441,964: Worker-CLBQ_AM - 2T - 2Q-Q1-1 create queue 1
+93,274,473,324: starting watcher
+93,274,547,448: Worker-CLBQ_AM - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+93,274,625,562: Main waiting for CLBQ_AM - 2T - 2Q
+93,388,742,796: assigning 1000000 tasks finished 8,707,620.609 jobs/s
+93,479,341,760: Main notified
+93,479,699,834: Main resuming from CLBQ_AM - 2T - 2Q
+93,479,950,144: CLBQ_AM: 1.000.000 jobs,  total size: 22,1M in 210 ms (105.368 ops/ms, 4.761.904,8 jobs/s, speedup 0,448, 140,408 ns (66,861%) overhead, 33,139% of max perf
+93,628,980,721: closed threads after 1000000 Tasks, Watcher CLBQ_AM - 2T - 2Q finished
+93,628,984,143: building CLBQ_MC-4T-2Q
+93,630,808,723: assigning 1000000 tasks started in 2 threads
+93,631,052,760: Worker-CLBQ_MC - 2T - 2Q-Q1-1 create queue 1
+93,631,067,015: starting watcher
+93,631,125,174: Worker-CLBQ_MC - 2T - 2Q-Q0-0 create queue 0
+93,631,155,963: Worker-CLBQ_MC - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+93,631,229,517: Worker-CLBQ_MC - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+93,631,294,517: Main waiting for CLBQ_MC - 2T - 2Q
+93,751,339,927: assigning 1000000 tasks finished 8,305,092.903 jobs/s
+93,830,860,267: Main notified
+93,831,103,165: Main resuming from CLBQ_MC - 2T - 2Q
+93,831,363,167: CLBQ_MC: 1.000.000 jobs,  total size: 22,1M in 211 ms (104.869 ops/ms, 4.739.336,5 jobs/s, speedup 0,446, 141,408 ns (67,018%) overhead, 32,982% of max perf
+93,964,681,258: closed threads after 1000000 Tasks, Watcher CLBQ_MC - 2T - 2Q finished
+93,964,684,679: building CLBQ_AMC-4T-2Q
+93,970,323,772: assigning 1000000 tasks started in 2 threads
+93,970,330,044: Worker-CLBQ_AMC - 2T - 2Q-Q0-0 create queue 0
+93,970,400,747: starting watcher
+93,970,452,063: Worker-CLBQ_AMC - 2T - 2Q-Q1-1 create queue 1
+93,970,485,134: Worker-CLBQ_AMC - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+93,970,550,704: Worker-CLBQ_AMC - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+93,970,622,547: Main waiting for CLBQ_AMC - 2T - 2Q
+94,108,374,938: assigning 1000000 tasks finished 7,249,709.629 jobs/s
+94,182,509,916: Main notified
+94,182,974,614: Main resuming from CLBQ_AMC - 2T - 2Q
+94,183,157,642: CLBQ_AMC: 1.000.000 jobs,  total size: 22,1M in 227 ms (97.477 ops/ms, 4.405.286,3 jobs/s, speedup 0,415, 157,408 ns (69,343%) overhead, 30,657% of max perf
+94,331,427,028: closed threads after 1000000 Tasks, Watcher CLBQ_AMC - 2T - 2Q finished
+94,331,475,493: building CLBQ_BM-4T-2Q
+94,337,314,150: assigning 1000000 tasks started in 2 threads
+94,337,330,115: Worker-CLBQ_BM - 2T - 2Q-Q0-0 create queue 0
+94,337,431,607: Worker-CLBQ_BM - 2T - 2Q-Q1-1 create queue 1
+94,337,457,836: starting watcher
+94,337,468,099: Worker-CLBQ_BM - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+94,337,544,503: Worker-CLBQ_BM - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+94,337,616,346: Main waiting for CLBQ_BM - 2T - 2Q
+94,432,593,162: assigning 1000000 tasks finished 10,520,611.403 jobs/s
+94,533,191,397: Main notified
+94,533,411,487: Main resuming from CLBQ_BM - 2T - 2Q
+94,533,601,357: CLBQ_BM: 1.000.000 jobs,  in 1.002 batches, (998 t/b), total size: 22,1M in 210 ms (105.368 ops/ms, 4.761.904,8 jobs/s, speedup 0,448, 140,408 ns (66,861%) overhead, 33,139% of max perf
+94,683,529,400: closed threads after 1000000 Tasks, Watcher CLBQ_BM - 2T - 2Q finished
+94,683,533,391: building CLBQ_ABM-4T-2Q
+94,689,145,116: assigning 1000000 tasks started in 2 threads
+94,689,211,827: Worker-CLBQ_ABM - 2T - 2Q-Q0-0 create queue 0
+94,689,264,284: starting watcher
+94,689,289,942: Worker-CLBQ_ABM - 2T - 2Q-Q1-1 create queue 1
+94,689,336,697: Worker-CLBQ_ABM - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+94,689,394,856: Worker-CLBQ_ABM - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+94,689,633,191: Main waiting for CLBQ_ABM - 2T - 2Q
+94,782,821,919: assigning 1000000 tasks finished 10,689,901.553 jobs/s
+94,884,643,763: Main notified
+94,884,942,538: Main resuming from CLBQ_ABM - 2T - 2Q
+94,885,146,092: CLBQ_ABM: 1.000.000 jobs,  in 1.014 batches, (986,2 t/b), total size: 22,1M in 211 ms (104.869 ops/ms, 4.739.336,5 jobs/s, speedup 0,446, 141,408 ns (67,018%) overhead, 32,982% of max perf
+95,051,046,625: closed threads after 1000000 Tasks, Watcher CLBQ_ABM - 2T - 2Q finished
+95,051,096,231: building CLBQ_BMC-4T-2Q
+95,057,441,779: assigning 1000000 tasks started in 2 threads
+95,057,493,666: Worker-CLBQ_BMC - 2T - 2Q-Q1-1 create queue 1
+95,057,625,378: Worker-CLBQ_BMC - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+95,057,831,783: Worker-CLBQ_BMC - 2T - 2Q-Q0-0 create queue 0
+95,057,925,293: Worker-CLBQ_BMC - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+95,057,953,232: starting watcher
+95,057,997,136: Main waiting for CLBQ_BMC - 2T - 2Q
+95,150,237,082: assigning 1000000 tasks finished 10,793,053.379 jobs/s
+95,266,278,108: Main notified
+95,266,586,576: Main resuming from CLBQ_BMC - 2T - 2Q
+95,266,810,657: CLBQ_BMC: 1.000.000 jobs,  in 17.168 batches, (58,2 t/b), total size: 22,1M in 209 ms (105.872 ops/ms, 4.784.689 jobs/s, speedup 0,45, 139,408 ns (66,703%) overhead, 33,297% of max perf
+95,422,495,251: closed threads after 1000000 Tasks, Watcher CLBQ_BMC - 2T - 2Q finished
+95,422,499,242: building CLBQ_ABMC-4T-2Q
+95,424,700,712: assigning 1000000 tasks started in 2 threads
+95,424,953,303: Worker-CLBQ_ABMC - 2T - 2Q-Q0-0 create queue 0
+95,425,069,620: Worker-CLBQ_ABMC - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+95,425,329,622: Worker-CLBQ_ABMC - 2T - 2Q-Q1-1 create queue 1
+95,425,425,983: Worker-CLBQ_ABMC - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+95,425,502,387: Main waiting for CLBQ_ABMC - 2T - 2Q
+95,426,676,961: starting watcher
+95,525,913,032: assigning 1000000 tasks finished 9,894,545.615 jobs/s
+95,633,030,149: Main notified
+95,633,324,363: Main resuming from CLBQ_ABMC - 2T - 2Q
+95,633,603,182: CLBQ_ABMC: 1.000.000 jobs,  in 1.390 batches, (719,4 t/b), total size: 22,1M in 210 ms (105.368 ops/ms, 4.761.904,8 jobs/s, speedup 0,448, 140,408 ns (66,861%) overhead, 33,139% of max perf
+95,770,866,927: closed threads after 1000000 Tasks, Watcher CLBQ_ABMC - 2T - 2Q finished
+95,770,872,629: building ABQ-4T-2Q
+95,777,330,503: assigning 1000000 tasks started in 1 threads
+95,777,832,262: starting watcher
+95,813,376,227: Worker-ABQ - 3T - 1Q-Q1-0 create queue 1
+95,813,502,807: Worker-ABQ - 3T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+95,813,533,597: Worker-ABQ - 3T - 1Q-Q1-2 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+95,813,514,211: Worker-ABQ - 3T - 1Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+95,813,644,212: Main waiting for ABQ - 3T - 1Q
+96,187,716,242: assigning 1000000 tasks finished 2,440,672.213 jobs/s
+96,211,714,604: Main notified
+96,212,095,485: Main resuming from ABQ - 3T - 1Q
+96,212,247,154: ABQ: 1.000.000 jobs,  total size: 22,1M in 437 ms (50.634 ops/ms, 2.288.329,5 jobs/s, speedup 0,215, 383,019 ns (87,647%) overhead, 12,353% of max perf
+96,362,673,535: closed threads after 1000000 Tasks, Watcher ABQ - 3T - 1Q finished
+96,362,676,956: building ABQ_A-4T-2Q
+96,364,561,976: assigning 1000000 tasks started in 1 threads
+96,365,190,886: starting watcher
+96,365,200,009: Worker-ABQ_A - 3T - 1Q-Q1-0 create queue 1
+96,365,402,423: Worker-ABQ_A - 3T - 1Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+96,365,462,292: Worker-ABQ_A - 3T - 1Q-Q1-2 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+96,365,402,423: Worker-ABQ_A - 3T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+96,365,578,609: Main waiting for ABQ_A - 3T - 1Q
+96,712,562,464: assigning 1000000 tasks finished 2,874,519.979 jobs/s
+96,790,142,477: Main notified
+96,791,127,751: Main resuming from ABQ_A - 3T - 1Q
+96,791,429,947: ABQ_A: 1.000.000 jobs,  total size: 22,1M in 438 ms (50.519 ops/ms, 2.283.105 jobs/s, speedup 0,215, 384,019 ns (87,676%) overhead, 12,324% of max perf
+96,951,709,632: closed threads after 1000000 Tasks, Watcher ABQ_A - 3T - 1Q finished
+96,951,723,887: building B_ABQ-4T-2Q
+96,957,583,070: assigning 1000000 tasks started in 1 threads
+96,958,376,763: Worker-B_ABQ - 3T - 1Q-Q1-0 create queue 1
+96,958,534,703: Worker-B_ABQ - 3T - 1Q-Q1-2 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+96,958,537,554: Worker-B_ABQ - 3T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+96,958,556,940: starting watcher
+96,958,618,519: Worker-B_ABQ - 3T - 1Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+96,958,950,365: Main waiting for B_ABQ - 3T - 1Q
+97,292,292,061: assigning 1000000 tasks finished 2,989,223.08 jobs/s
+97,384,120,906: Main notified
+97,384,403,146: Main resuming from B_ABQ - 3T - 1Q
+97,384,979,029: B_ABQ: 1.000.000 jobs,  in 30.521 batches, (32,8 t/b), total size: 22,1M in 437 ms (50.634 ops/ms, 2.288.329,5 jobs/s, speedup 0,215, 383,019 ns (87,647%) overhead, 12,353% of max perf
+97,554,511,047: closed threads after 1000000 Tasks, Watcher B_ABQ - 3T - 1Q finished
+97,554,578,329: building B_ABQ_A-4T-2Q
+97,560,666,155: assigning 1000000 tasks started in 1 threads
+97,561,354,934: starting watcher
+97,561,667,963: Worker-B_ABQ_A - 3T - 1Q-Q1-0 create queue 1
+97,561,772,307: Worker-B_ABQ_A - 3T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+97,561,802,526: Worker-B_ABQ_A - 3T - 1Q-Q1-1 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+97,561,772,877: Worker-B_ABQ_A - 3T - 1Q-Q1-2 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+97,561,905,729: Main waiting for B_ABQ_A - 3T - 1Q
+97,843,151,096: assigning 1000000 tasks finished 3,541,520.017 jobs/s
+97,883,554,146: Main notified
+97,883,686,998: Main resuming from B_ABQ_A - 3T - 1Q
+97,883,883,141: B_ABQ_A: 1.000.000 jobs,  in 27.471 batches, (36,4 t/b), total size: 22,1M in 328 ms (67.461 ops/ms, 3.048.780,5 jobs/s, speedup 0,287, 274,019 ns (83,542%) overhead, 16,458% of max perf
+98,023,513,139: building B1_ABQ-4T-2Q
+98,023,517,700: closed threads after 1000000 Tasks, Watcher B_ABQ_A - 3T - 1Q finished
+98,029,739,519: assigning 1000000 tasks started in 1 threads
+98,029,800,528: starting watcher
+98,030,256,103: Worker-B1_ABQ - 1T - 1Q-Q1-0 create queue 1
+98,030,344,481: Worker-B1_ABQ - 1T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+98,030,395,227: Main waiting for B1_ABQ - 1T - 1Q
+98,104,897,972: assigning 1000000 tasks finished 13,324,125.652 jobs/s
+98,243,520,460: Main notified
+98,244,217,221: Main resuming from B1_ABQ - 1T - 1Q
+98,244,697,884: B1_ABQ: 1.000.000 jobs,  in 1.001 batches, (999 t/b), total size: 22,1M in 219 ms (101.038 ops/ms, 4.566.210 jobs/s, speedup 0,43, 124,855 ns (57,012%) overhead, 42,988% of max perf
+98,416,412,556: closed threads after 1000000 Tasks, Watcher B1_ABQ - 1T - 1Q finished
+98,416,416,548: building B1_ABQ_A-4T-2Q
+98,421,945,026: assigning 1000000 tasks started in 1 threads
+98,421,988,930: starting watcher
+98,422,352,706: Worker-B1_ABQ_A - 1T - 1Q-Q1-0 create queue 1
+98,422,425,119: Worker-B1_ABQ_A - 1T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+98,422,475,295: Main waiting for B1_ABQ_A - 1T - 1Q
+98,491,986,102: assigning 1000000 tasks finished 14,299,453.814 jobs/s
+98,633,967,527: Main notified
+98,634,363,233: Main resuming from B1_ABQ_A - 1T - 1Q
+98,634,802,843: B1_ABQ_A: 1.000.000 jobs,  in 1.001 batches, (999 t/b), total size: 22,1M in 218 ms (101.502 ops/ms, 4.587.156 jobs/s, speedup 0,432, 123,855 ns (56,814%) overhead, 43,186% of max perf
+98,813,418,420: closed threads after 1000000 Tasks, Watcher B1_ABQ_A - 1T - 1Q finished
+98,813,421,841: building ABQ_M-4T-2Q
+98,819,256,507: assigning 1000000 tasks started in 2 threads
+98,819,357,429: starting watcher
+98,819,511,378: Worker-ABQ_M - 2T - 2Q-Q0-0 create queue 0
+98,819,609,449: Worker-ABQ_M - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+98,819,767,959: Worker-ABQ_M - 2T - 2Q-Q1-1 create queue 1
+98,819,832,390: Worker-ABQ_M - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+98,819,879,715: Main waiting for ABQ_M - 2T - 2Q
+98,967,533,875: assigning 1000000 tasks finished 6,748,866.739 jobs/s
+99,024,131,215: Main notified
+99,024,303,410: Main resuming from ABQ_M - 2T - 2Q
+99,024,456,789: ABQ_M: 1.000.000 jobs,  total size: 22,1M in 219 ms (101.038 ops/ms, 4.566.210 jobs/s, speedup 0,43, 149,408 ns (68,223%) overhead, 31,777% of max perf
+99,163,453,315: closed threads after 1000000 Tasks, Watcher ABQ_M - 2T - 2Q finished
+99,163,456,736: building ABQ_AM-4T-2Q
+99,165,592,065: assigning 1000000 tasks started in 2 threads
+99,165,739,742: starting watcher
+99,165,833,252: Worker-ABQ_AM - 2T - 2Q-Q0-0 create queue 0
+99,165,948,999: Worker-ABQ_AM - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+99,166,093,825: Worker-ABQ_AM - 2T - 2Q-Q1-1 create queue 1
+99,166,150,273: Worker-ABQ_AM - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+99,166,200,449: Main waiting for ABQ_AM - 2T - 2Q
+99,312,217,618: assigning 1000000 tasks finished 6,826,464.647 jobs/s
+99,383,613,445: Main notified
+99,383,737,744: Main resuming from ABQ_AM - 2T - 2Q
+99,383,949,282: ABQ_AM: 1.000.000 jobs,  total size: 22,1M in 218 ms (101.502 ops/ms, 4.587.156 jobs/s, speedup 0,432, 148,408 ns (68,077%) overhead, 31,923% of max perf
+99,534,909,923: closed threads after 1000000 Tasks, Watcher ABQ_AM - 2T - 2Q finished
+99,534,927,029: building ABQ_MC-4T-2Q
+99,536,634,152: assigning 1000000 tasks started in 2 threads
+99,536,804,066: starting watcher
+99,536,924,374: Worker-ABQ_MC - 2T - 2Q-Q0-0 create queue 0
+99,537,021,305: Worker-ABQ_MC - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+99,537,182,666: Worker-ABQ_MC - 2T - 2Q-Q1-1 create queue 1
+99,537,247,667: Worker-ABQ_MC - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+99,537,295,562: Main waiting for ABQ_MC - 2T - 2Q
+99,685,371,086: assigning 1000000 tasks finished 6,728,670.604 jobs/s
+99,743,092,254: Main notified
+99,743,324,888: Main resuming from ABQ_MC - 2T - 2Q
+99,743,529,012: ABQ_MC: 1.000.000 jobs,  total size: 22,1M in 219 ms (101.038 ops/ms, 4.566.210 jobs/s, speedup 0,43, 149,408 ns (68,223%) overhead, 31,777% of max perf
+99,892,196,955: closed threads after 1000000 Tasks, Watcher ABQ_MC - 2T - 2Q finished
+99,892,202,657: building ABQ_AMC-4T-2Q
+99,893,859,033: assigning 1000000 tasks started in 2 threads
+99,894,070,571: starting watcher
+99,894,096,799: Worker-ABQ_AMC - 2T - 2Q-Q0-0 create queue 0
+99,894,217,107: Worker-ABQ_AMC - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+99,894,381,319: Worker-ABQ_AMC - 2T - 2Q-Q1-1 create queue 1
+99,894,481,671: Worker-ABQ_AMC - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+99,894,559,216: Main waiting for ABQ_AMC - 2T - 2Q
+100,044,648,050: assigning 1000000 tasks finished 6,636,852.157 jobs/s
+100,103,401,816: Main notified
+100,103,515,282: Main resuming from ABQ_AMC - 2T - 2Q
+100,103,663,530: ABQ_AMC: 1.000.000 jobs,  total size: 22,1M in 219 ms (101.038 ops/ms, 4.566.210 jobs/s, speedup 0,43, 149,408 ns (68,223%) overhead, 31,777% of max perf
+100,266,444,600: building ABQ_BM-4T-2Q
+100,268,183,654: assigning 1000000 tasks started in 2 threads
+100,268,332,471: starting watcher
+100,268,479,008: Worker-ABQ_BM - 2T - 2Q-Q0-0 create queue 0
+100,268,569,096: Worker-ABQ_BM - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+100,268,735,019: Worker-ABQ_BM - 2T - 2Q-Q1-1 create queue 1
+100,268,802,871: Worker-ABQ_BM - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+100,268,853,046: Main waiting for ABQ_BM - 2T - 2Q
+100,368,637,632: closed threads after 1000000 Tasks, Watcher ABQ_AMC - 2T - 2Q finished
+100,471,331,853: assigning 1000000 tasks finished 4,925,251.842 jobs/s
+100,477,603,277: Main notified
+100,477,770,341: Main resuming from ABQ_BM - 2T - 2Q
+100,477,948,237: ABQ_BM: 1.000.000 jobs,  in 96.046 batches, (10,4 t/b), total size: 22,1M in 219 ms (101.038 ops/ms, 4.566.210 jobs/s, speedup 0,43, 149,408 ns (68,223%) overhead, 31,777% of max perf
+100,671,008,218: closed threads after 1000000 Tasks, Watcher ABQ_BM - 2T - 2Q finished
+100,671,015,630: building ABQ_ABM-4T-2Q
+100,672,923,457: assigning 1000000 tasks started in 2 threads
+100,673,177,758: starting watcher
+100,673,305,479: Worker-ABQ_ABM - 2T - 2Q-Q0-0 create queue 0
+100,673,411,532: Worker-ABQ_ABM - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+100,673,568,902: Worker-ABQ_ABM - 2T - 2Q-Q1-1 create queue 1
+100,673,653,289: Worker-ABQ_ABM - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+100,673,725,702: Main waiting for ABQ_ABM - 2T - 2Q
+100,877,507,943: assigning 1000000 tasks finished 4,891,186.914 jobs/s
+100,883,670,463: Main notified
+100,883,772,525: Main resuming from ABQ_ABM - 2T - 2Q
+100,883,976,650: ABQ_ABM: 1.000.000 jobs,  in 110.555 batches, (9 t/b), total size: 22,1M in 218 ms (101.502 ops/ms, 4.587.156 jobs/s, speedup 0,432, 148,408 ns (68,077%) overhead, 31,923% of max perf
+101,033,377,846: closed threads after 1000000 Tasks, Watcher ABQ_ABM - 2T - 2Q finished
+101,033,406,925: building ABQ_BMC-4T-2Q
+101,035,183,610: assigning 1000000 tasks started in 2 threads
+101,035,271,988: starting watcher
+101,035,452,166: Worker-ABQ_BMC - 2T - 2Q-Q0-0 create queue 0
+101,035,552,518: Worker-ABQ_BMC - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+101,035,709,317: Worker-ABQ_BMC - 2T - 2Q-Q1-1 create queue 1
+101,035,788,003: Worker-ABQ_BMC - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+101,035,843,310: Main waiting for ABQ_BMC - 2T - 2Q
+101,178,195,924: assigning 1000000 tasks finished 6,998,040.835 jobs/s
+101,243,092,254: Main notified
+101,243,213,702: Main resuming from ABQ_BMC - 2T - 2Q
+101,243,377,344: ABQ_BMC: 1.000.000 jobs,  in 43.103 batches, (23,2 t/b), total size: 22,1M in 219 ms (101.038 ops/ms, 4.566.210 jobs/s, speedup 0,43, 149,408 ns (68,223%) overhead, 31,777% of max perf
+101,388,055,158: building ABQ_ABMC-4T-2Q
+101,388,083,667: closed threads after 1000000 Tasks, Watcher ABQ_BMC - 2T - 2Q finished
+101,389,978,949: assigning 1000000 tasks started in 2 threads
+101,390,232,680: starting watcher
+101,390,359,260: Worker-ABQ_ABMC - 2T - 2Q-Q0-0 create queue 0
+101,390,465,884: Worker-ABQ_ABMC - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+101,390,634,088: Worker-ABQ_ABMC - 2T - 2Q-Q1-1 create queue 1
+101,390,713,913: Worker-ABQ_ABMC - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+101,390,782,905: Main waiting for ABQ_ABMC - 2T - 2Q
+101,614,657,196: assigning 1000000 tasks finished 4,453,205.027 jobs/s
+101,712,090,354: Main notified
+101,712,397,681: Main resuming from ABQ_ABMC - 2T - 2Q
+101,712,555,052: ABQ_ABMC: 1.000.000 jobs,  in 134.653 batches, (7,4 t/b), total size: 22,1M in 328 ms (67.461 ops/ms, 3.048.780,5 jobs/s, speedup 0,287, 258,408 ns (78,783%) overhead, 21,217% of max perf
+102,192,074,138: closed threads after 1000000 Tasks, Watcher ABQ_ABMC - 2T - 2Q finished
+102,192,116,331: building LTQ-4T-2Q (throttled)
+102,192,622,652: assigning 1000000 tasks started in 1 threads (throttled)
+102,192,957,919: Worker-LTQ - 3T - 1Q-Q1-0 create queue 1
+102,193,063,973: Worker-LTQ - 3T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+102,193,572,004: Worker-LTQ - 3T - 1Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+102,193,603,364: Worker-LTQ - 3T - 1Q-Q1-2 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+102,193,573,715: starting watcher
+102,193,725,383: Main waiting for LTQ - 3T - 1Q
+103,193,032,613: assigning 1000000 tasks finished 999,770.84 jobs/s (throttled)
+103,208,993,129: Main notified
+103,209,293,614: Main resuming from LTQ - 3T - 1Q
+103,209,483,485: LTQ (throttled): 1.000.000 jobs,  total size: 0M in 1.029 ms (0 ops/ms, 971.817,3 jobs/s, 
+103,209,663,092: LTQ 
+103,294,837,921: Mean: 570, 90%: 3.991, 99%: 297.635, 99,9%: 911.150, 99,99%: 1.092.467, 99,999%: 1.107.863, 99,9999%: 1.841.686 Avg: 8.172, Avg90: 533, Min: 0, Max: 1.841.686, 1.000.000 jobs, nano res = 570,1809
+103,669,688,248: closed threads after 1000000 Tasks, Watcher LTQ - 3T - 1Q finished
+103,669,690,529: building LTQ_A-4T-2Q (throttled)
+103,670,594,836: assigning 1000000 tasks started in 1 threads (throttled)
+103,670,666,109: Worker-LTQ_A - 3T - 1Q-Q1-0 create queue 1
+103,670,880,497: Worker-LTQ_A - 3T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+103,671,358,879: Worker-LTQ_A - 3T - 1Q-Q1-2 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+103,671,293,309: Worker-LTQ_A - 3T - 1Q-Q1-1 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+103,671,283,045: starting watcher
+103,671,497,434: Main waiting for LTQ_A - 3T - 1Q
+104,671,306,993: assigning 1000000 tasks finished 999,404.516 jobs/s (throttled)
+104,781,715,767: Main notified
+104,782,279,677: Main resuming from LTQ_A - 3T - 1Q
+104,782,715,295: LTQ_A (throttled): 1.000.000 jobs,  total size: 0M in 1.119 ms (0 ops/ms, 893.655 jobs/s, 
+104,782,862,402: LTQ_A 
+104,853,610,503: Mean: 0, 90%: 1.141, 99%: 23.377, 99,9%: 261.713, 99,99%: 292.503, 99,999%: 295.924, 99,9999%: 1.005.230 Avg: 1.409, Avg90: 248, Min: 0, Max: 1.005.230, 1.000.000 jobs, nano res = 570,1814
+105,200,332,074: closed threads after 1000000 Tasks, Watcher LTQ_A - 3T - 1Q finished
+105,200,358,873: building LTQ_B-4T-2Q (throttled)
+105,201,155,416: assigning 1000000 tasks started in 1 threads (throttled)
+105,201,225,548: Worker-LTQ_B - 3T - 1Q-Q1-0 create queue 1
+105,201,328,751: Worker-LTQ_B - 3T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+105,201,654,895: Worker-LTQ_B - 3T - 1Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+105,201,703,930: starting watcher
+105,201,737,571: Worker-LTQ_B - 3T - 1Q-Q1-2 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+105,201,812,265: Main waiting for LTQ_B - 3T - 1Q
+106,201,864,151: assigning 1000000 tasks finished 999,402.238 jobs/s (throttled)
+106,235,055,548: Main notified
+106,235,543,053: Main resuming from LTQ_B - 3T - 1Q
+106,236,042,531: LTQ_B (throttled): 1.000.000 jobs,  in 810.511 batches, (1,2 t/b), total size: 0M in 1.046 ms (0 ops/ms, 956.022,9 jobs/s, 
+106,236,501,527: LTQ_B 
+106,284,093,424: Mean: 570, 90%: 86.097, 99%: 13.644.440, 99,9%: 13.960.320, 99,99%: 13.993.390, 99,999%: 14.000.232, 99,9999%: 17.183.555 Avg: 690.993, Avg90: 2.063, Min: 0, Max: 17.183.555, 1.000.000 jobs, nano res = 570,1807
+106,528,526,173: closed threads after 1000000 Tasks, Watcher LTQ_B - 3T - 1Q finished
+106,528,529,024: building LTQ_AB-4T-2Q (throttled)
+106,529,421,358: Worker-LTQ_AB - 3T - 1Q-Q1-0 create queue 1
+106,529,574,736: assigning 1000000 tasks started in 1 threads (throttled)
+106,530,236,147: starting watcher
+106,530,411,763: Worker-LTQ_AB - 3T - 1Q-Q1-2 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+106,530,411,763: Worker-LTQ_AB - 3T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+106,530,411,763: Worker-LTQ_AB - 3T - 1Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+106,530,601,633: Main waiting for LTQ_AB - 3T - 1Q
+107,530,186,541: assigning 1000000 tasks finished 1,000,293.73 jobs/s (throttled)
+107,561,404,540: Main notified
+107,561,514,585: Main resuming from LTQ_AB - 3T - 1Q
+107,561,670,814: LTQ_AB (throttled): 1.000.000 jobs,  in 929.486 batches, (1,1 t/b), total size: 0M in 1.047 ms (0 ops/ms, 955.109,8 jobs/s, 
+107,561,719,850: LTQ_AB 
+107,586,395,588: Mean: 570, 90%: 1.711, 99%: 61.579, 99,9%: 357.504, 99,99%: 391.144, 99,999%: 531.980, 99,9999%: 3.711.880 Avg: 2.860, Avg90: 317, Min: 0, Max: 3.711.880, 1.000.000 jobs, nano res = 570,1816
+107,871,637,926: closed threads after 1000000 Tasks, Watcher LTQ_AB - 3T - 1Q finished
+107,871,641,917: building LTQ_B1-4T-2Q (throttled)
+107,872,262,275: assigning 1000000 tasks started in 1 threads (throttled)
+107,872,319,863: starting watcher
+107,872,327,846: Worker-LTQ_B1 - 1T - 1Q-Q1-0 create queue 1
+107,872,456,707: Worker-LTQ_B1 - 1T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+107,872,514,865: Main waiting for LTQ_B1 - 1T - 1Q
+108,872,535,392: assigning 1000000 tasks finished 999,821.565 jobs/s (throttled)
+108,966,497,285: Main notified
+108,967,365,671: Main resuming from LTQ_B1 - 1T - 1Q
+108,967,828,659: LTQ_B1 (throttled): 1.000.000 jobs,  in 567.417 batches, (1,8 t/b), total size: 0M in 1.108 ms (0 ops/ms, 902.527,1 jobs/s, 
+108,967,996,292: LTQ_B1 
+109,026,451,853: Mean: 570, 90%: 26.799, 99%: 107.194, 99,9%: 301.626, 99,99%: 1.278.917, 99,999%: 1.505.279, 99,9999%: 1.505.849 Avg: 8.737, Avg90: 3.198, Min: 0, Max: 1.505.849, 1.000.000 jobs, nano res = 570,1813
+109,295,877,361: closed threads after 1000000 Tasks, Watcher LTQ_B1 - 1T - 1Q finished
+109,295,881,923: building LTQ_AB1-4T-2Q (throttled)
+109,296,426,446: assigning 1000000 tasks started in 1 threads (throttled)
+109,296,499,429: Worker-LTQ_AB1 - 1T - 1Q-Q1-0 create queue 1
+109,296,515,394: starting watcher
+109,296,594,079: Worker-LTQ_AB1 - 1T - 1Q-Q1-0 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+109,296,663,641: Main waiting for LTQ_AB1 - 1T - 1Q
+110,297,105,532: assigning 1000000 tasks finished 999,426.727 jobs/s (throttled)
+110,312,983,372: Main notified
+110,313,085,434: Main resuming from LTQ_AB1 - 1T - 1Q
+110,313,227,979: LTQ_AB1 (throttled): 1.000.000 jobs,  in 575.232 batches, (1,7 t/b), total size: 0M in 1.019 ms (0 ops/ms, 981.354,3 jobs/s, 
+110,313,272,454: LTQ_AB1 
+110,339,309,214: Mean: 570, 90%: 24.517, 99%: 86.098, 99,9%: 161.932, 99,99%: 181.888, 99,999%: 193.862, 99,9999%: 196.712 Avg: 7.612, Avg90: 2.803, Min: 0, Max: 196.712, 1.000.000 jobs, nano res = 570,1824
+110,596,025,380: building LTQ_M-4T-2Q (throttled)
+110,596,017,398: closed threads after 1000000 Tasks, Watcher LTQ_AB1 - 1T - 1Q finished
+110,596,711,309: assigning 1000000 tasks started in 2 threads (throttled)
+110,596,950,785: Worker-LTQ_M - 2T - 2Q-Q0-0 create queue 0
+110,597,027,189: Worker-LTQ_M - 2T - 2Q-Q1-1 create queue 1
+110,597,084,207: Worker-LTQ_M - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+110,597,113,857: Worker-LTQ_M - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+110,597,181,138: Main waiting for LTQ_M - 2T - 2Q
+110,597,267,235: starting watcher
+111,601,461,489: assigning 1000000 tasks finished 995,402.198 jobs/s (throttled)
+111,615,674,400: Main notified
+111,615,791,287: Main resuming from LTQ_M - 2T - 2Q
+111,615,984,008: LTQ_M (throttled): 1.000.000 jobs,  total size: 0M in 1.021 ms (0 ops/ms, 979.431,9 jobs/s, 
+111,616,063,833: LTQ_M 
+111,650,030,676: Mean: 570, 90%: 46.754, 99%: 176.186, 99,9%: 1.608.482, 99,99%: 10.631.031, 99,999%: 10.970.859, 99,9999%: 10.972.000 Avg: 20.908, Avg90: 4.786, Min: 0, Max: 10.972.000, 1.000.000 jobs, nano res = 570,1823
+111,976,617,434: closed threads after 1000000 Tasks, Watcher LTQ_M - 2T - 2Q finished
+111,976,620,285: building LTQ_AM-4T-2Q (throttled)
+111,977,161,957: assigning 1000000 tasks started in 2 threads (throttled)
+111,977,252,046: Worker-LTQ_AM - 2T - 2Q-Q0-0 create queue 0
+111,977,359,240: Worker-LTQ_AM - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+111,977,379,766: starting watcher
+111,977,435,644: Worker-LTQ_AM - 2T - 2Q-Q1-1 create queue 1
+111,977,509,768: Worker-LTQ_AM - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+111,977,574,768: Main waiting for LTQ_AM - 2T - 2Q
+112,977,281,695: assigning 1000000 tasks finished 999,980.613 jobs/s (throttled)
+112,993,547,828: Main notified
+112,993,828,358: Main resuming from LTQ_AM - 2T - 2Q
+112,994,146,519: LTQ_AM (throttled): 1.000.000 jobs,  total size: 0M in 1.018 ms (0 ops/ms, 982.318,3 jobs/s, 
+112,994,327,837: LTQ_AM 
+113,060,860,016: Mean: 571, 90%: 42.763, 99%: 106.624, 99,9%: 195.572, 99,99%: 518.865, 99,999%: 564.479, 99,9999%: 566.191 Avg: 11.559, Avg90: 4.997, Min: 0, Max: 566.191, 1.000.000 jobs, nano res = 570,1807
+113,318,691,457: closed threads after 1000000 Tasks, Watcher LTQ_AM - 2T - 2Q finished
+113,318,709,703: building LTQ_MC-4T-2Q (throttled)
+113,319,369,403: Worker-LTQ_MC - 2T - 2Q-Q0-0 create queue 0
+113,319,377,385: assigning 1000000 tasks started in 2 threads (throttled)
+113,319,494,843: Worker-LTQ_MC - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+113,319,677,871: Worker-LTQ_MC - 2T - 2Q-Q1-1 create queue 1
+113,319,732,038: starting watcher
+113,319,832,960: Worker-LTQ_MC - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+113,319,902,522: Main waiting for LTQ_MC - 2T - 2Q
+114,320,212,701: assigning 1000000 tasks finished 999,316.25 jobs/s (throttled)
+114,430,359,192: Main notified
+114,430,944,768: Main resuming from LTQ_MC - 2T - 2Q
+114,431,448,808: LTQ_MC (throttled): 1.000.000 jobs,  total size: 0M in 1.125 ms (0 ops/ms, 888.888,9 jobs/s, 
+114,431,596,485: LTQ_MC 
+114,499,353,415: Mean: 570, 90%: 39.342, 99%: 104.914, 99,9%: 205.836, 99,99%: 246.319, 99,999%: 322.153, 99,9999%: 324.433 Avg: 10.325, Avg90: 3.864, Min: 0, Max: 324.433, 1.000.000 jobs, nano res = 570,1811
+114,771,143,465: building LTQ_AMC-4T-2Q (throttled)
+114,771,143,465: closed threads after 1000000 Tasks, Watcher LTQ_MC - 2T - 2Q finished
+114,771,687,988: assigning 1000000 tasks started in 2 threads (throttled)
+114,772,024,965: Worker-LTQ_AMC - 2T - 2Q-Q1-1 create queue 1
+114,772,039,790: starting watcher
+114,772,099,659: Worker-LTQ_AMC - 2T - 2Q-Q0-0 create queue 0
+114,772,135,581: Worker-LTQ_AMC - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=0, threadId=0}
+114,772,211,415: Worker-LTQ_AMC - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=1, threadId=0}
+114,772,291,810: Main waiting for LTQ_AMC - 2T - 2Q
+115,771,774,656: assigning 1000000 tasks finished 1,000,037.063 jobs/s (throttled)
+115,880,857,188: Main notified
+115,880,975,786: Main resuming from LTQ_AMC - 2T - 2Q
+115,881,109,779: LTQ_AMC (throttled): 1.000.000 jobs,  total size: 0M in 1.123 ms (0 ops/ms, 890.472 jobs/s, 
+115,881,171,928: LTQ_AMC 
+115,914,204,814: Mean: 571, 90%: 40.483, 99%: 104.343, 99,9%: 176.757, 99,99%: 230.923, 99,999%: 280.529, 99,9999%: 303.336 Avg: 10.751, Avg90: 4.328, Min: 0, Max: 303.336, 1.000.000 jobs, nano res = 570,1815
+116,284,491,980: closed threads after 1000000 Tasks, Watcher LTQ_AMC - 2T - 2Q finished
+116,284,507,375: building LTQ_BM-4T-2Q (throttled)
+116,285,055,890: assigning 1000000 tasks started in 2 threads (throttled)
+116,285,108,917: Worker-LTQ_BM - 2T - 2Q-Q0-0 create queue 0
+116,285,219,532: Worker-LTQ_BM - 2T - 2Q-Q0-0 running on: CpuInfo{socketId=0, coreId=0, threadId=1}
+116,285,299,357: Worker-LTQ_BM - 2T - 2Q-Q1-1 create queue 1
+116,285,318,743: starting watcher
+116,285,388,876: Worker-LTQ_BM - 2T - 2Q-Q1-1 running on: CpuInfo{socketId=0, coreId=1, threadId=1}
+116,285,457,868: Main waiting for LTQ_BM - 2T - 2Q
+117,285,193,874: assigning 1000000 tasks finished 999,968.641 jobs/s (throttled)
+117,293,045,271: Main notified
+117,293,298,431: Main resuming from LTQ_BM - 2T - 2Q
+117,293,446,108: LTQ_BM (throttled): 1.000.000 jobs,  in 721.911 batches, (1,4 t/b), total size: 0M in 1.022 ms (0 ops/ms, 978.473,6 jobs/s, 
+117,293,520,802: LTQ_BM 
+117,332,495,547: Mean: 571, 90%: 36.492, 99%: 147.107, 99,9%: 403.688, 99,99%: 556.497, 99,999%: 1.173.433, 99,9999%: 1.175.144 Avg: 11.279, Avg90: 3.023, Min: 0, Max: 1.175.144, 1.000.000 jobs, nano res = 570,1816
