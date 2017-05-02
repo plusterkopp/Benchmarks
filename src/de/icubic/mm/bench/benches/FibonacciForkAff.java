@@ -10,6 +10,7 @@ import java.util.function.*;
 import de.icubic.mm.bench.base.*;
 import net.openhft.affinity.*;
 import net.openhft.affinity.AffinityManager.*;
+import net.openhft.affinity.impl.LayoutEntities.LayoutEntity;
 
 public class FibonacciForkAff extends RecursiveTask<Long> {
 

@@ -4,12 +4,17 @@
 package de.icubic.mm.server.utils;
 
 import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import de.icubic.mm.bench.base.BenchLogger;
+import de.icubic.mm.server.*;
 import net.openhft.affinity.*;
 import net.openhft.affinity.AffinityManager.*;
-import net.openhft.affinity.impl.*;
+import net.openhft.affinity.impl.LayoutEntities.LayoutEntity;
+import net.openhft.affinity.impl.LayoutEntities.NumaNode;
+import net.openhft.affinity.impl.LayoutEntities.Socket;
 
 /**
  * Jeder Thread kann mit {@link Affinity#getThreadId()} seine native Thread ID feststellen, aber ein
@@ -108,15 +113,16 @@ public class AffinityThread extends Thread {
 		if ( bindTo == null) {
 			return target;
 		}
-		if ( ( bindTo instanceof Socket) && AffinityManager.INSTANCE.getNumSockets() == 1) {
-			return target;
-		}
-
 		Runnable	bindingRunnable = new Runnable() {
 			@Override
 			public void run() {
 				bindTo.bind();
-//				BenchLogger.sysinfo( "bound " + Thread.currentThread().getName() + " to " + bindTo.getLocation());
+				Thread current = Thread.currentThread();
+				if ( current instanceof AffinityThread) {
+					AffinityThread at = ( AffinityThread) current;
+//					BenchLogger.sysinfo( "bound " + Thread.currentThread().getName() + " to " + bindTo.getLocation());
+					at.skipCounterMax = 1000;	// frage die Position bei gebundenden Threads sehr selten ab
+				}
 				target.run();
 			}
 		};
@@ -174,11 +180,24 @@ public class AffinityThread extends Thread {
 		Thread current = Thread.currentThread();
 		if ( current instanceof AffinityThread) {
 			AffinityThread at = ( AffinityThread) current;
-			if ( at.skipCounter >= at.skipCounterMax) {
+			recordCpuId( at.skipCounterMax);
+		}
+	}
+
+	/**
+	 * falls {@link Thread#currentThread()} ein {@link AffinityThread} ist: ruft {@link Affinity#getCpu()} ab und speichert sie für später
+	 */
+	public static void recordCpuId( int skipMax) {
+		Thread current = Thread.currentThread();
+		if ( current instanceof AffinityThread) {
+			AffinityThread at = ( AffinityThread) current;
+			if ( ++at.skipCounter >= skipMax) {
 				at.skipCounter = 0;
-				at.cpuId = Affinity.getCpu();
-			} else {
-				at.skipCounter++;
+				try {
+					at.cpuId = Affinity.getCpu();
+				} catch ( Throwable t) {
+					BenchLogger.syserr( "can not obtain cpuID for " + at, t);
+				}
 			}
 		}
 	}
@@ -193,7 +212,7 @@ public class AffinityThread extends Thread {
 	}
 
 	public String getLocation() {
-		List<AffinityManager.LayoutEntity> boundTo = AffinityManager.INSTANCE.getBoundTo( this);
+		List<LayoutEntity> boundTo = AffinityManager.INSTANCE.getBoundTo( this);
 		String	locString = getLocation( cpuId);
 		if ( boundTo.isEmpty()) {
 			return locString;
@@ -209,6 +228,27 @@ public class AffinityThread extends Thread {
 			return locString + " [" + boundString + "]";
 		}
 		return getLocation( cpuId);
+	}
+
+	public static int getNumSockets() {
+		IAffinity aff = Affinity.getAffinityImpl();
+		if (aff instanceof IDefaultLayoutAffinity) {
+			IDefaultLayoutAffinity idl = (IDefaultLayoutAffinity) aff;
+			CpuLayout	layout = idl.getDefaultLayout();
+			return layout.sockets();
+		}
+		return 1;
+	}
+
+	public static Socket getOtherSocket( Socket socket) {
+		Socket[] socketA = new Socket[ 1];
+		socketA[ 0] = null;
+		AffinityManager.INSTANCE.visitEntities( ( entity) -> {
+			if ( ( entity instanceof Socket) && socket != entity) {
+				socketA[ 0] = ( Socket) entity;
+			}
+		});
+		return socketA[ 0];
 	}
 
 	public static int getCoresPerSocket() {
@@ -238,10 +278,6 @@ public class AffinityThread extends Thread {
 
 	public static Map<LayoutEntity, Collection<Thread>> getAffinities() {
 		Map<LayoutEntity, Collection<Thread>> collected = new HashMap<>();
-		IAffinity aff = Affinity.getAffinityImpl();
-		if ( ! ( aff instanceof WindowsJNAAffinity)) {
-			return collected;
-		}
 		Consumer<LayoutEntity> collector = ( entity) -> {
 			Collection<Thread> threads = entity.getThreads();
 			if ( threads != null && ! threads.isEmpty()) {
@@ -264,41 +300,6 @@ public class AffinityThread extends Thread {
 						.map( mapper)
 						.collect( Collectors.toList())));
 		return result;
-	}
-
-
-
-	public static int getNumNodes() {
-		IAffinity aff = Affinity.getAffinityImpl();
-		if ( ! ( aff instanceof WindowsJNAAffinity)) {
-			return 1;
-		}
-		WindowsJNAAffinity waff = ( WindowsJNAAffinity) aff;
-		WindowsCpuLayout layout = ( WindowsCpuLayout) waff.getDefaultLayout();
-		return layout.numaNodes();
-	}
-
-	public static NumaNode getOtherNode( NumaNode node) {
-		NumaNode[] nodeA = new NumaNode[ 1];
-		nodeA[ 0] = null;
-		AffinityManager.INSTANCE.visitEntities( ( entity) -> {
-			if ( ( entity instanceof NumaNode) && node != entity) {
-				nodeA[ 0] = ( NumaNode) entity;
-			}
-		});
-		return nodeA[ 0];
-	}
-
-
-
-	public static String getBoundTo() {
-		List<LayoutEntity> boundTo = AffinityManager.INSTANCE .getBoundTo( Thread.currentThread());
-		LayoutEntity first = boundTo.size() == 1 ? boundTo.get( 0) : null;
-		if ( first != null) {
-			String loc = first.getLocation();
-			return loc;
-		}
-		return "none";
 	}
 
 }

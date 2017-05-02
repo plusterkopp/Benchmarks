@@ -13,6 +13,8 @@ import de.icubic.mm.communication.util.*;
 import de.icubic.mm.server.utils.*;
 import net.openhft.affinity.*;
 import net.openhft.affinity.AffinityManager.*;
+import net.openhft.affinity.impl.LayoutEntities.LayoutEntity;
+import net.openhft.affinity.impl.LayoutEntities.Socket;
 
 public class DisruptorQueue implements IWorkQueue {
 
@@ -95,8 +97,8 @@ public class DisruptorQueue implements IWorkQueue {
 			nThreads = Math.max( 1, nthreads - numAT);
 		}
 		// if affinity, use only threads of the same node
-		int	threadsOnNode = AffinityThread.getNumThreadsOnNode( WorkAssignerThread.createdOnNode);
-		nThreads = Math.min( nThreads, threadsOnNode);
+		int	threadsPerSocket = AffinityThread.getThreadsPerSocket();
+		nThreads = Math.min( nThreads, threadsPerSocket);
 		workersReady = new CountDownLatch( nThreads);
 		createRingBuffer( bufSize, numAT > 1, useAffinity);
 		thArray = new TaskHandler[ nThreads];
@@ -183,7 +185,7 @@ public class DisruptorQueue implements IWorkQueue {
 			tf = new ThreadFactory() {
 				@Override
 				public Thread newThread( final Runnable r) {
-					NumaNode node = WorkAssignerThread.createdOnNode;
+					Socket node = WorkAssignerThread.createdOnSocket;
 					Thread t = new AffinityThread( () ->  {
 							workersReady.countDown();
 							r.run();

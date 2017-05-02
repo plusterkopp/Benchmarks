@@ -1,0 +1,294 @@
+127,051,798: warmup
+5,119,142,242: No-Queue Speed in 1 Threads: 100.100 jobs in 5.000ms, total size 3.258,8 M in 5.000 ms (651.758 ops/ms, 20.020 jobs/s
+35,306,200,494: No-Queue Speed in 1 Threads: 19.749.000 jobs in 20.000ms, total size 10.212,5 M in 20.001 ms (510.601 ops/ms, 987.400,6 jobs/s
+35,306,426,286: estimate single thread
+45,313,936,145: No-Queue Speed in 1 Threads: 9.820.000 jobs in 10.000ms, total size 5.078 M in 10.001 ms (507.751 ops/ms, 981.901,8 jobs/s
+55,318,443,428: No-Queue Speed in 4 Threads: 19.300.000 jobs in 10.000ms, total size 9.981,1 M in 10.007 ms (997.407 ops/ms, 1.928.649,9 jobs/s
+55,318,910,977: Max Speedup: 1,964
+65,332,138,044: No-Queue Speed in 2 Threads: 13.730.000 jobs in 10.000ms, total size 7.100,3 M in 10.011 ms (709.252 ops/ms, 1.371.491,4 jobs/s
+65,332,384,932: Half Speedup: 1,397
+75,333,408,408: No-Queue Speed in 3 Threads: 17.990.000 jobs in 10.000ms, total size 9.304,5 M in 10.001 ms (930.356 ops/ms, 1.798.820,1 jobs/s
+75,333,615,954: MinusOne Speedup: 1,832
+75,904,158,219: assigning 1000000 tasks finished 7,663,858.33 jobs/s
+76,530,472,772: LTQ: 1.000.000 jobs,  total size: 517,1M in 766 ms (675.088 ops/ms, 1.305.483 jobs/s, speedup 1,33, 210,08 ns (27,426%) overhead, 72,574% of max perf
+76,988,251,414: assigning 1000000 tasks finished 5,303,717.488 jobs/s
+77,481,499,327: LTQ_A: 1.000.000 jobs,  total size: 517,1M in 688 ms (751.624 ops/ms, 1.453.488,4 jobs/s, speedup 1,48, 132,08 ns (19,198%) overhead, 80,802% of max perf
+77,782,117,175: assigning 1000000 tasks finished 9,880,832.418 jobs/s
+78,373,309,698: LTQ_B: 1.000.000 jobs,  in 1.004 batches, (996 t/b), total size: 517,1M in 703 ms (735.586 ops/ms, 1.422.475,1 jobs/s, speedup 1,449, 147,08 ns (20,922%) overhead, 79,078% of max perf
+78,653,072,024: assigning 1000000 tasks finished 8,622,047.851 jobs/s
+79,200,531,067: LTQ_AB: 1.000.000 jobs,  in 1.004 batches, (996 t/b), total size: 517,1M in 672 ms (769.520 ops/ms, 1.488.095,2 jobs/s, speedup 1,516, 116,08 ns (17,274%) overhead, 82,726% of max perf
+79,390,790,888: assigning 1000000 tasks finished 17,704,168.096 jobs/s
+80,419,378,069: LTQ_B1: 1.000.000 jobs,  in 1.001 batches, (999 t/b), total size: 517,1M in 1.094 ms (472.685 ops/ms, 914.076,8 jobs/s, speedup 0,931, 75,568 ns (6,908%) overhead, 93,092% of max perf
+80,615,676,110: assigning 1000000 tasks finished 16,452,883.384 jobs/s
+81,637,982,174: LTQ_AB1: 1.000.000 jobs,  in 1.001 batches, (999 t/b), total size: 517,1M in 1.093 ms (473.117 ops/ms, 914.913,1 jobs/s, speedup 0,932, 74,568 ns (6,822%) overhead, 93,178% of max perf
+81,891,459,140: assigning 1000000 tasks finished 8,418,751.601 jobs/s
+82,639,599,209: LTQ_M: 1.000.000 jobs,  total size: 517,1M in 876 ms (590.316 ops/ms, 1.141.552,5 jobs/s, speedup 1,163, 146,867 ns (16,766%) overhead, 83,234% of max perf
+82,962,260,268: assigning 1000000 tasks finished 10,596,763.856 jobs/s
+83,732,976,096: LTQ_AM: 1.000.000 jobs,  total size: 517,1M in 875 ms (590.991 ops/ms, 1.142.857,1 jobs/s, speedup 1,164, 145,867 ns (16,67%) overhead, 83,33% of max perf
+83,970,692,109: assigning 1000000 tasks finished 13,613,823.106 jobs/s
+84,654,246,597: LTQ_MC: 1.000.000 jobs,  total size: 517,1M in 765 ms (675.970 ops/ms, 1.307.189,5 jobs/s, speedup 1,331, 35,867 ns (4,688%) overhead, 95,312% of max perf
+84,882,822,603: assigning 1000000 tasks finished 12,502,605.699 jobs/s
+85,670,647,293: LTQ_AMC: 1.000.000 jobs,  total size: 517,1M in 875 ms (590.991 ops/ms, 1.142.857,1 jobs/s, speedup 1,164, 145,867 ns (16,67%) overhead, 83,33% of max perf
+85,905,641,831: assigning 1000000 tasks finished 14,158,046.528 jobs/s
+86,700,754,008: LTQ_BM: 1.000.000 jobs,  in 1.006 batches, (994 t/b), total size: 517,1M in 875 ms (590.991 ops/ms, 1.142.857,1 jobs/s, speedup 1,164, 145,867 ns (16,67%) overhead, 83,33% of max perf
+86,893,471,880: assigning 1000000 tasks finished 15,601,508.76 jobs/s
+87,592,116,217: LTQ_ABM: 1.000.000 jobs,  in 1.002 batches, (998 t/b), total size: 517,1M in 766 ms (675.088 ops/ms, 1.305.483 jobs/s, speedup 1,33, 36,867 ns (4,813%) overhead, 95,187% of max perf
+87,833,221,388: assigning 1000000 tasks finished 10,838,944.962 jobs/s
+88,497,585,853: LTQ_BMC: 1.000.000 jobs,  in 1.002 batches, (998 t/b), total size: 517,1M in 765 ms (675.970 ops/ms, 1.307.189,5 jobs/s, speedup 1,331, 35,867 ns (4,688%) overhead, 95,312% of max perf
+88,769,739,108: assigning 1000000 tasks finished 11,924,718.631 jobs/s
+89,452,907,583: LTQ_ABMC: 1.000.000 jobs,  in 1.003 batches, (997 t/b), total size: 517,1M in 765 ms (675.970 ops/ms, 1.307.189,5 jobs/s, speedup 1,331, 35,867 ns (4,688%) overhead, 95,312% of max perf
+89,782,179,895: assigning 1000000 tasks finished 9,289,835.29 jobs/s
+90,386,305,271: DIS: 1.000.000 jobs,  total size: 517,1M in 703 ms (735.586 ops/ms, 1.422.475,1 jobs/s, speedup 1,449, 147,08 ns (20,922%) overhead, 79,078% of max perf
+91,085,247,813: assigning 1000000 tasks finished 14,755,657.961 jobs/s
+91,769,578,887: DIS_A: 1.000.000 jobs,  total size: 517,1M in 750 ms (689.490 ops/ms, 1.333.333,3 jobs/s, speedup 1,358, 194,08 ns (25,877%) overhead, 74,123% of max perf
+92,345,386,777: assigning 1000000 tasks finished 13,920,816.475 jobs/s
+93,085,540,886: DIS_B: 1.000.000 jobs,  in 13 batches, (76.923,1 t/b), total size: 517,1M in 813 ms (636.060 ops/ms, 1.230.012,3 jobs/s, speedup 1,253, 257,08 ns (31,621%) overhead, 68,379% of max perf
+93,272,947,519: assigning 1000000 tasks finished 24,236,529.918 jobs/s
+93,982,745,173: DIS_AB: 1.000.000 jobs,  in 10 batches, (100.000 t/b), total size: 517,1M in 766 ms (675.088 ops/ms, 1.305.483 jobs/s, speedup 1,33, 210,08 ns (27,426%) overhead, 72,574% of max perf
+94,383,652,787: assigning 1000000 tasks finished 3,979,099.747 jobs/s
+95,030,761,284: LBQ: 1.000.000 jobs,  total size: 517,1M in 906 ms (570.769 ops/ms, 1.103.752,8 jobs/s, speedup 1,124, 350,08 ns (38,64%) overhead, 61,36% of max perf
+95,407,289,085: assigning 1000000 tasks finished 4,719,882.234 jobs/s
+95,951,295,681: LBQ_A: 1.000.000 jobs,  total size: 517,1M in 766 ms (675.088 ops/ms, 1.305.483 jobs/s, speedup 1,33, 210,08 ns (27,426%) overhead, 72,574% of max perf
+96,209,977,832: assigning 1000000 tasks finished 8,021,459.715 jobs/s
+96,952,179,462: LBQ_M: 1.000.000 jobs,  total size: 517,1M in 875 ms (590.991 ops/ms, 1.142.857,1 jobs/s, speedup 1,164, 145,867 ns (16,67%) overhead, 83,33% of max perf
+97,196,603,658: assigning 1000000 tasks finished 11,352,666.205 jobs/s
+97,873,351,891: LBQ_AM: 1.000.000 jobs,  total size: 517,1M in 766 ms (675.088 ops/ms, 1.305.483 jobs/s, speedup 1,33, 36,867 ns (4,813%) overhead, 95,187% of max perf
+98,123,240,706: assigning 1000000 tasks finished 9,979,504.194 jobs/s
+98,779,530,262: LBQ_MC: 1.000.000 jobs,  total size: 517,1M in 766 ms (675.088 ops/ms, 1.305.483 jobs/s, speedup 1,33, 36,867 ns (4,813%) overhead, 95,187% of max perf
+99,004,441,713: assigning 1000000 tasks finished 11,129,833.222 jobs/s
+99,781,390,194: LBQ_AMC: 1.000.000 jobs,  total size: 517,1M in 875 ms (590.991 ops/ms, 1.142.857,1 jobs/s, speedup 1,164, 145,867 ns (16,67%) overhead, 83,33% of max perf
+99,992,620,143: assigning 1000000 tasks finished 24,217,119.261 jobs/s
+101,439,085,817: DIS_B1: 1.000.000 jobs,  in 4 batches, (250.000 t/b), total size: 517,1M in 1.484 ms (348.461 ops/ms, 673.854,4 jobs/s, speedup 0,686, 465,568 ns (31,373%) overhead, 68,627% of max perf
+101,632,247,861: assigning 1000000 tasks finished 23,204,922.321 jobs/s
+103,045,119,020: DIS_AB1: 1.000.000 jobs,  in 3 batches, (333.333,3 t/b), total size: 517,1M in 1.469 ms (352.020 ops/ms, 680.735,2 jobs/s, speedup 0,693, 450,568 ns (30,672%) overhead, 69,328% of max perf
+103,719,816,311: assigning 1000000 tasks finished 1,906,247.758 jobs/s
+103,805,152,501: DIS_Bo: 1.000.000 jobs,  total size: 517,1M in 610 ms (847.733 ops/ms, 1.639.344,3 jobs/s, speedup 1,67, 54,08 ns (8,866%) overhead, 91,134% of max perf
+104,468,247,742: assigning 1000000 tasks finished 2,006,440.916 jobs/s
+104,549,864,069: DIS_ABo: 1.000.000 jobs,  total size: 517,1M in 594 ms (870.568 ops/ms, 1.683.501,7 jobs/s, speedup 1,715, 38,08 ns (6,411%) overhead, 93,589% of max perf
+104,819,598,045: assigning 1000000 tasks finished 9,977,119.771 jobs/s
+105,395,485,191: CLBQ: 1.000.000 jobs,  total size: 517,1M in 678 ms (762.710 ops/ms, 1.474.926,3 jobs/s, speedup 1,502, 122,08 ns (18,006%) overhead, 81,994% of max perf
+105,650,331,162: assigning 1000000 tasks finished 8,316,001.055 jobs/s
+106,188,058,921: CLBQ_A: 1.000.000 jobs,  total size: 517,1M in 667 ms (775.288 ops/ms, 1.499.250,4 jobs/s, speedup 1,527, 111,08 ns (16,654%) overhead, 83,346% of max perf
+106,557,339,717: assigning 1000000 tasks finished 5,314,292.125 jobs/s
+107,047,773,784: CLBQ_B: 1.010.799 jobs,  in 1.015 batches, (995,9 t/b), total size: 517,1M in 688 ms (751.624 ops/ms, 1.469.184,6 jobs/s, speedup 1,496, 124,73 ns (18,325%) overhead, 81,675% of max perf
+107,264,094,313: assigning 1000000 tasks finished 11,843,787.128 jobs/s
+107,818,810,625: CLBQ_AB: 1.006.428 jobs,  in 1.011 batches, (995,5 t/b), total size: 517,1M in 647 ms (799.254 ops/ms, 1.555.530,1 jobs/s, speedup 1,584, 86,948 ns (13,525%) overhead, 86,475% of max perf
+108,056,268,916: assigning 1000000 tasks finished 11,715,304.922 jobs/s
+109,053,362,132: CLBQ_B1: 1.000.000 jobs,  in 1.001 batches, (999 t/b), total size: 517,1M in 1.094 ms (472.685 ops/ms, 914.076,8 jobs/s, speedup 0,931, 75,568 ns (6,908%) overhead, 93,092% of max perf
+109,265,747,839: assigning 1000000 tasks finished 13,852,207.474 jobs/s
+110,263,852,556: CLBQ_AB1: 1.000.000 jobs,  in 1.001 batches, (999 t/b), total size: 517,1M in 1.085 ms (476.606 ops/ms, 921.659 jobs/s, speedup 0,939, 66,568 ns (6,135%) overhead, 93,865% of max perf
+110,546,828,994: assigning 1000000 tasks finished 9,770,956.183 jobs/s
+111,191,578,080: CLBQ_M: 1.000.000 jobs,  total size: 517,1M in 757 ms (683.114 ops/ms, 1.321.004 jobs/s, speedup 1,345, 27,867 ns (3,681%) overhead, 96,319% of max perf
+111,409,684,416: assigning 1000000 tasks finished 12,010,217.188 jobs/s
+112,073,798,001: CLBQ_AM: 1.000.000 jobs,  total size: 517,1M in 757 ms (683.114 ops/ms, 1.321.004 jobs/s, speedup 1,345, 27,867 ns (3,681%) overhead, 96,319% of max perf
+112,309,116,972: assigning 1000000 tasks finished 9,969,520.087 jobs/s
+113,056,728,482: CLBQ_MC: 1.000.000 jobs,  total size: 517,1M in 857 ms (603.404 ops/ms, 1.166.861,1 jobs/s, speedup 1,188, 127,867 ns (14,92%) overhead, 85,08% of max perf
+113,305,514,566: assigning 1000000 tasks finished 11,910,304.024 jobs/s
+113,969,390,956: CLBQ_AMC: 1.000.000 jobs,  total size: 517,1M in 757 ms (683.114 ops/ms, 1.321.004 jobs/s, speedup 1,345, 27,867 ns (3,681%) overhead, 96,319% of max perf
+114,198,834,778: assigning 1000000 tasks finished 12,930,211.408 jobs/s
+114,867,155,160: CLBQ_BM: 1.000.000 jobs,  in 1.003 batches, (997 t/b), total size: 517,1M in 757 ms (683.114 ops/ms, 1.321.004 jobs/s, speedup 1,345, 27,867 ns (3,681%) overhead, 96,319% of max perf
+115,088,642,102: assigning 1000000 tasks finished 11,578,256.719 jobs/s
+115,858,362,394: CLBQ_ABM: 1.000.000 jobs,  in 1.002 batches, (998 t/b), total size: 517,1M in 866 ms (597.133 ops/ms, 1.154.734,4 jobs/s, speedup 1,176, 136,867 ns (15,804%) overhead, 84,196% of max perf
+116,072,418,732: assigning 1000000 tasks finished 13,176,175.293 jobs/s
+116,739,923,756: CLBQ_BMC: 1.000.000 jobs,  in 1.002 batches, (998 t/b), total size: 517,1M in 757 ms (683.114 ops/ms, 1.321.004 jobs/s, speedup 1,345, 27,867 ns (3,681%) overhead, 96,319% of max perf
+116,947,082,040: assigning 1000000 tasks finished 13,951,158.139 jobs/s
+117,621,848,893: CLBQ_ABMC: 1.000.000 jobs,  in 1.004 batches, (996 t/b), total size: 517,1M in 757 ms (683.114 ops/ms, 1.321.004 jobs/s, speedup 1,345, 27,867 ns (3,681%) overhead, 96,319% of max perf
+118,079,316,216: assigning 1000000 tasks finished 3,261,127.79 jobs/s
+118,528,451,479: ABQ: 1.000.000 jobs,  total size: 517,1M in 766 ms (675.088 ops/ms, 1.305.483 jobs/s, speedup 1,33, 210,08 ns (27,426%) overhead, 72,574% of max perf
+118,938,569,233: assigning 1000000 tasks finished 3,750,677.396 jobs/s
+119,436,133,989: ABQ_A: 1.000.000 jobs,  total size: 517,1M in 765 ms (675.970 ops/ms, 1.307.189,5 jobs/s, speedup 1,331, 209,08 ns (27,331%) overhead, 72,669% of max perf
+119,764,538,484: assigning 1000000 tasks finished 6,197,819.588 jobs/s
+120,247,281,946: B_ABQ: 1.000.000 jobs,  in 1.004 batches, (996 t/b), total size: 517,1M in 656 ms (788.288 ops/ms, 1.524.390,2 jobs/s, speedup 1,552, 100,08 ns (15,256%) overhead, 84,744% of max perf
+120,519,550,378: assigning 1000000 tasks finished 7,852,515.807 jobs/s
+121,045,526,700: B_ABQ_A: 1.000.000 jobs,  in 1.011 batches, (989,1 t/b), total size: 517,1M in 656 ms (788.288 ops/ms, 1.524.390,2 jobs/s, speedup 1,552, 100,08 ns (15,256%) overhead, 84,744% of max perf
+121,285,764,055: assigning 1000000 tasks finished 16,720,959.623 jobs/s
+122,309,746,452: B1_ABQ: 1.000.000 jobs,  in 1.001 batches, (999 t/b), total size: 517,1M in 1.094 ms (472.685 ops/ms, 914.076,8 jobs/s, speedup 0,931, 75,568 ns (6,908%) overhead, 93,092% of max perf
+122,506,214,977: assigning 1000000 tasks finished 17,481,465.233 jobs/s
+123,528,564,375: B1_ABQ_A: 1.000.000 jobs,  in 1.001 batches, (999 t/b), total size: 517,1M in 1.093 ms (473.117 ops/ms, 914.913,1 jobs/s, speedup 0,932, 74,568 ns (6,822%) overhead, 93,178% of max perf
+123,769,505,904: assigning 1000000 tasks finished 10,955,604.822 jobs/s
+124,545,551,788: ABQ_M: 1.000.000 jobs,  total size: 517,1M in 875 ms (590.991 ops/ms, 1.142.857,1 jobs/s, speedup 1,164, 145,867 ns (16,67%) overhead, 83,33% of max perf
+124,818,672,641: assigning 1000000 tasks finished 8,921,065.785 jobs/s
+125,576,437,941: ABQ_AM: 1.000.000 jobs,  total size: 517,1M in 875 ms (590.991 ops/ms, 1.142.857,1 jobs/s, speedup 1,164, 145,867 ns (16,67%) overhead, 83,33% of max perf
+125,844,284,047: assigning 1000000 tasks finished 10,341,942.683 jobs/s
+126,512,978,468: ABQ_MC: 1.000.000 jobs,  total size: 517,1M in 766 ms (675.088 ops/ms, 1.305.483 jobs/s, speedup 1,33, 36,867 ns (4,813%) overhead, 95,187% of max perf
+126,810,887,955: assigning 1000000 tasks finished 8,372,732.903 jobs/s
+127,561,492,918: ABQ_AMC: 1.000.000 jobs,  total size: 517,1M in 875 ms (590.991 ops/ms, 1.142.857,1 jobs/s, speedup 1,164, 145,867 ns (16,67%) overhead, 83,33% of max perf
+127,812,973,108: assigning 1000000 tasks finished 13,863,266.492 jobs/s
+128,608,629,239: ABQ_BM: 1.000.000 jobs,  in 1.002 batches, (998 t/b), total size: 517,1M in 875 ms (590.991 ops/ms, 1.142.857,1 jobs/s, speedup 1,164, 145,867 ns (16,67%) overhead, 83,33% of max perf
+128,863,015,644: assigning 1000000 tasks finished 11,660,470.196 jobs/s
+129,638,453,714: ABQ_ABM: 1.000.000 jobs,  in 1.004 batches, (996 t/b), total size: 517,1M in 875 ms (590.991 ops/ms, 1.142.857,1 jobs/s, speedup 1,164, 145,867 ns (16,67%) overhead, 83,33% of max perf
+129,870,810,023: assigning 1000000 tasks finished 12,303,852.143 jobs/s
+130,654,584,144: ABQ_BMC: 1.000.000 jobs,  in 1.004 batches, (996 t/b), total size: 517,1M in 875 ms (590.991 ops/ms, 1.142.857,1 jobs/s, speedup 1,164, 145,867 ns (16,67%) overhead, 83,33% of max perf
+130,895,103,739: assigning 1000000 tasks finished 12,628,551.711 jobs/s
+131,575,962,410: ABQ_ABMC: 1.000.000 jobs,  in 1.004 batches, (996 t/b), total size: 517,1M in 766 ms (675.088 ops/ms, 1.305.483 jobs/s, speedup 1,33, 36,867 ns (4,813%) overhead, 95,187% of max perf
+133,052,927,654: assigning 1000000 tasks finished 999,876.286 jobs/s (throttled)
+133,068,983,960: LTQ (throttled): 1.000.000 jobs,  total size: 0M in 1.025 ms (0 ops/ms, 975.609,8 jobs/s, 
+133,231,243,885: Mean: 570, 90%: 5.702, 99%: 956.194, 99,9%: 1.691.158, 99,99%: 1.752.737, 99,999%: 2.340.595, 99,9999%: 27.233.001 Avg: 33.956, Avg90: 619, Min: 0, Max: 27.233.001, 1.000.000 jobs, nano res = 570,1811
+134,651,974,424: assigning 1000000 tasks finished 1,000,404.421 jobs/s (throttled)
+134,762,457,322: LTQ_A (throttled): 1.000.000 jobs,  total size: 0M in 1.114 ms (0 ops/ms, 897.666,1 jobs/s, 
+134,833,633,629: Mean: 0, 90%: 1.711, 99%: 33.071, 99,9%: 348.951, 99,99%: 380.882, 99,999%: 749.218, 99,9999%: 1.161.460 Avg: 2.544, Avg90: 286, Min: 0, Max: 1.161.460, 1.000.000 jobs, nano res = 570,1817
+136,171,794,498: assigning 1000000 tasks finished 1,000,230.977 jobs/s (throttled)
+136,187,850,234: LTQ_B (throttled): 1.000.000 jobs,  in 863.962 batches, (1,2 t/b), total size: 0M in 1.020 ms (0 ops/ms, 980.392,2 jobs/s, 
+136,217,102,818: Mean: 570, 90%: 4.561, 99%: 515.443, 99,9%: 1.070.801, 99,99%: 1.102.161, 99,999%: 4.117.279, 99,9999%: 8.028.154 Avg: 15.601, Avg90: 708, Min: 0, Max: 8.028.154, 1.000.000 jobs, nano res = 570,1818
+137,556,041,414: assigning 1000000 tasks finished 1,000,273.192 jobs/s (throttled)
+137,666,651,462: LTQ_AB (throttled): 1.000.000 jobs,  in 905.809 batches, (1,1 t/b), total size: 0M in 1.118 ms (0 ops/ms, 894.454,4 jobs/s, 
+137,720,235,394: Mean: 570, 90%: 2.281, 99%: 21.097, 99,9%: 185.309, 99,99%: 289.652, 99,999%: 1.253.259, 99,9999%: 1.870.765 Avg: 1.720, Avg90: 417, Min: 0, Max: 1.870.765, 1.000.000 jobs, nano res = 570,1818
+139,028,816,965: assigning 1000000 tasks finished 999,606.159 jobs/s (throttled)
+139,045,070,555: LTQ_B1 (throttled): 1.000.000 jobs,  in 480.943 batches, (2,1 t/b), total size: 0M in 1.020 ms (0 ops/ms, 980.392,2 jobs/s, 
+139,073,252,908: Mean: 1.140, 90%: 34.211, 99%: 114.036, 99,9%: 190.440, 99,99%: 290.792, 99,999%: 293.073, 99,9999%: 294.784 Avg: 10.430, Avg90: 4.632, Min: 0, Max: 294.784, 1.000.000 jobs, nano res = 570,182
+140,323,601,289: assigning 1000000 tasks finished 1,000,207.019 jobs/s (throttled)
+140,418,115,688: LTQ_AB1 (throttled): 1.000.000 jobs,  in 436.584 batches, (2,3 t/b), total size: 0M in 1.107 ms (0 ops/ms, 903.342,4 jobs/s, 
+140,477,331,301: Mean: 3.422, 90%: 40.483, 99%: 135.133, 99,9%: 218.380, 99,99%: 268.555, 99,999%: 271.977, 99,9999%: 423.645 Avg: 12.841, Avg90: 6.290, Min: 0, Max: 423.645, 1.000.000 jobs, nano res = 570,1822
+141,746,535,579: assigning 1000000 tasks finished 999,621.543 jobs/s (throttled)
+141,763,301,191: LTQ_M (throttled): 1.000.000 jobs,  total size: 0M in 1.032 ms (0 ops/ms, 968.992,2 jobs/s, 
+141,808,525,694: Mean: 570, 90%: 31.360, 99%: 103.203, 99,9%: 180.177, 99,99%: 257.722, 99,999%: 1.280.628, 99,9999%: 1.289.751 Avg: 8.828, Avg90: 2.750, Min: 0, Max: 1.289.751, 1.000.000 jobs, nano res = 570,1817
+143,135,712,282: assigning 1000000 tasks finished 1,000,183.062 jobs/s (throttled)
+143,246,566,939: LTQ_AM (throttled): 1.000.000 jobs,  total size: 0M in 1.123 ms (0 ops/ms, 890.472 jobs/s, 
+143,304,359,949: Mean: 570, 90%: 32.500, 99%: 113.466, 99,9%: 478.382, 99,99%: 599.260, 99,999%: 604.392, 99,9999%: 609.523 Avg: 10.037, Avg90: 2.927, Min: 0, Max: 609.523, 1.000.000 jobs, nano res = 570,1819
+144,649,595,058: assigning 1000000 tasks finished 1,000,009.693 jobs/s (throttled)
+144,743,946,385: LTQ_MC (throttled): 1.000.000 jobs,  total size: 0M in 1.108 ms (0 ops/ms, 902.527,1 jobs/s, 
+144,774,878,723: Mean: 570, 90%: 31.360, 99%: 104.343, 99,9%: 214.958, 99,99%: 466.408, 99,999%: 490.356, 99,9999%: 494.918 Avg: 9.060, Avg90: 2.908, Min: 0, Max: 494.918, 1.000.000 jobs, nano res = 570,1804
+146,025,893,646: assigning 1000000 tasks finished 1,000,075.841 jobs/s (throttled)
+146,041,748,678: LTQ_AMC (throttled): 1.000.000 jobs,  total size: 0M in 1.016 ms (0 ops/ms, 984.252 jobs/s, 
+146,078,097,739: Mean: 570, 90%: 31.360, 99%: 122.019, 99,9%: 264.564, 99,99%: 355.223, 99,999%: 372.329, 99,9999%: 374.039 Avg: 9.463, Avg90: 2.912, Min: 0, Max: 374.039, 1.000.000 jobs, nano res = 570,1817
+147,388,964,597: assigning 1000000 tasks finished 999,457.482 jobs/s (throttled)
+147,405,544,900: LTQ_BM (throttled): 1.000.000 jobs,  in 701.228 batches, (1,4 t/b), total size: 0M in 1.020 ms (0 ops/ms, 980.392,2 jobs/s, 
+147,437,741,330: Mean: 570, 90%: 36.492, 99%: 127.721, 99,9%: 220.660, 99,99%: 257.151, 99,999%: 271.976, 99,9999%: 780.578 Avg: 10.327, Avg90: 3.160, Min: 0, Max: 780.578, 1.000.000 jobs, nano res = 570,1816
+148,762,356,970: assigning 1000000 tasks finished 999,968.641 jobs/s (throttled)
+148,872,945,352: LTQ_ABM (throttled): 1.000.000 jobs,  in 686.718 batches, (1,5 t/b), total size: 0M in 1.123 ms (0 ops/ms, 890.472 jobs/s, 
+148,937,709,400: Mean: 570, 90%: 38.772, 99%: 107.765, 99,9%: 344.959, 99,99%: 396.276, 99,999%: 400.267, 99,9999%: 400.837 Avg: 10.578, Avg90: 3.584, Min: 0, Max: 400.837, 1.000.000 jobs, nano res = 570,1808
+150,291,567,931: assigning 1000000 tasks finished 1,000,096.94 jobs/s (throttled)
+150,386,759,706: LTQ_BMC (throttled): 1.000.000 jobs,  in 701.426 batches, (1,4 t/b), total size: 0M in 1.107 ms (0 ops/ms, 903.342,4 jobs/s, 
+150,447,149,322: Mean: 570, 90%: 33.071, 99%: 127.721, 99,9%: 254.301, 99,99%: 320.442, 99,999%: 332.415, 99,9999%: 346.100 Avg: 9.911, Avg90: 2.847, Min: 0, Max: 346.100, 1.000.000 jobs, nano res = 570,1811
+151,798,524,143: assigning 1000000 tasks finished 999,489.379 jobs/s (throttled)
+151,814,898,041: LTQ_ABMC (throttled): 1.000.000 jobs,  in 716.308 batches, (1,4 t/b), total size: 0M in 1.023 ms (0 ops/ms, 977.517,1 jobs/s, 
+151,845,328,049: Mean: 570, 90%: 34.211, 99%: 114.036, 99,9%: 216.098, 99,99%: 696.762, 99,999%: 732.683, 99,9999%: 734.393 Avg: 9.663, Avg90: 2.817, Min: 0, Max: 734.393, 1.000.000 jobs, nano res = 570,1817
+153,102,208,997: assigning 1000000 tasks finished 999,800.477 jobs/s (throttled)
+153,103,006,681: DIS (throttled): 1.000.000 jobs,  total size: 0M in 1.006 ms (0 ops/ms, 994.035,8 jobs/s, 
+153,130,974,646: Mean: 570, 90%: 1.711, 99%: 66.711, 99,9%: 513.164, 99,99%: 745.797, 99,999%: 788.561, 99,9999%: 3.371.482 Avg: 3.653, Avg90: 671, Min: 0, Max: 3.371.482, 1.000.000 jobs, nano res = 570,1813
+154,791,073,013: assigning 1000000 tasks finished 999,953.247 jobs/s (throttled)
+154,791,669,423: DIS_A (throttled): 1.000.000 jobs,  total size: 0M in 1.007 ms (0 ops/ms, 993.048,7 jobs/s, 
+154,819,599,756: Mean: 570, 90%: 1.710, 99%: 29.079, 99,9%: 140.265, 99,99%: 269.126, 99,999%: 443.031, 99,9999%: 700.753 Avg: 1.743, Avg90: 613, Min: 0, Max: 700.753, 1.000.000 jobs, nano res = 570,1811
+156,284,036,405: assigning 1000000 tasks finished 999,859.755 jobs/s (throttled)
+156,284,768,518: DIS_B (throttled): 1.000.000 jobs,  in 1.916.257 batches, (0,5 t/b), total size: 0M in 1.003 ms (0 ops/ms, 997.009 jobs/s, 
+156,315,716,821: Mean: 571, 90%: 1.711, 99%: 123.159, 99,9%: 782.289, 99,99%: 1.034.879, 99,999%: 1.059.967, 99,9999%: 1.060.538 Avg: 6.041, Avg90: 716, Min: 0, Max: 1.060.538, 1.000.000 jobs, nano res = 570,1818
+157,634,973,898: assigning 1000000 tasks finished 999,164.812 jobs/s (throttled)
+157,635,583,992: DIS_AB (throttled): 1.000.000 jobs,  in 1.895.616 batches, (0,5 t/b), total size: 0M in 1.007 ms (0 ops/ms, 993.048,7 jobs/s, 
+157,665,363,423: Mean: 571, 90%: 1.711, 99%: 104.913, 99,9%: 362.635, 99,99%: 495.488, 99,999%: 516.014, 99,9999%: 756.630 Avg: 4.587, Avg90: 729, Min: 0, Max: 756.630, 1.000.000 jobs, nano res = 570,1814
+158,955,530,417: assigning 1000000 tasks finished 999,598.184 jobs/s (throttled)
+159,066,182,089: LBQ (throttled): 1.000.000 jobs,  total size: 0M in 1.117 ms (0 ops/ms, 895.255,1 jobs/s, 
+159,124,676,423: Mean: 44.474, 90%: 110.615, 99%: 296.494, 99,9%: 567.900, 99,99%: 724.700, 99,999%: 752.639, 99,9999%: 753.780 Avg: 55.097, Avg90: 41.068, Min: 0, Max: 753.780, 1.000.000 jobs, nano res = 570,1827
+160,426,826,918: assigning 1000000 tasks finished 1,000,165.38 jobs/s (throttled)
+160,442,758,355: LBQ_A (throttled): 1.000.000 jobs,  total size: 0M in 1.017 ms (0 ops/ms, 983.284,2 jobs/s, 
+160,486,706,222: Mean: 46.755, 90%: 104.343, 99%: 216.098, 99,9%: 319.872, 99,99%: 714.438, 99,999%: 732.683, 99,9999%: 741.236 Avg: 53.109, Avg90: 43.150, Min: 0, Max: 741.236, 1.000.000 jobs, nano res = 570,1834
+161,791,705,915: assigning 1000000 tasks finished 999,952.677 jobs/s (throttled)
+161,826,350,133: LBQ_M (throttled): 1.000.000 jobs,  total size: 0M in 1.040 ms (0 ops/ms, 961.538,5 jobs/s, 
+161,875,372,044: Mean: 2.851, 90%: 15.966, 99%: 88.378, 99,9%: 169.344, 99,99%: 321.582, 99,999%: 500.049, 99,9999%: 534.830 Avg: 7.967, Avg90: 3.140, Min: 0, Max: 534.830, 1.000.000 jobs, nano res = 570,1823
+163,246,604,571: assigning 1000000 tasks finished 999,467.164 jobs/s (throttled)
+163,341,946,303: LBQ_AM (throttled): 1.000.000 jobs,  total size: 0M in 1.109 ms (0 ops/ms, 901.713,3 jobs/s, 
+163,404,177,605: Mean: 2.851, 90%: 18.816, 99%: 86.667, 99,9%: 173.905, 99,99%: 214.958, 99,999%: 216.099, 99,9999%: 286.231 Avg: 8.377, Avg90: 3.370, Min: 0, Max: 286.231, 1.000.000 jobs, nano res = 570,1812
+164,745,793,203: assigning 1000000 tasks finished 999,500.201 jobs/s (throttled)
+164,762,103,240: LBQ_MC (throttled): 1.000.000 jobs,  total size: 0M in 1.031 ms (0 ops/ms, 969.932,1 jobs/s, 
+164,797,669,441: Mean: 2.851, 90%: 19.956, 99%: 88.948, 99,9%: 203.554, 99,99%: 416.233, 99,999%: 668.822, 99,9999%: 704.744 Avg: 8.654, Avg90: 3.552, Min: 0, Max: 704.744, 1.000.000 jobs, nano res = 570,1798
+166,134,369,505: assigning 1000000 tasks finished 1,000,240.675 jobs/s (throttled)
+166,245,272,627: LBQ_AMC (throttled): 1.000.000 jobs,  total size: 0M in 1.123 ms (0 ops/ms, 890.472 jobs/s, 
+166,316,115,948: Mean: 2.281, 90%: 13.684, 99%: 79.825, 99,9%: 198.423, 99,99%: 283.951, 99,999%: 295.354, 99,9999%: 298.775 Avg: 7.314, Avg90: 2.921, Min: 0, Max: 298.775, 1.000.000 jobs, nano res = 570,1809
+167,652,958,557: assigning 1000000 tasks finished 1,000,090.097 jobs/s (throttled)
+167,653,708,346: DIS_B1 (throttled): 1.000.000 jobs,  in 614.572 batches, (1,6 t/b), total size: 0M in 1.003 ms (0 ops/ms, 997.009 jobs/s, 
+167,678,300,837: Mean: 570, 90%: 13.684, 99%: 69.562, 99,9%: 160.792, 99,99%: 267.415, 99,999%: 278.819, 99,9999%: 279.959 Avg: 4.820, Avg90: 1.345, Min: 0, Max: 279.959, 1.000.000 jobs, nano res = 570,1819
+168,940,583,113: assigning 1000000 tasks finished 1,000,079.832 jobs/s (throttled)
+168,941,152,725: DIS_AB1 (throttled): 1.000.000 jobs,  in 586.539 batches, (1,7 t/b), total size: 0M in 1.007 ms (0 ops/ms, 993.048,7 jobs/s, 
+168,964,506,212: Mean: 570, 90%: 16.535, 99%: 157.940, 99,9%: 1.129.530, 99,99%: 1.640.981, 99,999%: 1.640.982, 99,9999%: 1.641.553 Avg: 9.619, Avg90: 1.670, Min: 0, Max: 1.641.553, 1.000.000 jobs, nano res = 570,1817
+170,221,603,829: assigning 1000000 tasks finished 999,957.809 jobs/s (throttled)
+170,222,315,986: DIS_Bo (throttled): 1.000.000 jobs,  total size: 0M in 1.003 ms (0 ops/ms, 997.009 jobs/s, 
+170,251,786,379: Mean: 570, 90%: 1.710, 99%: 22.808, 99,9%: 227.503, 99,99%: 457.856, 99,999%: 458.426, 99,9999%: 615.796 Avg: 1.888, Avg90: 657, Min: 0, Max: 615.796, 1.000.000 jobs, nano res = 570,1809
+171,584,669,649: assigning 1000000 tasks finished 999,957.809 jobs/s (throttled)
+171,585,382,375: DIS_ABo (throttled): 1.000.000 jobs,  total size: 0M in 999 ms (0 ops/ms, 1.001.001 jobs/s, 
+171,613,543,632: Mean: 570, 90%: 1.711, 99%: 28.509, 99,9%: 242.327, 99,99%: 289.652, 99,999%: 291.363, 99,9999%: 429.917 Avg: 1.916, Avg90: 636, Min: 0, Max: 429.917, 1.000.000 jobs, nano res = 570,1817
+172,993,368,791: assigning 1000000 tasks finished 999,274.116 jobs/s (throttled)
+173,001,715,106: CLBQ (throttled): 1.000.000 jobs,  total size: 0M in 1.012 ms (0 ops/ms, 988.142,3 jobs/s, 
+173,039,987,958: Mean: 408.820, 90%: 2.002.477, 99%: 2.969.504, 99,9%: 3.089.242, 99,99%: 3.127.445, 99,999%: 3.128.585, 99,9999%: 11.486.874 Avg: 770.627, Avg90: 609.394, Min: 0, Max: 11.486.874, 1.000.000 jobs, nano res = 570,181
+174,386,707,819: assigning 1000000 tasks finished 999,646.042 jobs/s (throttled)
+174,482,212,053: CLBQ_A (throttled): 1.000.000 jobs,  total size: 0M in 1.105 ms (0 ops/ms, 904.977,4 jobs/s, 
+174,528,645,341: Mean: 359.214, 90%: 2.009.889, 99%: 2.995.163, 99,9%: 3.141.129, 99,99%: 3.173.059, 99,999%: 3.176.481, 99,9999%: 3.177.051 Avg: 778.165, Avg90: 605.140, Min: 0, Max: 3.177.051, 1.000.000 jobs, nano res = 570,1813
+175,854,009,060: assigning 1000000 tasks finished 999,503.619 jobs/s (throttled)
+175,854,233,141: CLBQ_B (throttled): 1.085.023 jobs,  in 225.558 batches, (4,8 t/b), total size: 0M in 1.012 ms (0 ops/ms, 1.072.157,1 jobs/s, 
+175,892,788,803: Mean: 964.747, 90%: 2.025.854, 99%: 3.023.671, 99,9%: 3.122.313, 99,99%: 3.237.490, 99,999%: 3.241.481 Avg: 891.118, Avg90: 723.219, Min: 0, Max: 6.926.563, 992.162 jobs, nano res = 570,182
+177,219,729,073: assigning 1000000 tasks finished 1,000,201.885 jobs/s (throttled)
+177,219,908,680: CLBQ_AB (throttled): 1.046.136 jobs,  in 326.024 batches, (3,2 t/b), total size: 0M in 1.006 ms (0 ops/ms, 1.039.896,6 jobs/s, 
+177,263,027,504: Mean: 224.652, 90%: 1.985.372, 99%: 2.976.917, 99,9%: 3.112.049, 99,99%: 3.149.112, 99,999%: 3.156.524 Avg: 757.457, Avg90: 590.658, Min: 0, Max: 15.378.931, 997.370 jobs, nano res = 570,181
+178,593,485,223: assigning 1000000 tasks finished 999,929.303 jobs/s (throttled)
+178,612,520,727: CLBQ_B1 (throttled): 1.000.000 jobs,  in 78.618 batches, (12,7 t/b), total size: 0M in 1.034 ms (0 ops/ms, 967.118 jobs/s, 
+178,650,599,147: Mean: 375.179, 90%: 1.968.266, 99%: 3.015.119, 99,9%: 3.108.058, 99,99%: 3.128.015, 99,999%: 3.130.295, 99,9999%: 15.805.997 Avg: 729.299, Avg90: 556.375, Min: 0, Max: 15.805.997, 1.000.000 jobs, nano res = 570,1814
+179,907,027,371: assigning 1000000 tasks finished 999,484.822 jobs/s (throttled)
+180,004,229,606: CLBQ_AB1 (throttled): 1.000.000 jobs,  in 100.747 batches, (9,9 t/b), total size: 0M in 1.110 ms (0 ops/ms, 900.900,9 jobs/s, 
+180,059,919,217: Mean: 235.485, 90%: 1.926.073, 99%: 2.902.793, 99,9%: 3.090.953, 99,99%: 3.138.279, 99,999%: 3.142.269, 99,9999%: 11.398.496 Avg: 670.694, Avg90: 505.248, Min: 0, Max: 11.398.496, 1.000.000 jobs, nano res = 570,1819
+181,315,435,722: assigning 1000000 tasks finished 999,954.957 jobs/s (throttled)
+181,333,530,997: CLBQ_M (throttled): 1.000.000 jobs,  total size: 0M in 1.033 ms (0 ops/ms, 968.054,2 jobs/s, 
+181,377,720,051: Mean: 72.413, 90%: 1.885.020, 99%: 2.897.661, 99,9%: 3.126.304, 99,99%: 3.146.260, 99,999%: 3.147.971, 99,9999%: 3.152.533 Avg: 528.112, Avg90: 349.423, Min: 0, Max: 3.152.533, 1.000.000 jobs, nano res = 570,1823
+182,629,940,907: assigning 1000000 tasks finished 999,982.895 jobs/s (throttled)
+182,720,778,777: CLBQ_AM (throttled): 1.000.000 jobs,  total size: 0M in 1.106 ms (0 ops/ms, 904.159,1 jobs/s, 
+182,760,985,684: Mean: 67.852, 90%: 1.846.818, 99%: 2.123.925, 99,9%: 3.108.629, 99,99%: 3.173.060, 99,999%: 3.181.611, 99,9999%: 3.183.322 Avg: 511.182, Avg90: 339.786, Min: 0, Max: 3.183.322, 1.000.000 jobs, nano res = 570,1816
+184,081,003,953: assigning 1000000 tasks finished 999,938.424 jobs/s (throttled)
+184,083,296,082: CLBQ_MC (throttled): 1.000.000 jobs,  total size: 0M in 1.004 ms (0 ops/ms, 996.015,9 jobs/s, 
+184,134,136,301: Mean: 74.694, 90%: 1.925.503, 99%: 2.929.591, 99,9%: 3.044.198, 99,99%: 3.064.155, 99,999%: 3.084.110, 99,9999%: 3.089.242 Avg: 585.832, Avg90: 402.554, Min: 0, Max: 3.089.242, 1.000.000 jobs, nano res = 570,1818
+185,478,485,918: assigning 1000000 tasks finished 999,709.862 jobs/s (throttled)
+185,498,790,646: CLBQ_AMC (throttled): 1.000.000 jobs,  total size: 0M in 1.025 ms (0 ops/ms, 975.609,8 jobs/s, 
+185,540,407,042: Mean: 55.307, 90%: 1.810.896, 99%: 2.822.967, 99,9%: 3.935.391, 99,99%: 4.321.975, 99,999%: 4.350.484, 99,9999%: 17.936.765 Avg: 504.507, Avg90: 328.717, Min: 0, Max: 17.936.765, 1.000.000 jobs, nano res = 570,1811
+186,872,378,592: assigning 1000000 tasks finished 999,935.573 jobs/s (throttled)
+186,896,678,010: CLBQ_BM (throttled): 1.000.000 jobs,  in 556.730 batches, (1,8 t/b), total size: 0M in 1.039 ms (0 ops/ms, 962.463,9 jobs/s, 
+186,934,023,747: Mean: 571, 90%: 1.128.959, 99%: 2.953.539, 99,9%: 4.063.683, 99,99%: 5.166.413, 99,999%: 5.188.650, 99,9999%: 5.190.361 Avg: 412.461, Avg90: 236.698, Min: 0, Max: 5.190.361, 1.000.000 jobs, nano res = 570,1812
+188,270,283,061: assigning 1000000 tasks finished 999,624.962 jobs/s (throttled)
+188,283,116,133: CLBQ_ABM (throttled): 1.000.000 jobs,  in 458.122 batches, (2,2 t/b), total size: 0M in 1.027 ms (0 ops/ms, 973.709,8 jobs/s, 
+188,328,397,084: Mean: 26.798, 90%: 1.868.484, 99%: 2.943.847, 99,9%: 3.090.383, 99,99%: 3.133.147, 99,999%: 3.165.646, 99,9999%: 3.170.778 Avg: 529.046, Avg90: 345.447, Min: 0, Max: 3.170.778, 1.000.000 jobs, nano res = 570,1817
+189,580,203,989: assigning 1000000 tasks finished 999,977.763 jobs/s (throttled)
+189,593,179,605: CLBQ_BMC (throttled): 1.000.000 jobs,  in 506.320 batches, (2 t/b), total size: 0M in 1.028 ms (0 ops/ms, 972.762,6 jobs/s, 
+189,632,348,213: Mean: 571, 90%: 1.867.344, 99%: 2.971.785, 99,9%: 4.393.247, 99,99%: 4.458.818, 99,999%: 4.466.801, 99,9999%: 4.467.941 Avg: 497.074, Avg90: 304.711, Min: 0, Max: 4.467.941, 1.000.000 jobs, nano res = 570,1812
+190,984,805,238: assigning 1000000 tasks finished 1,000,015.965 jobs/s (throttled)
+191,000,741,236: CLBQ_ABMC (throttled): 1.000.000 jobs,  in 471.936 batches, (2,1 t/b), total size: 0M in 1.017 ms (0 ops/ms, 983.284,2 jobs/s, 
+191,044,772,350: Mean: 15.965, 90%: 1.867.914, 99%: 2.822.967, 99,9%: 3.048.190, 99,99%: 3.090.383, 99,999%: 3.112.620, 99,9999%: 17.542.199 Avg: 516.374, Avg90: 336.429, Min: 0, Max: 17.542.199, 1.000.000 jobs, nano res = 570,1816
+192,286,875,338: assigning 1000000 tasks finished 999,956.098 jobs/s (throttled)
+192,375,805,952: ABQ (throttled): 1.000.000 jobs,  total size: 0M in 1.092 ms (0 ops/ms, 915.750,9 jobs/s, 
+192,435,934,995: Mean: 3.992, 90%: 10.834, 99%: 60.439, 99,9%: 200.134, 99,99%: 417.943, 99,999%: 466.979, 99,9999%: 602.681 Avg: 7.183, Avg90: 4.748, Min: 0, Max: 602.681, 1.000.000 jobs, nano res = 570,1782
+193,763,721,414: assigning 1000000 tasks finished 999,969.211 jobs/s (throttled)
+193,825,872,891: ABQ_A (throttled): 1.000.000 jobs,  total size: 0M in 1.076 ms (0 ops/ms, 929.368 jobs/s, 
+193,880,352,008: Mean: 4.562, 90%: 11.974, 99%: 133.422, 99,9%: 416.233, 99,99%: 447.022, 99,999%: 452.724, 99,9999%: 5.836.376 Avg: 9.918, Avg90: 5.112, Min: 0, Max: 5.836.376, 1.000.000 jobs, nano res = 570,1979
+195,198,932,849: assigning 1000000 tasks finished 999,969.211 jobs/s (throttled)
+195,276,026,498: B_ABQ (throttled): 1.000.000 jobs,  in 106.702 batches, (9,4 t/b), total size: 0M in 1.091 ms (0 ops/ms, 916.590,3 jobs/s, 
+195,332,506,381: Mean: 3.992, 90%: 6.272, 99%: 26.799, 99,9%: 195.572, 99,99%: 265.134, 99,999%: 323.293, 99,9999%: 411.101 Avg: 6.110, Avg90: 4.263, Min: 0, Max: 411.101, 1.000.000 jobs, nano res = 570,1642
+196,587,005,112: assigning 1000000 tasks finished 999,975.483 jobs/s (throttled)
+196,686,729,258: B_ABQ_A (throttled): 1.000.000 jobs,  in 109.404 batches, (9,1 t/b), total size: 0M in 1.114 ms (0 ops/ms, 897.666,1 jobs/s, 
+196,756,655,157: Mean: 4.562, 90%: 6.272, 99%: 33.070, 99,9%: 217.239, 99,99%: 276.538, 99,999%: 306.757, 99,9999%: 497.198 Avg: 6.483, Avg90: 4.485, Min: 0, Max: 497.198, 1.000.000 jobs, nano res = 570,1304
+198,090,270,540: assigning 1000000 tasks finished 999,862.606 jobs/s (throttled)
+198,185,349,419: B1_ABQ (throttled): 1.000.000 jobs,  in 408.551 batches, (2,4 t/b), total size: 0M in 1.108 ms (0 ops/ms, 902.527,1 jobs/s, 
+198,258,215,173: Mean: 1.141, 90%: 19.386, 99%: 66.711, 99,9%: 145.396, 99,99%: 302.766, 99,999%: 306.758, 99,9999%: 403.118 Avg: 6.597, Avg90: 2.886, Min: 0, Max: 403.118, 1.000.000 jobs, nano res = 570,1811
+199,514,748,881: assigning 1000000 tasks finished 1,000,045.617 jobs/s (throttled)
+199,530,952,295: B1_ABQ_A (throttled): 1.000.000 jobs,  in 270.065 batches, (3,7 t/b), total size: 0M in 1.019 ms (0 ops/ms, 981.354,3 jobs/s, 
+199,561,296,205: Mean: 3.991, 90%: 18.245, 99%: 62.720, 99,9%: 124.300, 99,99%: 338.687, 99,999%: 341.538, 99,9999%: 342.109 Avg: 7.245, Avg90: 3.832, Min: 0, Max: 342.109, 1.000.000 jobs, nano res = 570,1805
+200,797,842,776: assigning 1000000 tasks finished 999,961.798 jobs/s (throttled)
+200,866,567,874: ABQ_M (throttled): 1.000.000 jobs,  total size: 0M in 1.070 ms (0 ops/ms, 934.579,4 jobs/s, 
+200,907,406,542: Mean: 2.851, 90%: 7.983, 99%: 77.545, 99,9%: 194.431, 99,99%: 300.486, 99,999%: 432.767, 99,9999%: 451.584 Avg: 6.028, Avg90: 2.733, Min: 0, Max: 451.584, 1.000.000 jobs, nano res = 570,183
+202,177,879,473: assigning 1000000 tasks finished 999,958.949 jobs/s (throttled)
+202,258,466,623: ABQ_AM (throttled): 1.000.000 jobs,  total size: 0M in 1.095 ms (0 ops/ms, 913.242 jobs/s, 
+202,299,646,830: Mean: 2.850, 90%: 5.702, 99%: 78.115, 99,9%: 256.012, 99,99%: 397.986, 99,999%: 494.917, 99,9999%: 736.104 Avg: 5.135, Avg90: 2.559, Min: 0, Max: 736.104, 1.000.000 jobs, nano res = 570,1828
+203,556,320,803: assigning 1000000 tasks finished 999,718.409 jobs/s (throttled)
+203,604,094,017: ABQ_MC (throttled): 1.000.000 jobs,  total size: 0M in 1.048 ms (0 ops/ms, 954.198,5 jobs/s, 
+203,664,056,567: Mean: 2.851, 90%: 22.807, 99%: 88.378, 99,9%: 157.940, 99,99%: 230.923, 99,999%: 277.678, 99,9999%: 286.801 Avg: 9.116, Avg90: 3.641, Min: 0, Max: 286.801, 1.000.000 jobs, nano res = 570,1808
+204,992,981,068: assigning 1000000 tasks finished 999,958.379 jobs/s (throttled)
+205,104,655,075: ABQ_AMC (throttled): 1.000.000 jobs,  total size: 0M in 1.125 ms (0 ops/ms, 888.888,9 jobs/s, 
+205,151,407,664: Mean: 3.421, 90%: 46.755, 99%: 98.071, 99,9%: 342.679, 99,99%: 3.297.929, 99,999%: 3.313.894, 99,9999%: 3.317.886 Avg: 14.992, Avg90: 6.357, Min: 0, Max: 3.317.886, 1.000.000 jobs, nano res = 570,1814
+206,471,762,340: assigning 1000000 tasks finished 999,937.284 jobs/s (throttled)
+206,487,708,031: ABQ_BM (throttled): 1.000.000 jobs,  in 395.502 batches, (2,5 t/b), total size: 0M in 1.026 ms (0 ops/ms, 974.658,9 jobs/s, 
+206,527,319,669: Mean: 3.421, 90%: 31.930, 99%: 86.098, 99,9%: 338.688, 99,99%: 439.039, 99,999%: 448.163, 99,9999%: 449.303 Avg: 10.174, Avg90: 4.480, Min: 0, Max: 449.303, 1.000.000 jobs, nano res = 570,1826
+207,854,054,674: assigning 1000000 tasks finished 999,736.076 jobs/s (throttled)
+207,962,517,990: ABQ_ABM (throttled): 1.000.000 jobs,  in 383.460 batches, (2,6 t/b), total size: 0M in 1.114 ms (0 ops/ms, 897.666,1 jobs/s, 
+208,063,962,943: Mean: 3.421, 90%: 27.939, 99%: 80.966, 99,9%: 137.414, 99,99%: 246.888, 99,999%: 281.099, 99,9999%: 287.372 Avg: 9.435, Avg90: 4.303, Min: 0, Max: 287.372, 1.000.000 jobs, nano res = 570,1824
+209,413,895,776: assigning 1000000 tasks finished 999,778.819 jobs/s (throttled)
+209,445,625,797: ABQ_BMC (throttled): 1.000.000 jobs,  in 394.947 batches, (2,5 t/b), total size: 0M in 1.046 ms (0 ops/ms, 956.022,9 jobs/s, 
+209,481,964,024: Mean: 2.851, 90%: 31.930, 99%: 80.396, 99,9%: 148.817, 99,99%: 191.581, 99,999%: 240.616, 99,9999%: 257.152 Avg: 9.652, Avg90: 4.497, Min: 0, Max: 257.152, 1.000.000 jobs, nano res = 570,1813
+210,819,346,595: assigning 1000000 tasks finished 999,945.266 jobs/s (throttled)
+210,930,470,947: ABQ_ABMC (throttled): 1.000.000 jobs,  in 375.821 batches, (2,7 t/b), total size: 0M in 1.124 ms (0 ops/ms, 889.679,7 jobs/s, 
+211,013,668,958: Mean: 3.421, 90%: 27.939, 99%: 82.106, 99,9%: 141.975, 99,99%: 205.266, 99,999%: 213.818, 99,9999%: 252.020 Avg: 9.433, Avg90: 4.390, Min: 0, Max: 252.020, 1.000.000 jobs, nano res = 570,1826
+211,014,288,175: 
+Conf	Hardware	Takt (G)	OS	Threads	Queues	Jobs	MOps	Ops/Job	Single	LTQ	LTQ A	LTQ B	LTQ AB	LTQ B1	LTQ AB1	LTQ M	LTQ AM	LTQ MC	LTQ AMC	LTQ BM	LTQ ABM	LTQ BMC	LTQ ABMC	DIS	DIS A	DIS B	DIS AB	LBQ	LBQ A	LBQ M	LBQ AM	LBQ MC	LBQ AMC	DIS B1	DIS AB1	DIS Bo	DIS ABo	CLBQ	CLBQ A	CLBQ B	CLBQ AB	CLBQ B1	CLBQ AB1	CLBQ M	CLBQ AM	CLBQ MC	CLBQ AMC	CLBQ BM	CLBQ ABM	CLBQ BMC	CLBQ ABMC	ABQ	ABQ A	B ABQ	B ABQ A	B1 ABQ	B1 ABQ A	ABQ M	ABQ AM	ABQ MC	ABQ AMC	ABQ BM	ABQ ABM	ABQ BMC	ABQ ABMC	
+null	null	null	null	4	2	1000000	5,171176e+02	5,171176e+02	9,819018e+05	9,756098e+05	8,976661e+05	9,803922e+05	8,944544e+05	9,803922e+05	9,033424e+05	9,689922e+05	8,904720e+05	9,025271e+05	9,842520e+05	9,803922e+05	8,904720e+05	9,033424e+05	9,775171e+05	9,940358e+05	9,930487e+05	9,970090e+05	9,930487e+05	8,952551e+05	9,832842e+05	9,615385e+05	9,017133e+05	9,699321e+05	8,904720e+05	9,970090e+05	9,930487e+05	9,970090e+05	1,001001e+06	9,881423e+05	9,049774e+05	1,072157e+06	1,039897e+06	9,671180e+05	9,009009e+05	9,680542e+05	9,041591e+05	9,960159e+05	9,756098e+05	9,624639e+05	9,737098e+05	9,727626e+05	9,832842e+05	9,157509e+05	9,293680e+05	9,165903e+05	8,976661e+05	9,025271e+05	9,813543e+05	9,345794e+05	9,132420e+05	9,541985e+05	8,888889e+05	9,746589e+05	8,976661e+05	9,560229e+05	8,896797e+05	
