@@ -1,11 +1,13 @@
 package Benchmarks;
 
+import jdk.nashorn.internal.objects.*;
 import org.HdrHistogram.*;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.*;
 import org.openjdk.jmh.runner.options.*;
 
 import java.text.*;
+import java.util.*;
 import java.util.concurrent.*;
 
 @State(Scope.Benchmark)
@@ -83,6 +85,54 @@ public class ConsumerProducer {
 		one_to_one( new ArrayBlockingQueue<Pair>( 100));
 	}
 
+	@Benchmark
+	@OperationsPerInvocation( LoopsMax)
+	public void n_to_n2_lt() {
+		n_to_n( 2, new LinkedTransferQueue<Pair>());
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( LoopsMax)
+	public void n_to_n2_lbq() {
+		n_to_n( 2, new LinkedBlockingQueue<Pair>());
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( LoopsMax)
+	public void n_to_n2_abqfull() {
+		n_to_n( 2, new ArrayBlockingQueue<Pair>( LoopsMax));
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( LoopsMax)
+	public void n_to_n2_abq100() {
+		n_to_n( 2, new ArrayBlockingQueue<Pair>( 100));
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( LoopsMax)
+	public void n_to_nT_lt() {
+		n_to_n( Runtime.getRuntime().availableProcessors() / 2, new LinkedTransferQueue<Pair>());
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( LoopsMax)
+	public void n_to_nT_lbq() {
+		n_to_n( Runtime.getRuntime().availableProcessors() / 2, new LinkedBlockingQueue<Pair>());
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( LoopsMax)
+	public void n_to_nT_abqfull() {
+		n_to_n( Runtime.getRuntime().availableProcessors() / 2, new ArrayBlockingQueue<Pair>( LoopsMax));
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( LoopsMax)
+	public void n_to_nT_abq100() {
+		n_to_n( Runtime.getRuntime().availableProcessors() / 2, new ArrayBlockingQueue<Pair>( 100));
+	}
+
 	private void one_to_one( BlockingQueue<Pair> q) {
 		Thread  producer = new Thread( "producer") {
 			@Override
@@ -90,11 +140,13 @@ public class ConsumerProducer {
 				for ( int i = LoopsMax - 1; i >= 0; -- i ) {
 					Pair    p = new Pair( System.nanoTime());
 					pairs[ i] = p;
-					q.offer( p);
+					try {
+						q.put( p);
+					} catch ( InterruptedException e) {}
 				}
 			}
 		};
-		Thread  consumer = new Thread( "producer") {
+		Thread  consumer = new Thread( "consumer") {
 			@Override
 			public void run() {
 				try {
@@ -113,14 +165,54 @@ public class ConsumerProducer {
 		} catch ( InterruptedException e) {}
 	}
 
+	private void n_to_n( int n, BlockingQueue<Pair> q) {
+		final int loopsPerThread = LoopsMax / n;
+		List<Thread> threads = new ArrayList<>(  2* n);
+		for ( int i = 0, startIndex = 0;  i < n;  i++, startIndex += loopsPerThread) {
+			int startIndexF = startIndex;
+			int endIndex = startIndex + loopsPerThread;
+			Thread  producer = new Thread( "producer-" + i) {
+				@Override
+				public void run() {
+					for ( int i = startIndexF;  i < endIndex;  i++) {
+						Pair    p = new Pair( System.nanoTime());
+						pairs[ i] = p;
+						try {
+							q.put( p);
+						} catch ( InterruptedException e) {}
+					}
+				}
+			};
+			Thread  consumer = new Thread( "consumer-" + i) {
+				@Override
+				public void run() {
+					try {
+						for ( int i = 0;  i < loopsPerThread;  i++) {
+							Pair p = q.take();
+							p.after = System.nanoTime();
+						}
+					} catch ( InterruptedException e) {}
+				}
+			};
+			threads.add( producer);
+			threads.add( consumer);
+		}
+		threads.forEach( t -> t.start());
+		try {   // join geht im Lambda nur mit try/catch, aber dann wird es häßlich
+			for ( Thread t : threads) {
+				t.join();
+			}
+		} catch ( InterruptedException e) {}
+	}
+
 
 	public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include( ConsumerProducer.class.getSimpleName())
-		        .warmupIterations(5)
-		        .measurementTime(TimeValue.seconds( 20))
+		        .warmupIterations(3)
+		        .measurementTime(TimeValue.seconds( 5))
 				.measurementIterations( 3)
-		        // .forks(1)
+		        .forks(0)
                 .build();
         new Runner(opt).run();
     }
