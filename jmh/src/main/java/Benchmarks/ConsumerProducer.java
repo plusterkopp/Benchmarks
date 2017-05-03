@@ -61,7 +61,9 @@ public class ConsumerProducer {
 						.append( nf.format( valueAtP));
 			}
 		}
-		System.out.println( "\nLatencies:" + sb.toString());
+		if ( lastValue > 0) {
+			System.out.println("\nLatencies (µs):" + sb.toString());
+		}
 	}
 
 	@Benchmark
@@ -152,6 +154,13 @@ public class ConsumerProducer {
 	@OperationsPerInvocation( LoopsMax)
 	public void n_to_nT_cl() {
 		n_to_n( Runtime.getRuntime().availableProcessors() / 2, new ConcurrentLinkedQueue<>());
+	}
+
+	@Benchmark
+	@BenchmarkMode( Mode.AverageTime)
+	@OutputTimeUnit( TimeUnit.NANOSECONDS)
+	public void nanoTime() {
+		System.nanoTime();
 	}
 
 	private void one_to_one( BlockingQueue<Pair> q) {
@@ -301,7 +310,7 @@ public class ConsumerProducer {
         Options opt = new OptionsBuilder()
                 .include( ConsumerProducer.class.getSimpleName())
 		        .warmupIterations(3)
-		        .measurementTime(TimeValue.seconds( 10))
+		        .measurementTime(TimeValue.seconds( 1))
 				.measurementIterations( 5)
 		        .forks(1)
                 .build();
