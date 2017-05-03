@@ -56,12 +56,12 @@ public class ConsumerProducer {
 			if ( i == Percentiles.length - 1 || valueAtP < lastValue) {
 				lastValue = valueAtP;
 				sb.append( " ")
-						.append( p)
+						.append( nf.format( p))
 						.append( "% < ")
 						.append( nf.format( valueAtP));
 			}
 		}
-		System.out.println( "Latencies:" + sb.toString());
+		System.out.println( "\nLatencies:" + sb.toString());
 	}
 
 	@Benchmark
