@@ -1,4 +1,4 @@
-package de.icubic.mm.bench.jmh;
+package Benchmarks;
 
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.*;

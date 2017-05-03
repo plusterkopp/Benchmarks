@@ -1,4 +1,4 @@
-package de.icubic.mm.bench.jmh;
+package Benchmarks;
 
 import org.HdrHistogram.*;
 import org.openjdk.jmh.annotations.*;
@@ -11,7 +11,7 @@ import java.util.concurrent.*;
 @State(Scope.Benchmark)
 public class ConsumerProducer {
 
-	static final int LoopsMax = 10_000_000;
+	static final int LoopsMax = 1_000_000;
 	public static double[] Percentiles = { 50, 90, 99, 99.9, 99.99};
 
 	static private class    Pair {
@@ -120,7 +120,7 @@ public class ConsumerProducer {
 		        .warmupIterations(5)
 		        .measurementTime(TimeValue.seconds( 20))
 				.measurementIterations( 3)
-		        .forks(1)
+		        // .forks(1)
                 .build();
         new Runner(opt).run();
     }
