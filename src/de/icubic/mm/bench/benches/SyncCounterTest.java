@@ -53,6 +53,12 @@ public class SyncCounterTest {
 			public String getName() {
 				return super.getName() + " (" + lnf.format( getCount()) + ")";
 			}
+
+			public final boolean isValid() {
+				long c = getCount();
+				long r = getRunSize();
+				return c == r;
+			}
 		};
 
 		// ohne Sync: einfach z�hlen (nur f�r Single-Thread)
@@ -168,6 +174,14 @@ public class SyncCounterTest {
 					counters[ i] = 0;
 				}
 			}
+
+			@Override
+			public String getName() {
+				return super.getName() + " ("
+						+ ( isValid() ? "" : "invalid ")
+						+ lnf.format( getCount()) + ")";
+			}
+
 		};
 
 		final CounterBenchRunnable vbench = new VolatileCounterBenchRunnable( "volatile");
@@ -288,7 +302,9 @@ public class SyncCounterTest {
 							runner.setBenchRunner( bench);
 							runner.run();
 							runner.printResults();
-							BenchRunner.addToComparisonList( bench.getName(), runner.getRunsPerSecond());
+							if ( bench.isValid()) {
+								BenchRunner.addToComparisonList(bench.getName(), runner.getRunsPerSecond());
+							}
 							System.gc();
 						}
 						BenchRunner.printComparisonList();

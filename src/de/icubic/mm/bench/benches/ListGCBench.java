@@ -1,5 +1,6 @@
 package de.icubic.mm.bench.benches;
 
+import java.text.NumberFormat;
 import java.util.*;
 
 import de.icubic.mm.bench.base.*;
@@ -100,20 +101,25 @@ public class ListGCBench {
 	}
 
 	public static void main( String[] args) {
+		NumberFormat nf = BenchLogger.LNF;
+		nf.setGroupingUsed( true);
 		ListGCBench list = new ListGCBench();
 		int count = 0;
 		long start = System.currentTimeMillis();
 		while ( true) {
 			// Append a million random entries
-			list.prependNodes( 1000000);
-			count += 1000000;
+			final int increment = 1000000;
+			list.prependNodes(increment);
+			count += increment;
 
 			// Sort the entire list
 			list.sortNodes();
 
 			// Print the time taken for this pass
 			long end = System.currentTimeMillis();
-			BenchLogger.sysout( "Took " + ( end - start) + " to prepend 1000000 and then sort all " + count);
+			BenchLogger.sysout( "Took " + nf.format( end - start) + " ms to prepend "
+					+ nf.format( increment)
+					+ " and then sort all " + nf.format( count));
 			start = end;
 		}
 	}

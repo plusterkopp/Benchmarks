@@ -88,7 +88,7 @@ public class StreamReduceBench {
 			}
 		};
 
-		IBenchRunnable	srBench = new StreamRunnable( "SR") {
+		IBenchRunnable	srBench = new StreamRunnable( "Stream Reduce") {
 			@Override
 			public void run() {
 				sum = 0;
@@ -98,7 +98,7 @@ public class StreamReduceBench {
 			}
 		};
 
-		IBenchRunnable psBench = new StreamRunnable( "PSR") {
+		IBenchRunnable psBench = new StreamRunnable( "Parallel Stream Reduce") {
 			@Override
 			public void run() {
 				sum = 0;
@@ -108,7 +108,7 @@ public class StreamReduceBench {
 			}
 		};
 
-		IBenchRunnable asBench = new AStreamRunnable( "ASR") {
+		IBenchRunnable asBench = new AStreamRunnable( "Array Stream Reduce") {
 			@Override
 			public void run() {
 				sum = 0;
@@ -118,7 +118,7 @@ public class StreamReduceBench {
 			}
 		};
 
-		IBenchRunnable apsBench = new AStreamRunnable( "APSR") {
+		IBenchRunnable apsBench = new AStreamRunnable( "Array Parallel Stream Reduce") {
 			@Override
 			public void run() {
 				sum = 0;
