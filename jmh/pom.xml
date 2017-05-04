@@ -53,6 +53,11 @@ questions.
             <version>${jmh.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <version>1.18</version>
+        </dependency>
     </dependencies>
 
     <properties>

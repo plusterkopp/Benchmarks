@@ -13,6 +13,7 @@ import java.util.concurrent.*;
 public class ConsumerProducer {
 
 	static final int LoopsMax = 1_000_000;
+	public static final int N_CORES_HALF = Runtime.getRuntime().availableProcessors() / 2;
 	public static double[] Percentiles = { 50, 90, 99, 99.9, 99.99};
 
 	static private class    Pair {
@@ -69,91 +70,151 @@ public class ConsumerProducer {
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
 	public void one_to_one_lt() {
-		one_to_one( new LinkedTransferQueue<Pair>());
+		n_to_n( 1, 1, new LinkedTransferQueue<Pair>());
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
 	public void one_to_one_lbq() {
-		one_to_one( new LinkedBlockingQueue<Pair>());
+		n_to_n( 1, 1, new LinkedBlockingQueue<Pair>());
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
 	public void one_to_one_abqfull() {
-		one_to_one( new ArrayBlockingQueue<Pair>( LoopsMax));
+		n_to_n( 1, 1, new ArrayBlockingQueue<Pair>( LoopsMax));
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
 	public void one_to_one_abq100() {
-		one_to_one( new ArrayBlockingQueue<Pair>( 100));
+		n_to_n( 1, 1, new ArrayBlockingQueue<Pair>( 100));
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
 	public void one_to_one_cl() {
-		one_to_one( new ConcurrentLinkedQueue<>());
+		n_to_n( 1, 1, new ConcurrentLinkedQueue<>());
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
 	public void n_to_n2_lt() {
-		n_to_n( 2, new LinkedTransferQueue<Pair>());
+		n_to_n( 2, 2, new LinkedTransferQueue<Pair>());
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
 	public void n_to_n2_lbq() {
-		n_to_n( 2, new LinkedBlockingQueue<Pair>());
+		n_to_n( 2, 2, new LinkedBlockingQueue<Pair>());
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
 	public void n_to_n2_abqfull() {
-		n_to_n( 2, new ArrayBlockingQueue<Pair>( LoopsMax));
+		n_to_n( 2, 2, new ArrayBlockingQueue<Pair>( LoopsMax));
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
 	public void n_to_n2_abq100() {
-		n_to_n( 2, new ArrayBlockingQueue<Pair>( 100));
+		n_to_n( 2, 2, new ArrayBlockingQueue<Pair>( 100));
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
 	public void n_to_n2_cl() {
-		n_to_n( 2, new ConcurrentLinkedQueue<>());
+		n_to_n( 2, 2, new ConcurrentLinkedQueue<Pair>());
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( LoopsMax)
+	public void n_to_12_lt() {
+		n_to_n( 2, 1, new LinkedTransferQueue<Pair>());
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( LoopsMax)
+	public void n_to_12_lbq() {
+		n_to_n( 2, 1, new LinkedBlockingQueue<Pair>());
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( LoopsMax)
+	public void n_to_12_abqfull() {
+		n_to_n( 2, 1, new ArrayBlockingQueue<Pair>( LoopsMax));
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( LoopsMax)
+	public void n_to_12_abq100() {
+		n_to_n( 2, 1, new ArrayBlockingQueue<Pair>( 100));
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( LoopsMax)
+	public void n_to_12_cl() {
+		n_to_n( 2, 1, new ConcurrentLinkedQueue<Pair>());
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
 	public void n_to_nT_lt() {
-		n_to_n( Runtime.getRuntime().availableProcessors() / 2, new LinkedTransferQueue<Pair>());
+		n_to_n( N_CORES_HALF, N_CORES_HALF, new LinkedTransferQueue<Pair>());
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
 	public void n_to_nT_lbq() {
-		n_to_n( Runtime.getRuntime().availableProcessors() / 2, new LinkedBlockingQueue<Pair>());
+		n_to_n( N_CORES_HALF, N_CORES_HALF,new LinkedBlockingQueue<Pair>());
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
 	public void n_to_nT_abqfull() {
-		n_to_n( Runtime.getRuntime().availableProcessors() / 2, new ArrayBlockingQueue<Pair>( LoopsMax));
+		n_to_n( N_CORES_HALF, N_CORES_HALF,new ArrayBlockingQueue<Pair>( LoopsMax));
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
 	public void n_to_nT_abq100() {
-		n_to_n( Runtime.getRuntime().availableProcessors() / 2, new ArrayBlockingQueue<Pair>( 100));
+		n_to_n( N_CORES_HALF, N_CORES_HALF,new ArrayBlockingQueue<Pair>( 100));
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
 	public void n_to_nT_cl() {
-		n_to_n( Runtime.getRuntime().availableProcessors() / 2, new ConcurrentLinkedQueue<>());
+		n_to_n( N_CORES_HALF, N_CORES_HALF,new ConcurrentLinkedQueue<>());
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( LoopsMax)
+	public void n_to_1T_lt() {
+		n_to_n( N_CORES_HALF, 1, new LinkedTransferQueue<Pair>());
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( LoopsMax)
+	public void n_to_1T_lbq() {
+		n_to_n( N_CORES_HALF, 1,new LinkedBlockingQueue<Pair>());
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( LoopsMax)
+	public void n_to_1T_abqfull() {
+		n_to_n( N_CORES_HALF, 1,new ArrayBlockingQueue<Pair>( LoopsMax));
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( LoopsMax)
+	public void n_to_1T_abq100() {
+		n_to_n( N_CORES_HALF, 1,new ArrayBlockingQueue<Pair>( 100));
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( LoopsMax)
+	public void n_to_1T_cl() {
+		n_to_n( N_CORES_HALF, 1,new ConcurrentLinkedQueue<>());
 	}
 
 	@Benchmark
@@ -161,38 +222,6 @@ public class ConsumerProducer {
 	@OutputTimeUnit( TimeUnit.NANOSECONDS)
 	public void nanoTime() {
 		System.nanoTime();
-	}
-
-	private void one_to_one( BlockingQueue<Pair> q) {
-		Thread  producer = new Thread( "producer") {
-			@Override
-			public void run() {
-				for ( int i = LoopsMax - 1; i >= 0; -- i ) {
-					Pair    p = new Pair( System.nanoTime());
-					pairs[ i] = p;
-					try {
-						q.put( p);
-					} catch ( InterruptedException e) {}
-				}
-			}
-		};
-		Thread  consumer = new Thread( "consumer") {
-			@Override
-			public void run() {
-				try {
-					for ( int i = LoopsMax - 1; i >= 0; -- i ) {
-						Pair p = q.take();
-						p.after = System.nanoTime();
-					}
-				} catch ( InterruptedException e) {}
-			}
-		};
-		producer.start();
-		consumer.start();
-		try {
-			producer.join();
-			consumer.join();
-		} catch ( InterruptedException e) {}
 	}
 
 	private void one_to_one( ConcurrentLinkedQueue<Pair> q) {
@@ -226,24 +255,29 @@ public class ConsumerProducer {
 		} catch ( InterruptedException e) {}
 	}
 
-	private void n_to_n( int n, BlockingQueue<Pair> q) {
-		final int loopsPerThread = LoopsMax / n;
-		List<Thread> threads = new ArrayList<>(  2* n);
-		for ( int i = 0, startIndex = 0;  i < n;  i++, startIndex += loopsPerThread) {
+	private void n_to_n( int nP, int nC, BlockingQueue<Pair> q) {
+		List<Thread> threads = new ArrayList<>(  2* nP);
+		// die Producer anlegen
+		final int loopsPerThread = LoopsMax / nP;
+		for ( int i = 0, startIndex = 0;  i < nP;  i++, startIndex += loopsPerThread) {
 			int startIndexF = startIndex;
 			int endIndex = startIndex + loopsPerThread;
-			Thread  producer = new Thread( "producer-" + i) {
+			Thread producer = new Thread( "producer-" + i ) {
 				@Override
 				public void run() {
-					for ( int i = startIndexF;  i < endIndex;  i++) {
-						Pair    p = new Pair( System.nanoTime());
-						pairs[ i] = p;
+					for ( int i = startIndexF; i < endIndex; i++ ) {
+						Pair p = new Pair( System.nanoTime() );
+						pairs[ i ] = p;
 						try {
-							q.put( p);
-						} catch ( InterruptedException e) {}
+							q.put( p );
+						} catch ( InterruptedException e ) {}
 					}
 				}
 			};
+			threads.add( producer);
+		}
+		// die Consumer anlegen
+		for ( int i = 0;  i < nC;  i++) {
 			Thread  consumer = new Thread( "consumer-" + i) {
 				@Override
 				public void run() {
@@ -255,7 +289,6 @@ public class ConsumerProducer {
 					} catch ( InterruptedException e) {}
 				}
 			};
-			threads.add( producer);
 			threads.add( consumer);
 		}
 		threads.forEach( t -> t.start());
@@ -266,10 +299,10 @@ public class ConsumerProducer {
 		} catch ( InterruptedException e) {}
 	}
 
-	private void n_to_n( int n, ConcurrentLinkedQueue<Pair> q) {
-		final int loopsPerThread = LoopsMax / n;
-		List<Thread> threads = new ArrayList<>(  2* n);
-		for ( int i = 0, startIndex = 0;  i < n;  i++, startIndex += loopsPerThread) {
+	private void n_to_n( int nP, int nC, ConcurrentLinkedQueue<Pair> q) {
+		final int loopsPerThread = LoopsMax / nP;
+		List<Thread> threads = new ArrayList<>(  nP + nC);
+		for ( int i = 0, startIndex = 0;  i < nP;  i++, startIndex += loopsPerThread) {
 			int startIndexF = startIndex;
 			int endIndex = startIndex + loopsPerThread;
 			Thread  producer = new Thread( "producer-" + i) {
@@ -282,6 +315,10 @@ public class ConsumerProducer {
 					}
 				}
 			};
+			threads.add( producer);
+		}
+		// die Consumer anlegen
+		for ( int i = 0;  i < nC;  i++) {
 			Thread  consumer = new Thread( "consumer-" + i) {
 				@Override
 				public void run() {
@@ -294,7 +331,6 @@ public class ConsumerProducer {
 					}
 				}
 			};
-			threads.add( producer);
 			threads.add( consumer);
 		}
 		threads.forEach( t -> t.start());
@@ -310,7 +346,7 @@ public class ConsumerProducer {
         Options opt = new OptionsBuilder()
                 .include( ConsumerProducer.class.getSimpleName())
 		        .warmupIterations(3)
-		        .measurementTime(TimeValue.seconds( 1))
+		        .measurementTime(TimeValue.seconds( 10))
 				.measurementIterations( 5)
 		        .forks(1)
                 .build();
