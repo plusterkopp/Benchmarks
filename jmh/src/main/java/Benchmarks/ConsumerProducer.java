@@ -258,10 +258,10 @@ public class ConsumerProducer {
 	private void n_to_n( int nP, int nC, BlockingQueue<Pair> q) {
 		List<Thread> threads = new ArrayList<>(  2* nP);
 		// die Producer anlegen
-		final int loopsPerThread = LoopsMax / nP;
-		for ( int i = 0, startIndex = 0;  i < nP;  i++, startIndex += loopsPerThread) {
+		final int loopsPerThreadP = LoopsMax / nP;
+		for ( int i = 0, startIndex = 0;  i < nP;  i++, startIndex += loopsPerThreadP) {
 			int startIndexF = startIndex;
-			int endIndex = startIndex + loopsPerThread;
+			int endIndex = startIndex + loopsPerThreadP;
 			Thread producer = new Thread( "producer-" + i ) {
 				@Override
 				public void run() {
@@ -277,12 +277,13 @@ public class ConsumerProducer {
 			threads.add( producer);
 		}
 		// die Consumer anlegen
+		final int loopsPerThreadC = LoopsMax / nC;
 		for ( int i = 0;  i < nC;  i++) {
 			Thread  consumer = new Thread( "consumer-" + i) {
 				@Override
 				public void run() {
 					try {
-						for ( int i = 0;  i < loopsPerThread;  i++) {
+						for ( int i = 0;  i < loopsPerThreadC;  i++) {
 							Pair p = q.take();
 							p.after = System.nanoTime();
 						}
@@ -300,11 +301,11 @@ public class ConsumerProducer {
 	}
 
 	private void n_to_n( int nP, int nC, ConcurrentLinkedQueue<Pair> q) {
-		final int loopsPerThread = LoopsMax / nP;
+		final int loopsPerThreadP = LoopsMax / nP;
 		List<Thread> threads = new ArrayList<>(  nP + nC);
-		for ( int i = 0, startIndex = 0;  i < nP;  i++, startIndex += loopsPerThread) {
+		for ( int i = 0, startIndex = 0;  i < nP;  i++, startIndex += loopsPerThreadP) {
 			int startIndexF = startIndex;
-			int endIndex = startIndex + loopsPerThread;
+			int endIndex = startIndex + loopsPerThreadP;
 			Thread  producer = new Thread( "producer-" + i) {
 				@Override
 				public void run() {
@@ -318,11 +319,12 @@ public class ConsumerProducer {
 			threads.add( producer);
 		}
 		// die Consumer anlegen
+		final int loopsPerThreadC = LoopsMax / nC;
 		for ( int i = 0;  i < nC;  i++) {
 			Thread  consumer = new Thread( "consumer-" + i) {
 				@Override
 				public void run() {
-					for ( int i = 0;  i < loopsPerThread;  i++) {
+					for ( int i = 0;  i < loopsPerThreadC;  i++) {
 						Pair p = null;
 						do {
 							p = q.poll();
