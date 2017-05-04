@@ -224,37 +224,6 @@ public class ConsumerProducer {
 		System.nanoTime();
 	}
 
-	private void one_to_one( ConcurrentLinkedQueue<Pair> q) {
-		Thread  producer = new Thread( "producer") {
-			@Override
-			public void run() {
-				for ( int i = LoopsMax - 1; i >= 0; -- i ) {
-					Pair    p = new Pair( System.nanoTime());
-					pairs[ i] = p;
-					q.add( p);
-				}
-			}
-		};
-		Thread  consumer = new Thread( "consumer") {
-			@Override
-			public void run() {
-				for ( int i = LoopsMax - 1; i >= 0; -- i ) {
-					Pair p = null;
-					do {
-						p = q.poll();
-					} while ( p == null);
-					p.after = System.nanoTime();
-				}
-			}
-		};
-		producer.start();
-		consumer.start();
-		try {
-			producer.join();
-			consumer.join();
-		} catch ( InterruptedException e) {}
-	}
-
 	private void n_to_n( int nP, int nC, BlockingQueue<Pair> q) {
 		List<Thread> threads = new ArrayList<>(  2* nP);
 		// die Producer anlegen
@@ -263,6 +232,7 @@ public class ConsumerProducer {
 			int startIndexF = startIndex;
 			int endIndex = startIndex + loopsPerThreadP;
 			Thread producer = new Thread( "producer-" + i ) {
+				int count = 0;
 				@Override
 				public void run() {
 					for ( int i = startIndexF; i < endIndex; i++ ) {
@@ -270,6 +240,7 @@ public class ConsumerProducer {
 						pairs[ i ] = p;
 						try {
 							q.put( p );
+							count++;
 						} catch ( InterruptedException e ) {}
 					}
 				}
@@ -277,15 +248,17 @@ public class ConsumerProducer {
 			threads.add( producer);
 		}
 		// die Consumer anlegen
-		final int loopsPerThreadC = LoopsMax / nC;
+		final int loopsPerThreadC = ( loopsPerThreadP * nP) / nC;
 		for ( int i = 0;  i < nC;  i++) {
 			Thread  consumer = new Thread( "consumer-" + i) {
+				int count = 0;
 				@Override
 				public void run() {
 					try {
 						for ( int i = 0;  i < loopsPerThreadC;  i++) {
 							Pair p = q.take();
 							p.after = System.nanoTime();
+							count++;
 						}
 					} catch ( InterruptedException e) {}
 				}
@@ -319,7 +292,7 @@ public class ConsumerProducer {
 			threads.add( producer);
 		}
 		// die Consumer anlegen
-		final int loopsPerThreadC = LoopsMax / nC;
+		final int loopsPerThreadC = ( loopsPerThreadP * nP) / nC;
 		for ( int i = 0;  i < nC;  i++) {
 			Thread  consumer = new Thread( "consumer-" + i) {
 				@Override
