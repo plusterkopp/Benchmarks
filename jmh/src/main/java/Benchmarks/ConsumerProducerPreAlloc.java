@@ -2,17 +2,23 @@ package Benchmarks;
 
 import org.HdrHistogram.DoubleHistogram;
 import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.runner.*;
-import org.openjdk.jmh.runner.options.*;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.RunnerException;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
+import org.openjdk.jmh.runner.options.TimeValue;
 
-import java.text.*;
-import java.util.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 @State(Scope.Benchmark)
-public class ConsumerProducer {
+public class ConsumerProducerPreAlloc {
 
 	static final int LoopsMax = 1_000_000;
 	public static final int N_CORES_HALF = Runtime.getRuntime().availableProcessors() / 2;
@@ -24,6 +30,9 @@ public class ConsumerProducer {
 
 		public Pair( long l ) {
 			before = l;
+		}
+
+		public Pair() {
 		}
 	}
 
@@ -57,6 +66,10 @@ public class ConsumerProducer {
 	public void createHistogram() {
 		histo = new DoubleHistogram( 1000000, 3);
 		histo.setAutoResize( true);
+		for ( int i = 0;  i < LoopsMax;  i++) {
+			Pair    p = new Pair();
+			pairs[ i] = p;
+		}
 	}
 
 	@TearDown( Level.Iteration)
@@ -294,8 +307,8 @@ public class ConsumerProducer {
 				@Override
 				public void run() {
 					for ( int i = startIndexF; i < endIndex; i++ ) {
-						Pair p = new Pair( System.nanoTime());
-						pairs[ i ] = p;
+						Pair p = pairs[ i ];
+						p.before = System.nanoTime();
 						putConsumer.accept( q, p);
 						count++;
 					}
@@ -339,8 +352,8 @@ public class ConsumerProducer {
 				@Override
 				public void run() {
 					for ( int i = startIndexF; i < endIndex; i++ ) {
-						Pair p = new Pair( System.nanoTime());
-						pairs[ i ] = p;
+						Pair p = pairs[ i ];
+						p.before = System.nanoTime();
 						try {
 							q.put( p);
 						} catch (InterruptedException e) {}
@@ -426,7 +439,7 @@ public class ConsumerProducer {
 
 	public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include( ConsumerProducer.class.getSimpleName())
+                .include( ConsumerProducerPreAlloc.class.getSimpleName())
 		        .warmupIterations(3)
 		        .measurementTime(TimeValue.seconds( 10))
 				.measurementIterations( 5)
