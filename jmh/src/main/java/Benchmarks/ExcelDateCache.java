@@ -2,6 +2,8 @@ package Benchmarks;
 
 import de.icubic.mm.server.utils.MMKF4JavaStub;
 import gnu.trove.map.hash.TLongDoubleHashMap;
+import net.openhft.koloboke.collect.map.*;
+import net.openhft.koloboke.collect.map.hash.*;
 import org.apache.commons.collections4.map.LRUMap;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.*;
@@ -11,13 +13,13 @@ import java.text.*;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @State(Scope.Benchmark)
 public class ExcelDateCache {
 
 	final int ArraySizeM = 1;
-	final int ArraySize = ArraySizeM * 1000 * 100;
+	final int ArraySize = ArraySizeM * 1000 * 1000;
 	final NumberFormat nf = DecimalFormat.getNumberInstance( Locale.US);
 
 	ThreadLocal<Date[]> tlD;
@@ -28,9 +30,8 @@ public class ExcelDateCache {
 
 	@Setup(Level.Trial)
 	public void setup() {
-		long millisPerDay = 1000 * 60 * 60 * 24;
 		Instant iMin = Instant.parse( "2015-01-01T00:00:00.000Z");
-		Instant iMax = Instant.parse( "2045-01-01T00:00:00.000Z");
+		Instant iMax = Instant.parse( "2025-01-01T00:00:00.000Z");
 		long millisDist = iMax.toEpochMilli() - iMin.toEpochMilli();
 		tlD = new ThreadLocal<Date[]>() {
 			@Override
@@ -68,30 +69,46 @@ public class ExcelDateCache {
 
 	private void convertCachedT( TLongDoubleHashMap cache) {
 		Date[] dateValues = tlD.get();
-		final double notFound = cache.getNoEntryValue();
-		final boolean notFoundIsNaN = Double.isNaN(notFound);
 		for ( int i = dateValues.length - 1; i >= 0; -- i) {
 			Date date = dateValues[ i];
-			dummyD = cache.get( date.getTime());
-			if ( dummyD == notFound ||
-					( Double.isNaN( dummyD) && notFoundIsNaN)) {
-				dummyD = MMKF4JavaStub.toAccurateExcelDate( date);
-				cache.put( date.getTime(), dummyD);
+			final long ts = date.getTime();
+			double d = cache.get( ts);
+			if ( Double.isNaN( d)) {
+				d = MMKF4JavaStub.toAccurateExcelDate( date);
+				cache.put( ts, d);
 				misses++;
 			} else {
 				hits++;
 			}
+			dummyD = d;
 		}
 	}
 
-	private void convertCached( Map<Long, Double> cache) {
+	private void convertCached( LongDoubleMap cache) {
 		Date[] dateValues = tlD.get();
 		for ( int i = dateValues.length - 1; i >= 0; -- i) {
 			Date date = dateValues[ i];
-			Double dD = cache.get( date.getTime());
+			final long ts = date.getTime();
+			double d = cache.get( ts);
+			if ( Double.isNaN( d)) {
+				d = MMKF4JavaStub.toAccurateExcelDate( date);
+				cache.put( ts, d);
+				misses++;
+			} else {
+				hits++;
+			}
+			dummyD = d;
+		}
+	}
+
+	private void convertCachedDD( Map<Date, Double> cache) {
+		Date[] dateValues = tlD.get();
+		for ( int i = dateValues.length - 1; i >= 0; -- i) {
+			Date date = dateValues[ i];
+			Double dD = cache.get( date);
 			if ( dD == null) {
 				dD = MMKF4JavaStub.toAccurateExcelDate( date);
-				cache.put( date.getTime(), dD);
+				cache.put( date, dD);
 				misses++;
 			} else {
 				hits++;
@@ -119,22 +136,44 @@ public class ExcelDateCache {
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void convertCached1MT() {
-		TLongDoubleHashMap cache = new TLongDoubleHashMap(10000, 0.8f, Long.MIN_VALUE, Double.NaN);
+	public void convertCachedTrove() {
+		TLongDoubleHashMap cache = new TLongDoubleHashMap(1000, 0.8f, Long.MIN_VALUE, Double.NaN);
 		convertCachedT( cache);
 	}
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void convertCached1ML() {
-		final Map<Long, Double> scanCache = new LRUMap<>(1_000_000);
-		convertCached( scanCache);
+	public void convertCached10KLRU() {
+		final Map<Date, Double> scanCache = new LRUMap<>(10_000);
+		convertCachedDD( scanCache);
+	}
+
+//	@Benchmark
+//	@OperationsPerInvocation(ArraySize)
+//	public void convertCached1KL() {
+//		final Map<Date, Double> scanCache = new LRUMap<>(1_000);
+//		convertCachedDD( scanCache);
+//	}
+
+	@Benchmark
+	@OperationsPerInvocation(ArraySize)
+	public void convertCachedCHM() {
+		final Map<Date, Double> scanCache = new ConcurrentHashMap<>( 1_000);
+		convertCachedDD( scanCache);
 	}
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void convertCached1KL() {
-		final Map<Long, Double> scanCache = new LRUMap<>(1_000);
+	public void convertCachedHM() {
+		final Map<Date, Double> scanCache = new HashMap<>(1_000);
+		convertCachedDD( scanCache);
+	}
+
+	@Benchmark
+	@OperationsPerInvocation(ArraySize)
+	public void convertCachedKoloH() {
+		HashLongDoubleMapFactory    f  = HashLongDoubleMaps.getDefaultFactory().withDefaultValue( Double.NaN);
+		final LongDoubleMap scanCache = f.newMutableMap( 1_000);
 		convertCached( scanCache);
 	}
 
