@@ -16,7 +16,9 @@ public class DoubleParseCache {
 	final int ArraySize = ArraySizeM * 1000 * 100;
 	final NumberFormat nf = DecimalFormat.getNumberInstance( Locale.US);
 
-	ThreadLocal<char[][]> tl;
+	ThreadLocal<char[][]> tlC;
+	ThreadLocal<String[]> tlS;
+
 	double  dummyD;
 	private long hits;
 	private long misses;
@@ -24,7 +26,7 @@ public class DoubleParseCache {
 
 	@Setup(Level.Trial)
 	public void setup() {
-		tl = new ThreadLocal<char[][]>() {
+		tlC = new ThreadLocal<char[][]>() {
 			@Override
 			protected char[][] initialValue() {
 				nf.setGroupingUsed( false);
@@ -52,20 +54,41 @@ public class DoubleParseCache {
 				return arr;
 			}
 		};
+		char[][] arr = tlC.get();
+		tlS = new ThreadLocal<String[]>() {
+			@Override
+			protected String[] initialValue() {
+				final String[] arrS = new String[ArraySize];
+				for ( int i = arrS.length - 1; i >= 0; -- i) {
+					arrS[ i] = new String( arr[ i]);
+				}
+				return arrS;
+			}
+		};
 	}
 
 	@Setup(Level.Iteration)
 	public void get() {
-		tl.get();
+		tlC.get();
 	}
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
 	public void scan() {
-		char[][] values = tl.get();
+		char[][] values = tlC.get();
 		for ( int i = values.length - 1; i >= 0; -- i) {
 			char[] arr = values[ i];
 			String  s = new String( arr);
+			dummyD = Double.valueOf( s);
+		}
+	}
+
+	@Benchmark
+	@OperationsPerInvocation(ArraySize)
+	public void scanS() {
+		String[] values = tlS.get();
+		for ( int i = values.length - 1; i >= 0; -- i) {
+			String  s = values[ i];
 			dummyD = Double.valueOf( s);
 		}
 	}
@@ -116,12 +139,13 @@ public class DoubleParseCache {
 	}
 
 	private void scanCached(final Map<String, Double> scanCache) {
-		char[][] values = tl.get();
+		char[][] values = tlC.get();
 		for ( int i = values.length - 1; i >= 0; -- i) {
 			char[] arr = values[ i];
 			String  s = new String( arr);
-			if  ( scanCache.containsKey( s)) {
-				dummyD = scanCache.get( s);
+			Double dD = scanCache.get( s);
+			if  ( dD != null) {
+				dummyD = dD.doubleValue();
 				hits++;
 			} else {
 				dummyD = Double.valueOf(s);
@@ -131,15 +155,58 @@ public class DoubleParseCache {
 		}
 	}
 
+	@Benchmark
+	@OperationsPerInvocation(ArraySize)
+	public void scanCachedS1M() {
+		final Map<String, Double> scanCache = new LRUMap<String, Double>(1_000_000);
+		scanCachedS( scanCache);
+	}
+
+	@Benchmark
+	@OperationsPerInvocation(ArraySize)
+	public void scanCachedS1K() {
+		final Map<String, Double> scanCache = new LRUMap<String, Double>(1_000);
+		scanCachedS( scanCache);
+	}
+
+	@Benchmark
+	@OperationsPerInvocation(ArraySize)
+	public void scanCachedS100K() {
+		final Map<String, Double> scanCache = new LRUMap<String, Double>(100_000);
+		scanCachedS( scanCache);
+	}
+
+	@Benchmark
+	@OperationsPerInvocation(ArraySize)
+	public void scanCachedS10K() {
+		final Map<String, Double> scanCache = new LRUMap<String, Double>(10_000);
+		scanCachedS( scanCache);
+	}
+
+	private void scanCachedS(final Map<String, Double> scanCache) {
+		String[] values = tlS.get();
+		for ( int i = values.length - 1; i >= 0; -- i) {
+			String  s = values[ i];
+			Double dD = scanCache.get( s);
+			if  ( dD != null) {
+				dummyD = dD.doubleValue();
+				hits++;
+			} else {
+				dummyD = Double.valueOf(s);
+				scanCache.put( s, dummyD);
+				misses++;
+			}
+		}
+	}
 
 	public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include( DoubleParseCache.class.getSimpleName())
 		        .mode( Mode.AverageTime)
-		        .measurementTime( TimeValue.seconds( 10))
+		        .measurementTime( TimeValue.seconds( 5))
 		        .timeUnit(TimeUnit.NANOSECONDS)
 		        .warmupIterations(5)
-		        .measurementIterations(5)
+		        .measurementIterations(3)
 		        .forks(1)
                 .build();
         new Runner(opt).run();
