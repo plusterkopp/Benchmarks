@@ -3,7 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jmh" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/jmh-benchmarks" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jmh/src/main/java/Benchmarks/DoubleParseCache.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/jmh/src/main/java/Benchmarks/ILPBench.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/jmh/src/main/java/Benchmarks/MulDivBench.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/jmh/src/main/java/Benchmarks/ThreadStartJoinBench.java" charset="windows-1252" />
