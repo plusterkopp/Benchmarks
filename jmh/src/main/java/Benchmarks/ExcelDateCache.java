@@ -101,6 +101,15 @@ public class ExcelDateCache {
 		}
 	}
 
+	private void convertCachedNoStat( LongDoubleMap cache) {
+		Date[] dateValues = tlD.get();
+		for ( int i = dateValues.length - 1; i >= 0; -- i) {
+			Date date = dateValues[ i];
+			final long ts = date.getTime();
+			dummyD = cache.computeIfAbsent( ts, t -> MMKF4JavaStub.toAccurateExcelDate( date));
+		}
+	}
+
 	private void convertCachedDD( Map<Date, Double> cache) {
 		Date[] dateValues = tlD.get();
 		for ( int i = dateValues.length - 1; i >= 0; -- i) {
@@ -114,6 +123,14 @@ public class ExcelDateCache {
 				hits++;
 			}
 			dummyD = dD;
+		}
+	}
+
+	private void convertCachedDDNoStat( Map<Date, Double> cache) {
+		Date[] dateValues = tlD.get();
+		for ( int i = dateValues.length - 1; i >= 0; -- i) {
+			Date date = dateValues[ i];
+			dummyD = cache.computeIfAbsent( date, dt -> MMKF4JavaStub.toAccurateExcelDate( dt));
 		}
 	}
 
@@ -164,9 +181,23 @@ public class ExcelDateCache {
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
+	public void convertCachedCHMNoStat() {
+		final Map<Date, Double> scanCache = new ConcurrentHashMap<>( 1_000);
+		convertCachedDDNoStat( scanCache);
+	}
+
+	@Benchmark
+	@OperationsPerInvocation(ArraySize)
 	public void convertCachedHM() {
 		final Map<Date, Double> scanCache = new HashMap<>(1_000);
 		convertCachedDD( scanCache);
+	}
+
+	@Benchmark
+	@OperationsPerInvocation(ArraySize)
+	public void convertCachedHMNoStat() {
+		final Map<Date, Double> scanCache = new HashMap<>(1_000);
+		convertCachedDDNoStat( scanCache);
 	}
 
 	@Benchmark
@@ -177,11 +208,19 @@ public class ExcelDateCache {
 		convertCached( scanCache);
 	}
 
+	@Benchmark
+	@OperationsPerInvocation(ArraySize)
+	public void convertCachedKoloHNoStat() {
+		HashLongDoubleMapFactory    f  = HashLongDoubleMaps.getDefaultFactory().withDefaultValue( Double.NaN);
+		final LongDoubleMap scanCache = f.newMutableMap( 1_000);
+		convertCachedNoStat( scanCache);
+	}
+
 	public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include( ExcelDateCache.class.getSimpleName())
 		        .mode( Mode.AverageTime)
-		        .measurementTime( TimeValue.seconds( 10))
+		        .measurementTime( TimeValue.seconds( 5))
 		        .timeUnit(TimeUnit.NANOSECONDS)
 		        .warmupIterations(5)
 		        .measurementIterations(3)
