@@ -7,8 +7,8 @@ import java.text.*;
 public class Socketbench {
 
 	public final static int SOCKET_PORT = 13267; // you may change this
-	public final static String SERVER = "127.0.0.1"; // localhost
-	static final long	MaxNum = 5_000_000_000L;
+	public static String SERVER = "127.0.0.1"; // localhost
+	static final long	MaxNum = 3_000_000_000L;
 	static final int	WriteBufSize = 1 << 13;
 
 	static final NumberFormat NF = DecimalFormat.getIntegerInstance();
@@ -79,7 +79,7 @@ public class Socketbench {
 			long totalBytesRead = 0;
 			Socket sock = null;
 			try {
-				sock = new Socket(SERVER, SOCKET_PORT);
+				sock = new Socket( SERVER, SOCKET_PORT);
 				System.out.println("Connecting...");
 
 				// receive file
@@ -123,10 +123,13 @@ public class Socketbench {
 				SimpleFileServer server = new SimpleFileServer();
 				server.run();
 			} else if ( args[ 0].equals( "-client")) {
+				if ( args.length > 1) {
+					SERVER = args[ 1];
+				}
 				SimpleFileClient client = new SimpleFileClient();
 				client.run();
 			} else {
-				System.err.println("-server or -client (no arg runs both)"); 
+				System.err.println("-server or -client (no arg runs both)");
 			}
 		} else {
 			runBoth();
