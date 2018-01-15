@@ -8,8 +8,8 @@ public class Socketbench {
 
 	public final static int SOCKET_PORT = 13267; // you may change this
 	public final static String SERVER = "127.0.0.1"; // localhost
-	static final int	MaxNum = 1_000_000_000;
-	static final int	WriteBufSize = 1 << 16;
+	static final long	MaxNum = 5_000_000_000L;
+	static final int	WriteBufSize = 1 << 13;
 
 	static final NumberFormat NF = DecimalFormat.getIntegerInstance();
 	static {
@@ -30,7 +30,7 @@ public class Socketbench {
 			OutputStream os = null;
 			ServerSocket servsock = null;
 			Socket sock = null;
-			int	bytesSent = 0;
+			long	bytesSent = 0;
 			try {
 				servsock = new ServerSocket(SOCKET_PORT);
 				System.out.println("Waiting...");
@@ -43,7 +43,7 @@ public class Socketbench {
 					byte toSend = 0;
 					byte[] writeBuf = new byte[ WriteBufSize];
 					long	then = System.nanoTime();
-					int i = 0;
+					long i = 0;
 					while ( i < MaxNum) {
 						int j = 0;
 						while ( i < MaxNum && j < writeBuf.length) {
@@ -76,7 +76,7 @@ public class Socketbench {
 
 		public void run() throws IOException {
 			int bytesRead;
-			int totalBytesRead = 0;
+			long totalBytesRead = 0;
 			Socket sock = null;
 			try {
 				sock = new Socket(SERVER, SOCKET_PORT);
@@ -118,6 +118,22 @@ public class Socketbench {
 	}
 
 	public static void main(String[] args) throws IOException {
+		if ( args.length > 0) {
+			if ( args[ 0].equals( "-server")) {
+				SimpleFileServer server = new SimpleFileServer();
+				server.run();
+			} else if ( args[ 0].equals( "-client")) {
+				SimpleFileClient client = new SimpleFileClient();
+				client.run();
+			} else {
+				System.err.println("-server or -client (no arg runs both)"); 
+			}
+		} else {
+			runBoth();
+		}
+	}
+
+	private static void runBoth() {
 		Thread	serverThread = new Thread(() -> {
 			try {
 				SimpleFileServer server = new SimpleFileServer();
