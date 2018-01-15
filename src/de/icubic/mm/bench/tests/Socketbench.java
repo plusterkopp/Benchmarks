@@ -1,17 +1,29 @@
 package de.icubic.mm.bench.tests;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
+import java.text.*;
 
 public class Socketbench {
 
 	public final static int SOCKET_PORT = 13267; // you may change this
 	public final static String SERVER = "127.0.0.1"; // localhost
-	static final int	MaxNum = 1_000_000;
-	
+	static final int	MaxNum = 1_000_000_000;
+	static final int	WriteBufSize = 1 << 16;
+
+	static final NumberFormat NF = DecimalFormat.getIntegerInstance();
+	static {
+		NF.setGroupingUsed( true);
+	}
+
+	static private byte incCycle( byte value) {
+		if (value == Byte.MAX_VALUE) {
+			return Byte.MIN_VALUE;
+		}
+		return ( byte) ( value + 1);
+
+	}
+
 	static class SimpleFileServer {
 
 		public void run() throws IOException {
@@ -29,20 +41,24 @@ public class Socketbench {
 					// System.out.println("Sending " + FILE_TO_SEND + "(" + mybytearray.length + "
 					// bytes)");
 					byte toSend = 0;
+					byte[] writeBuf = new byte[ WriteBufSize];
 					long	then = System.nanoTime();
-					for (int i = 0; i < MaxNum; i++) {
-						os.write(toSend);
-						bytesSent++;
-						if (toSend == Byte.MAX_VALUE) {
-							toSend = Byte.MIN_VALUE;
-						} else {
-							toSend++;
+					int i = 0;
+					while ( i < MaxNum) {
+						int j = 0;
+						while ( i < MaxNum && j < writeBuf.length) {
+							writeBuf[ j] = toSend;
+							toSend = incCycle( toSend);
+							 j++;
+							 i++;
 						}
+						os.write( writeBuf, 0, j);
+						bytesSent += j;
 					}
 					os.flush();
 					long	now = System.nanoTime();
 					double	durMS = 1e-6 * ( now - then);
-					System.out.println("Done sending " + bytesSent + " bytes in " + durMS + " ms" + " (" + ( bytesSent / ( durMS)) + " kbytes/s");
+					System.out.println("Done sending " + NF.format( bytesSent) + " bytes in " + NF.format( durMS) + " ms" + " (" + NF.format( bytesSent / ( durMS)) + " kbytes/s");
 				} finally {
 					if (os != null)
 						os.close();
@@ -67,35 +83,32 @@ public class Socketbench {
 				System.out.println("Connecting...");
 
 				// receive file
-				byte[] mybytearray = new byte[1];
+				byte[] mybytearray = new byte[ WriteBufSize];
 				InputStream is = sock.getInputStream();
 				long	then = System.nanoTime();
-				bytesRead = is.read(mybytearray, 0, mybytearray.length);
-				totalBytesRead += bytesRead;
+//				bytesRead = is.read(mybytearray, 0, mybytearray.length);
+//				totalBytesRead += bytesRead;
 				byte expected = 0;
-				if ( mybytearray[ 0] != expected) {
-					System.err.println( "expected " + expected + " for first byte, got " + mybytearray[ 0]);
-				}
+//				if ( mybytearray[ 0] != expected) {
+//					System.err.println( "expected " + expected + " for first byte, got " + mybytearray[ 0]);
+//				}
 
 				do {
-					if ( expected == Byte.MAX_VALUE) {
-						expected = Byte.MIN_VALUE;
-					} else {
-						expected++;
-					}
 					bytesRead = is.read(mybytearray, 0, mybytearray.length);
 					if ( bytesRead > 0) {
 						totalBytesRead += bytesRead;
-						if ( mybytearray[ 0] != expected) {
-							System.err.println( "expected " + expected + " for byte #" + totalBytesRead + ", got " + mybytearray[ 0]);
+						for ( int i = 0;  i < bytesRead; i++) {
+							if ( mybytearray[ i] != expected) {
+								System.err.println( "expected " + expected + " for byte #" + totalBytesRead + ", got " + mybytearray[ 0]);
+							}
+							expected = incCycle( expected);
 						}
 					}
-					
 				} while (bytesRead > -1);
 
 				long	now = System.nanoTime();
 				double	durMS = 1e-6 * ( now - then);
-				System.out.println("transfer complete (" + totalBytesRead + " bytes read) in " + durMS + " ms");
+				System.out.println("transfer complete (" + NF.format( totalBytesRead) + " bytes read) in " + NF.format( durMS) + " ms");
 			} finally {
 				if (sock != null)
 					sock.close();
@@ -110,7 +123,6 @@ public class Socketbench {
 				SimpleFileServer server = new SimpleFileServer();
 				server.run();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}, "Server");
@@ -119,7 +131,6 @@ public class Socketbench {
 				SimpleFileClient client = new SimpleFileClient();
 				client.run();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}, "Client");
