@@ -8,8 +8,8 @@ public class Socketbench {
 
 	public final static int SOCKET_PORT = 13267; // you may change this
 	public static String SERVER = "127.0.0.1"; // localhost
-	static final long	MaxNum = 3_000_000_000L;
-	static final int	WriteBufSize = 1 << 13;
+	static final long	MaxNum = 2_000_000_000L;
+	static int	WriteBufSize = 1 << 12;
 
 	static final NumberFormat NF = DecimalFormat.getIntegerInstance();
 	static {
@@ -33,10 +33,10 @@ public class Socketbench {
 			long	bytesSent = 0;
 			try {
 				servsock = new ServerSocket(SOCKET_PORT);
-				System.out.println("Waiting...");
+//				System.out.println("Waiting...");
 				try {
 					sock = servsock.accept();
-					System.out.println("Accepted connection : " + sock);
+//					System.out.println("Accepted connection : " + sock);
 					os = sock.getOutputStream();
 					// System.out.println("Sending " + FILE_TO_SEND + "(" + mybytearray.length + "
 					// bytes)");
@@ -58,7 +58,8 @@ public class Socketbench {
 					os.flush();
 					long	now = System.nanoTime();
 					double	durMS = 1e-6 * ( now - then);
-					System.out.println("Done sending " + NF.format( bytesSent) + " bytes in " + NF.format( durMS) + " ms" + " (" + NF.format( bytesSent / ( durMS)) + " kbytes/s");
+					System.out.println("Done sending " + NF.format( bytesSent) + " bytes in " 
+					+ NF.format( durMS) + " ms" + " (" + NF.format( bytesSent / ( durMS)) + " kbytes/s) bufsize: " + NF.format( WriteBufSize) + " B");
 				} finally {
 					if (os != null)
 						os.close();
@@ -80,7 +81,7 @@ public class Socketbench {
 			Socket sock = null;
 			try {
 				sock = new Socket( SERVER, SOCKET_PORT);
-				System.out.println("Connecting...");
+//				System.out.println("Connecting...");
 
 				// receive file
 				byte[] mybytearray = new byte[ WriteBufSize];
@@ -108,7 +109,8 @@ public class Socketbench {
 
 				long	now = System.nanoTime();
 				double	durMS = 1e-6 * ( now - then);
-				System.out.println("transfer complete (" + NF.format( totalBytesRead) + " bytes read) in " + NF.format( durMS) + " ms");
+				System.out.println("transfer complete in " 
+				+ NF.format( durMS) + " ms)");
 			} finally {
 				if (sock != null)
 					sock.close();
@@ -132,7 +134,11 @@ public class Socketbench {
 				System.err.println("-server or -client (no arg runs both)");
 			}
 		} else {
-			runBoth();
+			for ( int i = 8;  i <= 25;  i++) {
+				System.gc();
+				WriteBufSize = 1 << i;
+				runBoth();
+			}
 		}
 	}
 
