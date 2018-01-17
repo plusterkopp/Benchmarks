@@ -6,7 +6,7 @@ import java.text.*;
 
 public class Socketbench {
 
-	public final static int SOCKET_PORT = 13267; // you may change this
+	public static int SOCKET_PORT = 13267; // you may change this
 	public static String SERVER = "127.0.0.1"; // localhost
 	static final long	MaxNum = 2_000_000_000L;
 	static int	WriteBufSize = 1 << 12;
@@ -137,6 +137,7 @@ public class Socketbench {
 			for ( int i = 8;  i <= 25;  i++) {
 				System.gc();
 				WriteBufSize = 1 << i;
+				SOCKET_PORT++;
 				runBoth();
 			}
 		}
