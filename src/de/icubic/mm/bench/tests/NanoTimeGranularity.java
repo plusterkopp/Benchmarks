@@ -15,7 +15,7 @@ public class NanoTimeGranularity {
 	private static void runNanos() throws InterruptedException {
 		final int	batchSize = 1000000;	//  runs per loop
 		final double	timeGoalS =5;
-		final int nThreads = Math.max( 1, Runtime.getRuntime().availableProcessors() / 2 - 1);
+		final int nThreads = Math.max( 1, Runtime.getRuntime().availableProcessors() - 1);
 		Thread[]	threads = new Thread[ nThreads];
 		final SortedMap<Long, Long>[]	granularityMaps = new SortedMap[ nThreads];
 
@@ -58,14 +58,21 @@ public class NanoTimeGranularity {
 		}
 
 		NumberFormat	nf = DecimalFormat.getNumberInstance();
-		nf.setMaximumFractionDigits( 2);
+		nf.setMaximumFractionDigits( 3);
+		long occSum = 0;
+		int runsTotal = runs.get();
 		for ( Long diffToLastTime : granularityMap.keySet()) {
 			long	occ = granularityMap.get( diffToLastTime);
-			if ( occ > 1)
-				BenchLogger.sysout( " G: " + diffToLastTime + "ns " + occ + " mal (" + nf.format( 100.0 * occ / runs.get()) + "%)");
+			occSum += occ;
+			long	remaining = runsTotal - occSum;
+			if ( occ > 10)
+				BenchLogger.sysout( " G: " + nf.format( diffToLastTime) + "ns "
+						+ nf.format( occ) + " mal (" + nf.format( 100.0 * occ / runsTotal) + "%,"
+						+ " rem: " + nf.format( remaining) + "/" + nf.format( 100.0 * remaining / runsTotal) + "%"
+						+ ")");
 		}
 		final double runtimeNS = runTimeNS.get();
-		BenchLogger.sysout( "Runs: " + runs.get() / 1e6 + " M in " + runtimeNS / 1e6 + " ms (" + ( runtimeNS / runs.get()) + " ns/Run in " + nThreads + " Threads)");
+		BenchLogger.sysout( "Runs: " + runsTotal / 1e6 + " M in " + runtimeNS / 1e6 + " ms (" + ( runtimeNS / runsTotal) + " ns/Run in " + nThreads + " Threads)");
 	}
 
 	private static double fillMap( int batchSize, SortedMap<Long, Long> granularityMap) {
@@ -78,6 +85,14 @@ public class NanoTimeGranularity {
 		for ( int i = 1;  i < batchSize;  i++) {
 			long	diffToLastTime = nList[ i] - nList[ i-1];
 			registerDistance( granularityMap, diffToLastTime, 1, false);
+			// count values, must be i
+			long count = 0;
+			for ( long v: granularityMap.values()) {
+				count += v;
+			}
+			if ( count != i) {
+				BenchLogger.syserr("value count = " + count + ", should be = " + i);
+			}
 		}
 
 		return distance;
@@ -85,7 +100,7 @@ public class NanoTimeGranularity {
 
 	private static void registerDistance( SortedMap<Long, Long> granularityMap, long key, long increment, boolean coalesce) {
 		long coalescedDiff = findDiff( granularityMap, key, coalesce);
-		if ( coalescedDiff == - 1) {
+		if ( coalescedDiff == -1) {
 			granularityMap.put( key, increment);
 		} else {
 			long occ = granularityMap.get( coalescedDiff);
