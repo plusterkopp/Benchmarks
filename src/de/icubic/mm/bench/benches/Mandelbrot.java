@@ -10,17 +10,17 @@ class Mandelbrot{
 	static int BAILOUT = 16;
 	static int MAX_ITERATIONS = 1000;
 
-	private static int iterate( float x, float y) {
-		float cr = y - 0.5f;
-		float ci = x;
-		float zi = 0.0f;
-		float zr = 0.0f;
+	private static int iterate( double x, double y) {
+		double cr = y - 0.5f;
+		double ci = x;
+		double zi = 0.0f;
+		double zr = 0.0f;
 		int i = 0;
 		while ( true) {
 			i++;
-			float temp = zr * zi;
-			float zr2 = zr * zr;
-			float zi2 = zi * zi;
+			double temp = zr * zi;
+			double zr2 = zr * zr;
+			double zi2 = zi * zi;
 			zr = zr2 - zi2 + cr;
 			zi = temp + temp + ci;
 			if ( zi2 + zr2 > BAILOUT)
@@ -36,7 +36,7 @@ class Mandelbrot{
 		for ( y = 1 - SIZE; y < SIZE - 10; y++) {
 			sb.append( "\n");
 			for ( x = 1 - SIZE; x < SIZE - 1; x++) {
-				if ( iterate( x / ( float) SIZE, y / ( float) SIZE) == 0)
+				if ( iterate( x / ( double) SIZE, y / ( double) SIZE) == 0)
 					sb.append( "*");
 				else
 					sb.append( " ");
