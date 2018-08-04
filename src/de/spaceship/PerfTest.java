@@ -1,7 +1,21 @@
 package de.spaceship;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.IntFunction;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToLongFunction;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
+
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 public class PerfTest {
 	private static final long TEST_COOL_OFF_MS = 10;
@@ -11,39 +25,105 @@ public class PerfTest {
 			new ReentrantLockSpaceship(), new StampedLockSpaceship(), new StampedLockWithRetriesSpaceship(),
 			new LockFreeSpaceship(), };
 
-	private static int NUM_WRITERS;
-	private static int NUM_READERS;
 	private static long TEST_DURATION_MS;
+	
+	static NumberFormat NF = DecimalFormat.getNumberInstance( Locale.US);
 
-	public static void main(final String[] args) throws Exception {
-		NUM_READERS = Integer.parseInt(args[0]);
-		NUM_WRITERS = Integer.parseInt(args[1]);
-		TEST_DURATION_MS = Long.parseLong(args[2]);
+	public static void main( final String[] args) throws Exception {
+		NF.setMaximumFractionDigits( 2);
+		int cpus = Runtime.getRuntime().availableProcessors();
+		TEST_DURATION_MS = Long.parseLong( args[ 0]);
+		int nRuns = Integer.parseInt( args[ 1]);
 
-		for (int i = 0; i < 5; i++) {
-			System.out.println("*** Run - " + i);
-			for (final Spaceship spaceship : SPACESHIPS) {
-				System.gc();
-				Thread.sleep(TEST_COOL_OFF_MS);
+		List<Results> results = new ArrayList<>();
+		
+		for ( int nr = 1; nr <= cpus; nr *= 2) {
+			for ( int nw = 1; nw <= cpus - nr; nw *= 2) {
+				for ( int i = 0; i < nRuns; i++) {
+					System.out.println( "*** Run - " + nr + " r - " + nw + " w: #" + i);
+					for ( final Spaceship spaceship : SPACESHIPS) {
+						System.gc();
+						Thread.sleep( TEST_COOL_OFF_MS);
 
-				perfRun(spaceship);
+						Results result = perfRun( spaceship, nr, nw);
+						results.add( result);
+					}
+				}
 			}
 		}
-
+		analyzeAll( results);
 		EXECUTOR.shutdown();
 	}
 
-	private static void perfRun(final Spaceship spaceship) throws Exception {
-		final Results results = new Results();
-		final CyclicBarrier startBarrier = new CyclicBarrier(NUM_READERS + NUM_WRITERS + 1);
-		final CountDownLatch finishLatch = new CountDownLatch(NUM_READERS + NUM_WRITERS);
+	private static void analyzeAll( List<Results> results) {
+		for ( final Spaceship spaceship : SPACESHIPS) {
+			List<Results> spaceShipResults = results.stream()
+					.filter( r -> spaceship.getClass().getSimpleName().equals( r.className))
+					.collect( Collectors.toList());
+			boolean hasR = true;
+			for ( int nr = 1; hasR; nr *= 2) {
+				int fnr = nr;
+				List<Results> resultsR = spaceShipResults.stream()
+						.filter( r -> r.numReaders == fnr)
+						.collect( Collectors.toList());
+				if ( resultsR.isEmpty()) {
+					hasR = false;
+					continue;
+				}
+				boolean hasW = true;
+				for ( int nw = 1; hasW; nw *= 2) {
+					int fnw = nw;
+					List<Results> resultsW = resultsR.stream()
+							.filter( r -> r.numWriters == fnw)
+							.collect( Collectors.toList());
+					if ( resultsW.isEmpty()) {
+						hasW = false;
+						continue;
+					}
+					analyze( resultsW);
+				}
+			}
+		}
+	}
+
+	/**
+	 * @param results same {@link Spaceship}, same number of readers and writers
+	 */
+	private static void analyze( List<Results> results) {
+		SummaryStatistics	trStats = statsFrom( results, r -> r.totalReads * 1e-6);
+		SummaryStatistics	tmStats = statsFrom( results, r -> r.totalMoves * 1e-6);
+		SummaryStatistics	traStats = statsFrom( results, r -> ( double) r.totalReadAttempts / r.totalReads);
+		SummaryStatistics	tmaStats = statsFrom( results, r -> ( double) r.totalMoveAttempts/ r.totalMoves);
+		SummaryStatistics	tomStats = statsFrom( results, r -> r.totalObservedMoves * 1e-6);
+		Results r1 = results.get( 0);
+		String out = r1.className + " " + r1.numReaders + " r/" + r1.numWriters + " w";
+		out += " totalReads Ø " + NF.format( trStats.getMean()) + ", σ " + NF.format( trStats.getStandardDeviation());
+		out += " totalMoves Ø " + NF.format( tmStats.getMean()) + ", σ " + NF.format( tmStats.getStandardDeviation());
+		out += " totalReadAttempts Ø " + NF.format( traStats.getMean()) + ", σ " + NF.format( traStats.getStandardDeviation());
+		out += " totalMoveAttempts Ø " + NF.format( tmaStats.getMean()) + ", σ " + NF.format( tmaStats.getStandardDeviation());
+		out += " totalObservedMoves Ø " + NF.format( tomStats.getMean()) + ", σ " + NF.format( tomStats.getStandardDeviation());
+		System.out.println( out);
+	}
+	
+	static SummaryStatistics statsFrom( Collection<Results> results, ToDoubleFunction<Results> f) {
+		SummaryStatistics stats = new SummaryStatistics();
+		for ( Results r : results) {
+			stats.addValue( f.applyAsDouble( r));
+		}
+		return stats;
+	}
+
+	private static Results perfRun(final Spaceship spaceship, int numReaders, int numWriters) throws Exception {
+		final Results results = new Results( spaceship.getClass().getSimpleName(), numReaders, numWriters);
+		final CyclicBarrier startBarrier = new CyclicBarrier( numReaders + numWriters + 1);
+		final CountDownLatch finishLatch = new CountDownLatch( numReaders + numWriters);
 		final AtomicBoolean runningFlag = new AtomicBoolean(true);
 
-		for (int i = 0; i < NUM_WRITERS; i++) {
+		for (int i = 0; i < numWriters; i++) {
 			EXECUTOR.execute(new WriterRunner(i, results, spaceship, runningFlag, startBarrier, finishLatch));
 		}
 
-		for (int i = 0; i < NUM_READERS; i++) {
+		for (int i = 0; i < numReaders; i++) {
 			EXECUTOR.execute(new ReaderRunner(i, results, spaceship, runningFlag, startBarrier, finishLatch));
 		}
 
@@ -54,8 +134,10 @@ public class PerfTest {
 
 		finishLatch.await();
 
-		System.out.format("%d readers %d writers %31s %s%n", NUM_READERS, NUM_WRITERS,
+		System.out.format("%d readers %d writers %31s %s%n", numReaders, numWriters,
 				spaceship.getClass().getSimpleName(), results);
+		
+		return results;
 	}
 
 	private static void awaitBarrier(final CyclicBarrier barrier) {
@@ -67,50 +149,58 @@ public class PerfTest {
 	}
 
 	static class Results {
-		final long[] reads = new long[NUM_READERS];
-		final long[] moves = new long[NUM_WRITERS];
+		final long[] reads;
+		final long[] moves;
 
-		final long[] readAttempts = new long[NUM_READERS];
-		final long[] observedMoves = new long[NUM_READERS];
-		final long[] moveAttempts = new long[NUM_WRITERS];
+		final long[] readAttempts;
+		final long[] observedMoves;
+		final long[] moveAttempts;
+
+		final int numReaders;
+		final int numWriters;
+		final String className;
+		
+		long totalReads;
+		long totalMoves;
+		long totalReadAttempts;
+		long totalMoveAttempts;
+		long totalObservedMoves;
+
+		public Results( String className, int r, int w) {
+			this.numReaders = r;
+			this.numWriters = w;
+			this.className = className;
+
+			reads = new long[ numReaders];
+			moves = new long[ numWriters];
+			readAttempts = new long[ numReaders];
+			observedMoves = new long[ numReaders];
+			moveAttempts = new long[ numWriters];
+			
+		}
 
 		public String toString() {
-			long totalReads = 0;
-			for (final long v : reads) {
-				totalReads += v;
-			}
+
 			final String readsSummary = String.format("%,d : ", totalReads);
-
-			long totalMoves = 0;
-			for (final long v : moves) {
-				totalMoves += v;
-			}
 			final String movesSummary = String.format("%,d : ", totalMoves);
-
-			long totalReadAttempts = 0;
-			for (final long v : readAttempts) {
-				totalReadAttempts += v;
-			}
 			final String readAttemptsSummary = String.format("%,d : ", totalReadAttempts);
-
-			long totalMoveAttempts = 0;
-			for (final long v : moveAttempts) {
-				totalMoveAttempts += v;
-			}
 			final String moveAttemptsSummary = String.format("%,d : ", totalMoveAttempts);
-
-			long totalObservedMoves = 0;
-			for (final long v : observedMoves) {
-				totalObservedMoves += v;
-			}
 			final String observedMovesSummary = String.format("%,d : ", totalObservedMoves);
 
-			return "reads=" + readsSummary + ( int) ( totalReads / ( 1e3 * TEST_DURATION_MS)) + " M/s" // + Arrays.toString(reads) 
-				+ " moves=" + movesSummary + ( int) ( totalMoves / ( 1e3 * TEST_DURATION_MS)) + " M/s" // + Arrays.toString(moves)
+			return "reads=" + NF.format( totalReads / ( 1e3 * TEST_DURATION_MS)) + " M/s" // + readsSummary + Arrays.toString(reads) 
+				+ " moves=" + NF.format( totalMoves / ( 1e3 * TEST_DURATION_MS)) + " M/s" // + movesSummary + Arrays.toString(moves)
 				+ " readAttempts=" + ( 100 * totalReadAttempts / totalReads) + "%" // readAttemptsSummary + ( int) ( totalReadAttempts / ( 1e3 * TEST_DURATION_MS)) + " M/s" // + Arrays.toString(readAttempts) 
 				+ " moveAttempts=" + ( 100 * totalMoveAttempts / totalMoves) + "%" // moveAttemptsSummary + ( int) ( totalMoveAttempts / ( 1e3 * TEST_DURATION_MS)) + " M/s" // + Arrays.toString(moveAttempts) 
-				+ " observedMoves=" + observedMovesSummary + ( int) ( totalObservedMoves / ( 1e3 * TEST_DURATION_MS)) + " M/s" // + Arrays.toString(observedMoves)
+				+ " observedMoves=" + NF.format( totalObservedMoves / ( 1e3 * TEST_DURATION_MS)) + " M/s" // + observedMovesSummary + Arrays.toString(observedMoves)
 				;
+		}
+
+		public void close() {
+			totalReads = LongStream.of( reads).sum();
+			totalMoves = LongStream.of( moves).sum();
+			totalReadAttempts = LongStream.of( readAttempts).sum();
+			totalMoveAttempts = LongStream.of( moveAttempts).sum();
+			totalObservedMoves = LongStream.of( observedMoves).sum();
 		}
 	}
 
@@ -146,6 +236,7 @@ public class PerfTest {
 
 			results.moveAttempts[id] = movedAttemptsCount;
 			results.moves[id] = movesCounter;
+			results.close();
 
 			latch.countDown();
 		}
@@ -194,6 +285,7 @@ public class PerfTest {
 			results.reads[id] = readsCount;
 			results.readAttempts[id] = readAttemptsCount;
 			results.observedMoves[id] = observedMoves;
+			results.close();
 
 			latch.countDown();
 		}
