@@ -1,21 +1,12 @@
 package de.spaceship;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
+import java.text.*;
+import java.util.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.IntFunction;
-import java.util.function.ToDoubleFunction;
-import java.util.function.ToLongFunction;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.LongStream;
+import java.util.concurrent.atomic.*;
+import java.util.function.*;
+import java.util.stream.*;
 
-import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+import org.apache.commons.math3.stat.descriptive.*;
 
 public class PerfTest {
 	private static final long TEST_COOL_OFF_MS = 10;
@@ -26,7 +17,7 @@ public class PerfTest {
 			new LockFreeSpaceship(), };
 
 	private static long TEST_DURATION_MS;
-	
+
 	static NumberFormat NF = DecimalFormat.getNumberInstance( Locale.US);
 
 	public static void main( final String[] args) throws Exception {
@@ -36,7 +27,7 @@ public class PerfTest {
 		int nRuns = Integer.parseInt( args[ 1]);
 
 		List<Results> results = new ArrayList<>();
-		
+
 		for ( int nr = 1; nr <= cpus; nr *= 2) {
 			for ( int nw = 1; nw <= cpus - nr; nw *= 2) {
 				for ( int i = 0; i < nRuns; i++) {
@@ -97,14 +88,14 @@ public class PerfTest {
 		SummaryStatistics	tomStats = statsFrom( results, r -> r.totalObservedMoves * 1e-6);
 		Results r1 = results.get( 0);
 		String out = r1.className + " " + r1.numReaders + " r/" + r1.numWriters + " w";
-		out += " totalReads Ø " + NF.format( trStats.getMean()) + ", σ " + NF.format( trStats.getStandardDeviation());
-		out += " totalMoves Ø " + NF.format( tmStats.getMean()) + ", σ " + NF.format( tmStats.getStandardDeviation());
-		out += " totalReadAttempts Ø " + NF.format( traStats.getMean()) + ", σ " + NF.format( traStats.getStandardDeviation());
-		out += " totalMoveAttempts Ø " + NF.format( tmaStats.getMean()) + ", σ " + NF.format( tmaStats.getStandardDeviation());
-		out += " totalObservedMoves Ø " + NF.format( tomStats.getMean()) + ", σ " + NF.format( tomStats.getStandardDeviation());
+		out += " totalReads Ø " + format( trStats.getMean()) + ", σ " + format( trStats.getStandardDeviation());
+		out += " totalMoves Ø " + format( tmStats.getMean()) + ", σ " + format( tmStats.getStandardDeviation());
+		out += " totalReadAttempts Ø " + format( traStats.getMean()) + ", σ " + format( traStats.getStandardDeviation());
+		out += " totalMoveAttempts Ø " + format( tmaStats.getMean()) + ", σ " + format( tmaStats.getStandardDeviation());
+		out += " totalObservedMoves Ø " + format( tomStats.getMean()) + ", σ " + format( tomStats.getStandardDeviation());
 		System.out.println( out);
 	}
-	
+
 	static SummaryStatistics statsFrom( Collection<Results> results, ToDoubleFunction<Results> f) {
 		SummaryStatistics stats = new SummaryStatistics();
 		for ( Results r : results) {
@@ -136,7 +127,7 @@ public class PerfTest {
 
 		System.out.format("%d readers %d writers %31s %s%n", numReaders, numWriters,
 				spaceship.getClass().getSimpleName(), results);
-		
+
 		return results;
 	}
 
@@ -146,6 +137,19 @@ public class PerfTest {
 		} catch (final Exception ex) {
 			throw new RuntimeException(ex);
 		}
+	}
+
+	static String format( double x) {
+		if ( x >= 1) {
+			NF.setMaximumFractionDigits( 2);
+		} else if ( x >= 0.1) {
+			NF.setMaximumFractionDigits( 3);
+		} else if ( x >= 0.01) {
+			NF.setMaximumFractionDigits( 4);
+		} else {
+			NF.setMaximumFractionDigits( 5);
+		}
+		return NF.format( x);
 	}
 
 	static class Results {
@@ -159,7 +163,7 @@ public class PerfTest {
 		final int numReaders;
 		final int numWriters;
 		final String className;
-		
+
 		long totalReads;
 		long totalMoves;
 		long totalReadAttempts;
@@ -167,8 +171,8 @@ public class PerfTest {
 		long totalObservedMoves;
 
 		public Results( String className, int r, int w) {
-			this.numReaders = r;
-			this.numWriters = w;
+			numReaders = r;
+			numWriters = w;
 			this.className = className;
 
 			reads = new long[ numReaders];
@@ -176,7 +180,6 @@ public class PerfTest {
 			readAttempts = new long[ numReaders];
 			observedMoves = new long[ numReaders];
 			moveAttempts = new long[ numWriters];
-			
 		}
 
 		public String toString() {
@@ -187,21 +190,22 @@ public class PerfTest {
 			final String moveAttemptsSummary = String.format("%,d : ", totalMoveAttempts);
 			final String observedMovesSummary = String.format("%,d : ", totalObservedMoves);
 
-			return "reads=" + NF.format( totalReads / ( 1e3 * TEST_DURATION_MS)) + " M/s" // + readsSummary + Arrays.toString(reads) 
-				+ " moves=" + NF.format( totalMoves / ( 1e3 * TEST_DURATION_MS)) + " M/s" // + movesSummary + Arrays.toString(moves)
-				+ " readAttempts=" + ( 100 * totalReadAttempts / totalReads) + "%" // readAttemptsSummary + ( int) ( totalReadAttempts / ( 1e3 * TEST_DURATION_MS)) + " M/s" // + Arrays.toString(readAttempts) 
-				+ " moveAttempts=" + ( 100 * totalMoveAttempts / totalMoves) + "%" // moveAttemptsSummary + ( int) ( totalMoveAttempts / ( 1e3 * TEST_DURATION_MS)) + " M/s" // + Arrays.toString(moveAttempts) 
-				+ " observedMoves=" + NF.format( totalObservedMoves / ( 1e3 * TEST_DURATION_MS)) + " M/s" // + observedMovesSummary + Arrays.toString(observedMoves)
+			return "reads=" + format( totalReads / ( 1e3 * TEST_DURATION_MS)) + " M/s" // + readsSummary + Arrays.toString(reads)
+				+ " moves=" + format( totalMoves / ( 1e3 * TEST_DURATION_MS)) + " M/s" // + movesSummary + Arrays.toString(moves)
+				+ " readAttempts=" + ( 100 * totalReadAttempts / totalReads) + "%" // readAttemptsSummary + ( int) ( totalReadAttempts / ( 1e3 * TEST_DURATION_MS)) + " M/s" // + Arrays.toString(readAttempts)
+				+ " moveAttempts=" + ( 100 * totalMoveAttempts / totalMoves) + "%" // moveAttemptsSummary + ( int) ( totalMoveAttempts / ( 1e3 * TEST_DURATION_MS)) + " M/s" // + Arrays.toString(moveAttempts)
+				+ " observedMoves=" + format( totalObservedMoves / ( 1e3 * TEST_DURATION_MS)) + " M/s" // + observedMovesSummary + Arrays.toString(observedMoves)
 				;
 		}
 
-		public void close() {
+		public synchronized void close() {
 			totalReads = LongStream.of( reads).sum();
 			totalMoves = LongStream.of( moves).sum();
 			totalReadAttempts = LongStream.of( readAttempts).sum();
 			totalMoveAttempts = LongStream.of( moveAttempts).sum();
 			totalObservedMoves = LongStream.of( observedMoves).sum();
 		}
+
 	}
 
 	static class WriterRunner implements Runnable {
