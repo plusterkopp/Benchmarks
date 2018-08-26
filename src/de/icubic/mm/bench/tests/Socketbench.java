@@ -1,3 +1,4 @@
+
 package de.icubic.mm.bench.tests;
 
 import java.io.*;
@@ -109,8 +110,7 @@ public class Socketbench {
 
 				long	now = System.nanoTime();
 				double	durMS = 1e-6 * ( now - then);
-				System.out.println("transfer complete in " 
-				+ NF.format( durMS) + " ms)");
+				System.out.println("transfer complete in " + NF.format( durMS) + " ms)");
 			} finally {
 				if (sock != null)
 					sock.close();
