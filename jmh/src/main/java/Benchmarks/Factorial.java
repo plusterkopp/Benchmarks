@@ -25,7 +25,7 @@ public class Factorial {
 	}
 
 	@Benchmark
-	@OperationsPerInvocation(arg)
+	@OperationsPerInvocation(1)
 	public void DoubleFactorial() {
 		int	count100out = 0;
 		double fact = 1;
@@ -44,20 +44,25 @@ public class Factorial {
 	}
 
 	@Benchmark
-	@OperationsPerInvocation(arg)
+	@OperationsPerInvocation(1)
 	public void LongFactorial() {
+		long limit = Long.MAX_VALUE / arg;
 		int	count1out = 0;
 		long fact = 1;
 		for ( int i = 1;  i <= arg;  i++) {
+			while (fact > limit) {
+				fact /= 10;
+				count1out++;
+			}
 			fact *= i;
-			if ( fact > 1e20) {
-				while ( fact % 10 == 0) {
+			if ( fact > 100) {
+				while ( fact > 10 && fact % 10 == 0) {
 					fact /= 10;
 					count1out++;
 				}
 			}
 		}
-		if ( count100outResult == 0) {
+		if ( count1outResult == 0) {
 			System.out.println( "long fact = " + fact + " * 10^" + ( 1*count1out));
 		}
 		count1outResult = count1out;
@@ -65,13 +70,13 @@ public class Factorial {
 	}
 
 	@Benchmark
-	@OperationsPerInvocation(arg)
+	@OperationsPerInvocation(1)
 	public void BigIntFactorial() {
 		BigInteger fact = BigInteger.ONE;
 		for ( int i = 1;  i <= arg;  i++) {
 			fact = fact.multiply( BigInteger.valueOf( i));
 		}
-		if ( count100outResult == 0) {
+		if ( count1outResult == 0) {
 			System.out.println( "bigint fact = " + fact);
 		}
 		count1outResult = 1;
@@ -79,13 +84,13 @@ public class Factorial {
 	}
 
 	@Benchmark
-	@OperationsPerInvocation(arg)
+	@OperationsPerInvocation(1)
 	public void BigDecFactorial() {
 		BigDecimal fact = BigDecimal.ONE;
 		for ( int i = 1;  i <= arg;  i++) {
 			fact = fact.multiply( BigDecimal.valueOf( i));
 		}
-		if ( count100outResult == 0) {
+		if ( count1outResult == 0) {
 			System.out.println( "bigdec fact = " + fact);
 		}
 		count1outResult = 1;
