@@ -1,6 +1,6 @@
 package Benchmarks;
 
-import de.icubic.mm.server.utils.DoubleToString;
+import de.icubic.mm.server.utils.*;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -79,7 +79,7 @@ public class NumberFormatBench {
 
 	@Benchmark
 	@OperationsPerInvocation( Size)
-	public void formatDoubleBDFull() {
+	public void formatBDFull() {
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
 			resultA[ i] = dummyBDA[ i].toPlainString();
 		}
@@ -87,7 +87,7 @@ public class NumberFormatBench {
 
 	@Benchmark
 	@OperationsPerInvocation( Size)
-	public void formatDoubleBDSingle() {
+	public void formatBDSingle() {
 		final int digits = nf.getMaximumFractionDigits();
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
 			resultA[ i] = dummyBDA[ i].setScale(digits).toPlainString();
@@ -96,7 +96,7 @@ public class NumberFormatBench {
 
 	@Benchmark
 	@OperationsPerInvocation( Size)
-	public void formatDoubleBDDouble() {
+	public void formatBDDouble() {
 		final int digits = nf.getMaximumFractionDigits();
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
 			resultA[ i] = dummyBDA[ i].setScale( 13).setScale(digits).toPlainString();
@@ -105,7 +105,7 @@ public class NumberFormatBench {
 
 	@Benchmark
 	@OperationsPerInvocation( Size)
-	public void formatDoubleNF() {
+	public void formatNF() {
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
 			resultA[ i] = nf.format( dummyDA[ i]);
 		}
@@ -113,9 +113,45 @@ public class NumberFormatBench {
 
 	@Benchmark
 	@OperationsPerInvocation( Size)
-	public void formatDoubleJ() {
+	public void formatJ() {
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
 			resultA[ i] = "" + dummyDA[ i];
+		}
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( Size)
+	public void formatQPDSNStripped() {
+		final int digits = nf.getMaximumFractionDigits();
+		for ( int i = valueA.length - 1;  i >= 0;  i--) {
+			resultA[ i] = QuotePrecision.DSInstance.checkAndformat0( dummyDA[ i], true, digits);
+		}
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( Size)
+	public void formatQPDSN() {
+		final int digits = nf.getMaximumFractionDigits();
+		for ( int i = valueA.length - 1;  i >= 0;  i--) {
+			resultA[ i] = QuotePrecision.DSInstance.checkAndformat0( dummyDA[ i], false, digits);
+		}
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( Size)
+	public void formatQPBDNStripped() {
+		final int digits = nf.getMaximumFractionDigits();
+		for ( int i = valueA.length - 1;  i >= 0;  i--) {
+			resultA[ i] = QuotePrecision.BDInstance.checkAndformat0( dummyDA[ i], true, digits);
+		}
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( Size)
+	public void formatQPBDN() {
+		final int digits = nf.getMaximumFractionDigits();
+		for ( int i = valueA.length - 1;  i >= 0;  i--) {
+			resultA[ i] = QuotePrecision.BDInstance.checkAndformat0( dummyDA[ i], false, digits);
 		}
 	}
 

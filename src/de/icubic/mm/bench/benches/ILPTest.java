@@ -4,10 +4,10 @@
  */
 package de.icubic.mm.bench.benches;
 
-import java.util.*;
-import java.util.concurrent.*;
-
 import de.icubic.mm.bench.base.*;
+
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -244,5 +244,4 @@ public class ILPTest {
 			y[ i] = Math.random();
 		}
 	}
-
 }

@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9b705a73-0f9a-4d57-a457-b6d4aa11b88c" name="Default" comment="Merge branch 'master' of https://github.com/plusterkopp/Benchmarks&#10;&#10;# Conflicts:&#10;#&#9;.idea/libraries/com_lmax_disruptor_3_3_2.xml&#10;#&#9;.idea/libraries/net_java_dev_jna_jna_4_2_1.xml&#10;#&#9;.idea/libraries/net_java_dev_jna_jna_platform_4_2_1.xml&#10;#&#9;.idea/libraries/net_openhft_koloboke_impl_jdk8_0_6_8.xml&#10;#&#9;.idea/libraries/net_sf_jopt_simple_jopt_simple_4_6.xml&#10;#&#9;.idea/libraries/net_sf_trove4j_trove4j_3_0_3.xml&#10;#&#9;.idea/libraries/org_apache_commons_commons_collections4_4_0.xml&#10;#&#9;.idea/libraries/org_apache_commons_commons_math3_3_5.xml&#10;#&#9;.idea/libraries/org_openjdk_jmh_jmh_core_1_11_1.xml&#10;#&#9;.idea/libraries/org_openjdk_jmh_jmh_generator_annprocess_1_11_1.xml&#10;#&#9;Benchmarks.iml">
-      <change afterPath="$PROJECT_DIR$/jmh/src/main/java/Benchmarks/NumberFormatBench.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jmh/src/main/java/Benchmarks/NumberParseBench.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/de/icubic/mm/bench/benches/DoubleParseBench.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/de/icubic/mm/bench/benches/DoubleParseBench.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jmh/src/main/java/Benchmarks/NumberFormatBench.java" beforeDir="false" afterPath="$PROJECT_DIR$/jmh/src/main/java/Benchmarks/NumberFormatBench.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/de/icubic/mm/bench/benches/ILPTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/de/icubic/mm/bench/benches/ILPTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/de/icubic/mm/server/utils/QuotePrecision.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/de/icubic/mm/server/utils/QuotePrecision.java" afterDir="false" />
     </list>
     <ignored path="Benchmarks.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -78,6 +79,34 @@
         </counts>
       </usages-collector>
     </session>
+    <session id="-1945639740">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.open.time.1" value="1" />
+          <entry key="project.opened" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="java" value="6" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="JAVA" value="6" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="java" value="67" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="JAVA" value="67" />
+        </counts>
+      </usages-collector>
+    </session>
   </component>
   <component name="FavoritesManager">
     <favorites_list name="Benchmarks" />
@@ -87,7 +116,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jmh/src/main/java/Benchmarks/ArrayCopy.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
+            <state relative-caret-position="80">
               <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
             </state>
           </provider>
@@ -96,12 +125,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jmh/src/main/java/Benchmarks/NumberParseBench.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="611">
-              <caret line="86" column="57" lean-forward="true" selection-start-line="86" selection-start-column="57" selection-end-line="86" selection-end-column="57" />
-              <folding>
-                <element signature="e#1423#1424#0" expanded="true" />
-                <element signature="e#1444#1445#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="1104">
+              <caret line="86" column="57" selection-start-line="86" selection-start-column="57" selection-end-line="86" selection-end-column="57" />
             </state>
           </provider>
         </entry>
@@ -109,51 +134,29 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/jmh/src/main/java/Benchmarks/NumberFormatBench.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="339">
-              <caret line="57" column="66" selection-start-line="57" selection-start-column="66" selection-end-line="57" selection-end-column="66" />
+            <state relative-caret-position="2336">
+              <caret line="163" column="12" selection-start-line="163" selection-start-column="12" selection-end-line="163" selection-end-column="12" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/de/icubic/mm/server/utils/DoubleToString.java">
+        <entry file="file://$PROJECT_DIR$/src/de/icubic/mm/bench/benches/DoubleFormatTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="534">
-              <caret line="631" column="91" selection-start-line="631" selection-start-column="82" selection-end-line="631" selection-end-column="91" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/de/icubic/mm/bench/benches/DoubleParseBench.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
-              <caret line="59" column="41" selection-start-line="59" selection-start-column="41" selection-end-line="59" selection-end-column="41" />
+            <state relative-caret-position="206">
+              <caret line="72" column="25" selection-start-line="72" selection-start-column="25" selection-end-line="72" selection-end-column="25" />
               <folding>
-                <element signature="method#setupStatics#0;class#DoubleParseBench#0" />
-                <element signature="e#1706#1707#0" expanded="true" />
-                <element signature="e#1737#1738#0" expanded="true" />
-                <element signature="e#1874#1875#0" expanded="true" />
-                <element signature="e#1907#1908#0" expanded="true" />
+                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="jar://$PROJECT_DIR$/lib/koloboke-api-jdk8-0.6.8.jar!/net/openhft/koloboke/collect/map/LongDoubleMapFactory.class">
+        <entry file="file://$PROJECT_DIR$/src/de/icubic/mm/bench/benches/QuoteDoubleFormatBench.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="27" selection-start-line="27" selection-end-line="27" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="jar://$PROJECT_DIR$/lib/commons-collections4-4.0-sources.jar!/org/apache/commons/collections4/map/LRUMap.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="70" column="29" selection-start-line="70" selection-start-column="29" selection-end-line="70" selection-end-column="29" />
+            <state relative-caret-position="262">
+              <caret line="79" column="28" selection-start-line="79" selection-start-column="28" selection-end-line="79" selection-end-column="28" />
             </state>
           </provider>
         </entry>
@@ -187,6 +190,8 @@
         <option value="$PROJECT_DIR$/jmh/src/main/java/Benchmarks/Factorial.java" />
         <option value="$PROJECT_DIR$/src/de/icubic/mm/bench/benches/DoubleParseBench.java" />
         <option value="$PROJECT_DIR$/jmh/src/main/java/Benchmarks/NumberParseBench.java" />
+        <option value="$PROJECT_DIR$/src/de/icubic/mm/bench/benches/ILPTest.java" />
+        <option value="$PROJECT_DIR$/src/de/icubic/mm/server/utils/QuotePrecision.java" />
         <option value="$PROJECT_DIR$/jmh/src/main/java/Benchmarks/NumberFormatBench.java" />
       </list>
     </option>
@@ -198,11 +203,11 @@
       </MavenImportingSettings>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="80" />
-    <option name="y" value="-8" />
-    <option name="width" value="2488" />
-    <option name="height" value="1456" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="1920" />
+    <option name="y" value="22" />
+    <option name="width" value="1920" />
+    <option name="height" value="1178" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -213,7 +218,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -259,54 +263,23 @@
             <path>
               <item name="Benchmarks" type="b2602c69:ProjectViewProjectNode" />
               <item name="Benchmarks" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="jmh" type="462c0819:PsiDirectoryNode" />
+              <item name="target" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Benchmarks" type="b2602c69:ProjectViewProjectNode" />
               <item name="Benchmarks" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="de" type="462c0819:PsiDirectoryNode" />
+              <item name="jmh" type="462c0819:PsiDirectoryNode" />
+              <item name="target" type="462c0819:PsiDirectoryNode" />
+              <item name="classes" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Benchmarks" type="b2602c69:ProjectViewProjectNode" />
               <item name="Benchmarks" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="de" type="462c0819:PsiDirectoryNode" />
-              <item name="mm" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Benchmarks" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jmh" type="462c0819:PsiDirectoryNode" />
+              <item name="target" type="462c0819:PsiDirectoryNode" />
+              <item name="classes" type="462c0819:PsiDirectoryNode" />
               <item name="Benchmarks" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="de" type="462c0819:PsiDirectoryNode" />
-              <item name="mm" type="462c0819:PsiDirectoryNode" />
-              <item name="bench" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Benchmarks" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Benchmarks" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="de" type="462c0819:PsiDirectoryNode" />
-              <item name="mm" type="462c0819:PsiDirectoryNode" />
-              <item name="bench" type="462c0819:PsiDirectoryNode" />
-              <item name="benches" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Benchmarks" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Benchmarks" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="de" type="462c0819:PsiDirectoryNode" />
-              <item name="mm" type="462c0819:PsiDirectoryNode" />
-              <item name="server" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Benchmarks" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Benchmarks" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="de" type="462c0819:PsiDirectoryNode" />
-              <item name="mm" type="462c0819:PsiDirectoryNode" />
-              <item name="server" type="462c0819:PsiDirectoryNode" />
-              <item name="utils" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Benchmarks" type="b2602c69:ProjectViewProjectNode" />
@@ -342,15 +315,18 @@
           <select />
         </subPane>
       </pane>
+      <pane id="AndroidView" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1535478275029" />
     <property name="last_opened_file_path" value="C:/User/Ralf/prog/IdeaProjects" />
     <property name="project.structure.last.edited" value="SDKs" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2942366" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -370,34 +346,6 @@
     </option>
   </component>
   <component name="RunManager" selected="Application.NumberFormatBench">
-    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android App">
-      <module name="" />
-      <option name="DEPLOY" value="true" />
-      <option name="ARTIFACT_NAME" value="" />
-      <option name="PM_INSTALL_OPTIONS" value="" />
-      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
-      <option name="MODE" value="default_activity" />
-      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
-      <option name="PREFERRED_AVD" value="" />
-      <option name="CLEAR_LOGCAT" value="false" />
-      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
-      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
-      <option name="FORCE_STOP_RUNNING_APP" value="true" />
-      <option name="DEBUGGER_TYPE" value="Java" />
-      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
-      <option name="PREFERRED_AVD" value="" />
-      <Java />
-      <Profilers>
-        <option name="ENABLE_ADVANCED_PROFILING" value="true" />
-        <option name="GAPID_ENABLED" value="false" />
-        <option name="GAPID_DISABLE_PCS" value="false" />
-        <option name="SUPPORT_LIB_ENABLED" value="true" />
-        <option name="INSTRUMENTATION_ENABLED" value="true" />
-      </Profilers>
-      <option name="DEEP_LINK" value="" />
-      <option name="ACTIVITY_CLASS" value="" />
-      <method />
-    </configuration>
     <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
       <module name="" />
       <option name="DEPLOY" value="true" />
@@ -442,13 +390,6 @@
         <option name="SUPPORT_LIB_ENABLED" value="true" />
         <option name="INSTRUMENTATION_ENABLED" value="true" />
       </Profilers>
-      <method />
-    </configuration>
-    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
-      <module name="" />
-      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
-      <option name="PROGRAM_PARAMETERS" />
-      <predefined_log_file id="idea.log" enabled="true" />
       <method />
     </configuration>
     <configuration default="true" type="Applet" factoryName="Applet">
@@ -500,7 +441,7 @@
       </method>
     </configuration>
     <configuration name="NumberFormatBench" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="10" />
+      <option name="ALTERNATIVE_JRE_PATH" value="11" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="Benchmarks.NumberFormatBench" />
       <module name="jmh" />
@@ -579,6 +520,15 @@
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
       <properties />
       <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
+      <module name="" />
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+      <option name="PROGRAM_PARAMETERS" />
+      <predefined_log_file id="idea.log" enabled="true" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -688,12 +638,11 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1847" height="1216" extended-state="6" />
-    <editor active="true" />
+    <frame x="1920" y="22" width="1920" height="1178" extended-state="0" />
     <layout>
       <window_info id="Nl-Palette" order="0" />
       <window_info id="Image Layers" order="1" />
-      <window_info content_ui="combo" id="Project" order="2" sideWeight="0.496063" visible="true" weight="0.20872971" />
+      <window_info active="true" content_ui="combo" id="Project" order="2" sideWeight="0.496063" visible="true" weight="0.2736954" />
       <window_info id="Palette&#9;" order="3" />
       <window_info id="UI Designer" order="4" />
       <window_info id="Favorites" order="5" sideWeight="0.503937" side_tool="true" weight="0.15614887" />
@@ -701,25 +650,25 @@
       <window_info id="Learn" order="7" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.6144376" visible="true" weight="0.24815498" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.613951" visible="true" weight="0.24746075" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4979424" weight="0.3993559" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49838188" weight="0.32333082" />
       <window_info anchor="bottom" id="Terminal" order="7" sideWeight="0.49804142" weight="0.32933578" />
-      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.3855624" side_tool="true" visible="true" weight="0.24815498" />
+      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.386049" side_tool="true" visible="true" weight="0.24746075" />
       <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.47006473" weight="0.24271844" />
-      <window_info anchor="bottom" id="Messages" order="10" sideWeight="0.48106995" weight="0.32608697" />
+      <window_info anchor="bottom" id="Messages" order="10" sideWeight="0.4802982" weight="0.32594645" />
       <window_info anchor="right" id="Properties" order="0" />
       <window_info anchor="right" id="Theme Preview" order="1" />
       <window_info anchor="right" id="Commander" order="2" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="3" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="4" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="4" visible="true" weight="0.1996805" />
       <window_info anchor="right" id="Palette" order="5" />
       <window_info anchor="right" id="Maven Projects" order="6" />
       <window_info anchor="right" id="Designer" order="7" />
       <window_info anchor="right" id="Capture Analysis" order="8" />
-      <window_info anchor="right" id="Structure" order="9" visible="true" weight="0.19026302" />
+      <window_info anchor="right" id="Structure" order="9" weight="0.24760383" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -750,13 +699,6 @@
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/jmh-benchmarks/src/main/java/de/icubic/mm/bench/jmh/ThreadStartJoinBench.java" />
-    <entry file="file://$PROJECT_DIR$/src/de/icubic/mm/bench/benches/DoubleFormatTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="2" column="23" selection-start-line="2" selection-start-column="23" selection-end-line="2" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/de/tsp/Tsp9.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="406">
@@ -854,13 +796,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/jmh/src/main/java/Benchmarks/MulDivBench.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1445">
-          <caret line="91" column="34" selection-start-line="91" selection-start-column="34" selection-end-line="91" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/jmh/src/main/java/Benchmarks/ThreadStartJoinBench.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
@@ -872,20 +807,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="680">
           <caret line="58" selection-start-line="58" selection-end-line="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/lib/koloboke-api-jdk8-0.6.8.jar!/net/openhft/koloboke/collect/map/LongDoubleMapFactory.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="27" selection-start-line="27" selection-end-line="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/lib/commons-collections4-4.0-sources.jar!/org/apache/commons/collections4/map/LRUMap.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="70" column="29" selection-start-line="70" selection-start-column="29" selection-end-line="70" selection-end-column="29" />
         </state>
       </provider>
     </entry>
@@ -909,62 +830,94 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/de/icubic/mm/bench/benches/DoubleParseBench.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="59" column="41" selection-start-line="59" selection-start-column="41" selection-end-line="59" selection-end-column="41" />
-          <folding>
-            <element signature="method#setupStatics#0;class#DoubleParseBench#0" />
-            <element signature="e#1706#1707#0" expanded="true" />
-            <element signature="e#1737#1738#0" expanded="true" />
-            <element signature="e#1874#1875#0" expanded="true" />
-            <element signature="e#1907#1908#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://P:/Soft/Java/jdk1.8.0_121/src.zip!/java/math/BigDecimal.java" />
     <entry file="file://$PROJECT_DIR$/jmh/src/main/java/Benchmarks/ArrayCopy.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
+        <state relative-caret-position="80">
           <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://P:/Soft/Java/jdk1.8.0_121/src.zip!/java/math/BigDecimal.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2551">
-          <caret line="408" column="11" selection-start-line="408" selection-start-column="11" selection-end-line="408" selection-end-column="11" />
-          <folding>
-            <element signature="e#15818#15819#0" expanded="true" />
-            <element signature="e#15875#15876#0" expanded="true" />
-            <element signature="e#34114#34115#0" expanded="true" />
-            <element signature="e#34170#34171#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/jmh/src/main/java/Benchmarks/NumberParseBench.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="611">
-          <caret line="86" column="57" lean-forward="true" selection-start-line="86" selection-start-column="57" selection-end-line="86" selection-end-column="57" />
+        <state relative-caret-position="1104">
+          <caret line="86" column="57" selection-start-line="86" selection-start-column="57" selection-end-line="86" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/koloboke-api-jdk8-0.6.8.jar!/net/openhft/koloboke/collect/map/LongDoubleMapFactory.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="320">
+          <caret line="27" selection-start-line="27" selection-end-line="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/commons-collections4-4.0-sources.jar!/org/apache/commons/collections4/map/LRUMap.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="784">
+          <caret line="70" column="29" selection-start-line="70" selection-start-column="29" selection-end-line="70" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/de/icubic/mm/bench/benches/DoubleParseBench.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="416">
+          <caret line="55" lean-forward="true" selection-start-line="55" selection-end-line="55" />
           <folding>
-            <element signature="e#1423#1424#0" expanded="true" />
-            <element signature="e#1444#1445#0" expanded="true" />
+            <element signature="method#setupStatics#0;class#DoubleParseBench#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jmh/src/main/java/Benchmarks/MulDivBench.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="880">
+          <caret line="64" lean-forward="true" selection-start-line="64" selection-end-line="64" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/de/icubic/mm/server/utils/DoubleToString.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="534">
-          <caret line="631" column="91" selection-start-line="631" selection-start-column="82" selection-end-line="631" selection-end-column="91" />
+        <state relative-caret-position="316">
+          <caret line="602" column="9" lean-forward="true" selection-start-line="602" selection-start-column="9" selection-end-line="602" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/de/icubic/mm/bench/benches/ILPTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="11" column="3" lean-forward="true" selection-start-line="11" selection-start-column="3" selection-end-line="11" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/de/icubic/mm/bench/benches/QuoteDoubleFormatBench.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="262">
+          <caret line="79" column="28" selection-start-line="79" selection-start-column="28" selection-end-line="79" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/de/icubic/mm/server/utils/QuotePrecision.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="254">
+          <caret line="723" column="71" lean-forward="true" selection-start-line="723" selection-start-column="71" selection-end-line="723" selection-end-column="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/de/icubic/mm/bench/benches/DoubleFormatTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="206">
+          <caret line="72" column="25" selection-start-line="72" selection-start-column="25" selection-end-line="72" selection-end-column="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/jmh/src/main/java/Benchmarks/NumberFormatBench.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="339">
-          <caret line="57" column="66" selection-start-line="57" selection-start-column="66" selection-end-line="57" selection-end-column="66" />
+        <state relative-caret-position="2336">
+          <caret line="163" column="12" selection-start-line="163" selection-start-column="12" selection-end-line="163" selection-end-column="12" />
         </state>
       </provider>
     </entry>
@@ -1010,11 +963,11 @@
       </state>
       <state key="JdkListConfigurable.UI">
         <settings>
-          <last-edited>10</last-edited>
+          <last-edited>11 Shen</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.2" />
+                <option value="0.2942366" />
               </list>
             </option>
           </splitter-proportions>
@@ -1026,7 +979,8 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.2" />
+                <option value="0.2942366" />
+                <option value="0.6" />
               </list>
             </option>
           </splitter-proportions>
@@ -1038,7 +992,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.2" />
+                <option value="0.38505748" />
               </list>
             </option>
           </splitter-proportions>
