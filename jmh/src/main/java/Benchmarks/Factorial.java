@@ -2,6 +2,7 @@ package Benchmarks;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.*;
@@ -10,7 +11,7 @@ import org.openjdk.jmh.runner.options.*;
 @State(Scope.Benchmark)
 public class Factorial {
 
-	final int	arg = 10000;
+	final int	arg = 100;
 	
 	static int	count100outResult = 0;
 	static double	factResult = 0;
@@ -25,7 +26,7 @@ public class Factorial {
 	}
 
 	@Benchmark
-	@OperationsPerInvocation(1)
+	@OperationsPerInvocation(arg)
 	public void DoubleFactorial() {
 		int	count100out = 0;
 		double fact = 1;
@@ -44,23 +45,27 @@ public class Factorial {
 	}
 
 	@Benchmark
-	@OperationsPerInvocation(1)
-	public void LongFactorial() {
+	@OperationsPerInvocation(arg)
+	public void ALongFactorial() {
 		long limit = Long.MAX_VALUE / arg;
 		int	count1out = 0;
 		long fact = 1;
 		for ( int i = 1;  i <= arg;  i++) {
+			while ( fact > 100 && fact % 100 == 0) {
+				fact /= 100;
+				count1out += 2;
+			}
 			while (fact > limit) {
 				fact /= 10;
 				count1out++;
 			}
 			fact *= i;
-			if ( fact > 100) {
-				while ( fact > 10 && fact % 10 == 0) {
-					fact /= 10;
-					count1out++;
-				}
-			}
+//			if ( fact > 100) {
+//				while ( fact > 10 && fact % 10 == 0) {
+//					fact /= 10;
+//					count1out++;
+//				}
+//			}
 		}
 		if ( count1outResult == 0) {
 			System.out.println( "long fact = " + fact + " * 10^" + ( 1*count1out));
@@ -70,7 +75,7 @@ public class Factorial {
 	}
 
 	@Benchmark
-	@OperationsPerInvocation(1)
+	@OperationsPerInvocation(arg)
 	public void BigIntFactorial() {
 		BigInteger fact = BigInteger.ONE;
 		for ( int i = 1;  i <= arg;  i++) {
@@ -84,7 +89,7 @@ public class Factorial {
 	}
 
 	@Benchmark
-	@OperationsPerInvocation(1)
+	@OperationsPerInvocation(arg)
 	public void BigDecFactorial() {
 		BigDecimal fact = BigDecimal.ONE;
 		for ( int i = 1;  i <= arg;  i++) {
@@ -101,9 +106,11 @@ public class Factorial {
 	public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include( Factorial.class.getSimpleName())
-		        .warmupIterations(5)
+		        .warmupIterations(4)
+				.warmupTime(TimeValue.seconds(5))
 		        .measurementTime(TimeValue.seconds( 10))
-				.measurementIterations( 3)
+				.measurementIterations( 1)
+				.timeUnit( TimeUnit.MILLISECONDS)
 		        .forks(1)
                 .build();
         new Runner(opt).run();
