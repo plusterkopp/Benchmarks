@@ -67,7 +67,7 @@ public class DoubleParseBench {
 		}
 
 		/* (non-Javadoc)
-		 * @see de.icubic.mm.bench.base.AbstractBenchRunnable#getName()
+		 * @see de.icubic.utils.bench.base.AbstractBenchRunnable#getName()
 		 */
 		@Override
 		public String getName() {

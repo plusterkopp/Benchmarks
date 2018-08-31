@@ -4,8 +4,9 @@
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/annotations" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/lib" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -112,12 +113,21 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="library" exported="" scope="PROVIDED" name="org.hdrhistogram:HdrHistogram:2.1.9" level="project" />
-    <orderEntry type="library" name="Maven: org.openjdk.jmh:jmh-core:1.18" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="org.hdrhistogram:HdrHistogram:2.1.9" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="affinity-3.0" level="project" />
+    <orderEntry type="library" name="Maven: org.openjdk.jmh:jmh-core:1.21" level="project" />
     <orderEntry type="library" name="Maven: net.sf.jopt-simple:jopt-simple:4.6" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.openjdk.jmh:jmh-generator-annprocess:1.18" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.openjdk.jmh:jmh-generator-annprocess:1.21" level="project" />
     <orderEntry type="library" name="Maven: org.hdrhistogram:HdrHistogram:2.1.9" level="project" />
-    <orderEntry type="module" module-name="Benchmarks" />
+    <orderEntry type="module-library">
+      <library name="Maven: affinity:affinity:3.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/affinity-3.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="library" name="Maven: org.apache.commons:commons-math3:3.2" level="project" />
     <orderEntry type="library" name="Maven: com.lmax:disruptor:3.2.0" level="project" />
     <orderEntry type="library" name="Maven: net.openhft:koloboke-impl-jdk6-7:0.6.3" level="project" />

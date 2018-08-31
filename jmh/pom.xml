@@ -43,7 +43,7 @@ questions.
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jmh.version>1.18</jmh.version>
+        <jmh.version>1.21</jmh.version>
         <javac.target>1.8</javac.target>
         <uberjar.name>benchmarks</uberjar.name>
     </properties>
@@ -67,10 +67,19 @@ questions.
             <version>2.1.9</version>
         </dependency>
         <dependency>
+            <groupId>affinity</groupId>
+            <artifactId>affinity</artifactId>
+            <version>3.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/affinity-3.0.jar</systemPath>
+        </dependency>
+        <!--
+        <dependency>
             <groupId>Benchmarks</groupId>
             <artifactId>Benchmarks</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        -->
     </dependencies>
 
     <build>

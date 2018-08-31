@@ -12,7 +12,7 @@ public class Benchmarks {
 
 	private static String getDateTimeFolderName() {
 		Date now = new Date();
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:utils:ss");
 		return df.format( now);
 	}
 

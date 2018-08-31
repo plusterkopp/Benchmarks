@@ -39,7 +39,7 @@ public abstract class AbstractBenchRunnable implements IBenchRunnable {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.icubic.mm.bench.base.IBenchRunnable#setName(java.lang.String)
+	 * @see de.icubic.utils.bench.base.IBenchRunnable#setName(java.lang.String)
 	 */
 	public void setName( String string) {
 		name = string;

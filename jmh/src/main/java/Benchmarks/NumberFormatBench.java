@@ -1,25 +1,19 @@
 package Benchmarks;
 
-import de.icubic.mm.server.utils.*;
 import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.runner.Runner;
-import org.openjdk.jmh.runner.RunnerException;
-import org.openjdk.jmh.runner.options.Options;
-import org.openjdk.jmh.runner.options.OptionsBuilder;
-import org.openjdk.jmh.runner.options.TimeValue;
+import org.openjdk.jmh.runner.*;
+import org.openjdk.jmh.runner.options.*;
+import utils.*;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
+import java.text.*;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @State(Scope.Benchmark)
 public class NumberFormatBench {
 
+	public static final int CAPACITY = 200;
 	static double dummyD;
 	static BigDecimal bd;
 
@@ -41,7 +35,7 @@ public class NumberFormatBench {
 			0.001234567, 0.00123456, 0.0012345, 0.001234, 0.00123, 0.0015, 0.001,
 	};
 
-	final static int Size = 100;
+	final static int Size = 1000;
 	static NumberFormat nf;
 
 	private static void setupStatics() {
@@ -70,6 +64,7 @@ public class NumberFormatBench {
 		}
 
 		resultA = new String[ valueA.length];
+		System.out.println( "Using " + Runtime.getRuntime().availableProcessors() + " hw threads");
 	}
 
 	@Setup(Level.Trial)
@@ -77,16 +72,16 @@ public class NumberFormatBench {
 		setupStatics();
 	}
 
-	@Benchmark
-	@OperationsPerInvocation( Size)
+//	@Benchmark
+//	@OperationsPerInvocation( Size)
 	public void formatBDFull() {
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
 			resultA[ i] = dummyBDA[ i].toPlainString();
 		}
 	}
 
-	@Benchmark
-	@OperationsPerInvocation( Size)
+//	@Benchmark
+//	@OperationsPerInvocation( Size)
 	public void formatBDSingle() {
 		final int digits = nf.getMaximumFractionDigits();
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
@@ -94,37 +89,57 @@ public class NumberFormatBench {
 		}
 	}
 
-	@Benchmark
-	@OperationsPerInvocation( Size)
+//	@Benchmark
+//	@OperationsPerInvocation( Size)
 	public void formatBDDouble() {
 		final int digits = nf.getMaximumFractionDigits();
+		final StringBuilder sb = new StringBuilder(CAPACITY);
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
-			resultA[ i] = dummyBDA[ i].setScale( 13).setScale(digits).toPlainString();
+			sb.setLength( 0);
+			sb.append( dummyBDA[ i].setScale( 13).setScale(digits).toPlainString());
 		}
 	}
 
-	@Benchmark
-	@OperationsPerInvocation( Size)
+//	@Benchmark
+//	@OperationsPerInvocation( Size)
+	public void formatBDDoubleNew() {
+		final int digits = nf.getMaximumFractionDigits();
+		final StringBuilder sb = new StringBuilder(CAPACITY);
+		for ( int i = valueA.length - 1;  i >= 0;  i--) {
+			sb.setLength( 0);
+			BigDecimal bd = BigDecimal.valueOf( dummyDA[ i]);
+			sb.append( bd.setScale( 13).setScale(digits).toPlainString());
+		}
+	}
+
+//	@Benchmark
+//	@OperationsPerInvocation( Size)
 	public void formatNF() {
+		final StringBuilder sb = new StringBuilder(CAPACITY);
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
-			resultA[ i] = nf.format( dummyDA[ i]);
+			sb.setLength( 0);
+			sb.append( nf.format( dummyDA[ i]));
 		}
 	}
 
-	@Benchmark
-	@OperationsPerInvocation( Size)
+//	@Benchmark
+//	@OperationsPerInvocation( Size)
 	public void formatJ() {
+		final StringBuilder sb = new StringBuilder(CAPACITY);
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
-			resultA[ i] = "" + dummyDA[ i];
+			sb.setLength( 0);
+			sb.append( dummyDA[ i]);
 		}
 	}
 
-	@Benchmark
-	@OperationsPerInvocation( Size)
+//	@Benchmark
+//	@OperationsPerInvocation( Size)
 	public void formatQPDSNStripped() {
 		final int digits = nf.getMaximumFractionDigits();
+		final StringBuilder sb = new StringBuilder(CAPACITY);
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
-			resultA[ i] = QuotePrecision.DSInstance.checkAndformat0( dummyDA[ i], true, digits);
+			sb.setLength( 0);
+			QuotePrecision.DSInstance.checkAndformat0( dummyDA[ i], sb,true, digits);
 		}
 	}
 
@@ -132,17 +147,21 @@ public class NumberFormatBench {
 	@OperationsPerInvocation( Size)
 	public void formatQPDSN() {
 		final int digits = nf.getMaximumFractionDigits();
+		final StringBuilder sb = new StringBuilder(CAPACITY);
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
-			resultA[ i] = QuotePrecision.DSInstance.checkAndformat0( dummyDA[ i], false, digits);
+			sb.setLength( 0);
+			QuotePrecision.DSInstance.checkAndformat0( dummyDA[ i], sb,false, digits);
 		}
 	}
 
-	@Benchmark
-	@OperationsPerInvocation( Size)
+//	@Benchmark
+//	@OperationsPerInvocation( Size)
 	public void formatQPBDNStripped() {
 		final int digits = nf.getMaximumFractionDigits();
+		final StringBuilder sb = new StringBuilder(CAPACITY);
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
-			resultA[ i] = QuotePrecision.BDInstance.checkAndformat0( dummyDA[ i], true, digits);
+			sb.setLength( 0);
+			QuotePrecision.BDInstance.checkAndformat0( dummyDA[ i], sb,true, digits);
 		}
 	}
 
@@ -150,13 +169,15 @@ public class NumberFormatBench {
 	@OperationsPerInvocation( Size)
 	public void formatQPBDN() {
 		final int digits = nf.getMaximumFractionDigits();
+		final StringBuilder sb = new StringBuilder(CAPACITY);
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
-			resultA[ i] = QuotePrecision.BDInstance.checkAndformat0( dummyDA[ i], false, digits);
+			sb.setLength( 0);
+			QuotePrecision.BDInstance.checkAndformat0( dummyDA[ i], sb,false, digits);
 		}
 	}
 
-	@Benchmark
-	@OperationsPerInvocation( Size)
+//	@Benchmark
+//	@OperationsPerInvocation( Size)
 	public void formatDoubleToString() {
 		StringBuilder	sb = new StringBuilder();
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
@@ -166,8 +187,8 @@ public class NumberFormatBench {
 		}
 	}
 
-	@Benchmark
-	@OperationsPerInvocation( Size)
+//	@Benchmark
+//	@OperationsPerInvocation( Size)
 	public void formatDoubleToStringN() {
 		final int digits = nf.getMaximumFractionDigits();
 		StringBuilder	sb = new StringBuilder();
@@ -182,9 +203,12 @@ public class NumberFormatBench {
 	public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include( NumberFormatBench.class.getSimpleName())
-		        .warmupIterations(4)
-		        .measurementTime(TimeValue.seconds( 10))
+		        .warmupIterations(1)
+		        .warmupTime( TimeValue.seconds( 10))
 				.measurementIterations( 3)
+		        .measurementTime(TimeValue.seconds( 20))
+//		        .addProfiler(GCProfiler.class)
+//		        .addProfiler(CompilerProfiler.class)
 				.mode( Mode.AverageTime)
 				.timeUnit( TimeUnit.MICROSECONDS)
 		        .forks(1)
