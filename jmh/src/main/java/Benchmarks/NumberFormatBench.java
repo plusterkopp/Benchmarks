@@ -89,8 +89,8 @@ public class NumberFormatBench {
 		}
 	}
 
-//	@Benchmark
-//	@OperationsPerInvocation( Size)
+	@Benchmark
+	@OperationsPerInvocation( Size)
 	public void formatBDDouble() {
 		final int digits = nf.getMaximumFractionDigits();
 		final StringBuilder sb = new StringBuilder(CAPACITY);
@@ -100,8 +100,8 @@ public class NumberFormatBench {
 		}
 	}
 
-//	@Benchmark
-//	@OperationsPerInvocation( Size)
+	@Benchmark
+	@OperationsPerInvocation( Size)
 	public void formatBDDoubleNew() {
 		final int digits = nf.getMaximumFractionDigits();
 		final StringBuilder sb = new StringBuilder(CAPACITY);
@@ -187,8 +187,8 @@ public class NumberFormatBench {
 		}
 	}
 
-//	@Benchmark
-//	@OperationsPerInvocation( Size)
+	@Benchmark
+	@OperationsPerInvocation( Size)
 	public void formatDoubleToStringN() {
 		final int digits = nf.getMaximumFractionDigits();
 		StringBuilder	sb = new StringBuilder();
