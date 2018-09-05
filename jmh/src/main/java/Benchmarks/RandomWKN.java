@@ -4,6 +4,8 @@ import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.*;
 import org.openjdk.jmh.runner.options.*;
 
+import java.util.concurrent.TimeUnit;
+
 @State(Scope.Benchmark)
 public class RandomWKN {
 
@@ -29,10 +31,10 @@ public class RandomWKN {
 		int digits = (int) (Math.random() * 900 + 100);
 		result = result + digits;
 		len = result.length();
-		System.out.println( result);
+//		System.out.println( result);
 	}
 
-	// @ Benchmark
+	@Benchmark
 	public void generateOpt() {
 		sbResult.setLength(0);
 
@@ -60,9 +62,11 @@ public class RandomWKN {
 	public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include( RandomWKN.class.getSimpleName())
-		        .warmupIterations(5)
+		        .warmupIterations(2)
+				.warmupTime(TimeValue.seconds( 5))
 		        .measurementTime(TimeValue.seconds( 10))
 				.measurementIterations( 3)
+				.timeUnit( TimeUnit.MICROSECONDS)
 		        .forks(1)
                 .build();
         new Runner(opt).run();
