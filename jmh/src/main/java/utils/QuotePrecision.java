@@ -1,5 +1,7 @@
 package utils;
 
+import utils.nsb.*;
+
 import java.math.*;
 import java.text.NumberFormat;
 import java.util.*;
@@ -51,14 +53,14 @@ public class QuotePrecision {
 			}
 
 			@Override
-			public StringBuilder formatDoubleRounded( double value, StringBuilder sb, int digits) {
+			public StringBuilder formatDoubleRounded(double value, StringBuilder sb, int digits) {
 				final int newScale = getScale( value);
 				BigDecimal bd = new BigDecimal( value).setScale( newScale, RoundingMode.HALF_UP).setScale( digits, RoundingMode.HALF_UP);
 				return sb.append( bd.toPlainString());
 			}
 
 			@Override
-			public StringBuilder formatSingleRounded( double value, StringBuilder sb, int digits) {
+			public StringBuilder formatSingleRounded(double value, StringBuilder sb, int digits) {
 				BigDecimal bd = new BigDecimal( value).setScale( digits, RoundingMode.HALF_UP);
 				return sb.append( bd.toPlainString());
 			}
@@ -84,7 +86,7 @@ public class QuotePrecision {
 					return BD.formatDoubleRounded( value, digits);
 				}
 				try {
-					StringBuilder	sb = getScratchSB();
+					StringBuilder sb = getScratchSB();
 					sb.setLength( 0);
 					DoubleToString.appendFormatted( sb, value, digits, '.',	DoubleToString.PRINT_NOTHING, 30, '-', DoubleToString.PRINT_NOTHING);
 					String s = sb.toString();
@@ -108,7 +110,7 @@ public class QuotePrecision {
 			}
 
 			@Override
-			public StringBuilder formatDoubleRounded( double value, StringBuilder sb, int digits) {
+			public StringBuilder formatDoubleRounded(double value, StringBuilder sb, int digits) {
 				if ( outOfRange( digits)) {
 					return BD.formatDoubleRounded( value, sb, digits);
 				}
@@ -122,7 +124,7 @@ public class QuotePrecision {
 			}
 
 			@Override
-			public StringBuilder formatSingleRounded( double value, StringBuilder sb, int digits) {
+			public StringBuilder formatSingleRounded(double value, StringBuilder sb, int digits) {
 				return formatDoubleRounded( value, sb, digits);
 			}
 
@@ -154,8 +156,8 @@ public class QuotePrecision {
 
 		public abstract String formatDoubleRounded( double value, int digits);
 		public abstract String formatSingleRounded( double value, int digits);
-		public abstract StringBuilder formatDoubleRounded( double value, StringBuilder sb, int digits);
-		public abstract StringBuilder formatSingleRounded( double value, StringBuilder sb, int digits);
+		public abstract StringBuilder formatDoubleRounded(double value, StringBuilder sb, int digits);
+		public abstract StringBuilder formatSingleRounded(double value, StringBuilder sb, int digits);
 		public abstract double round( double value, int decimalplaces);
 	}
 
@@ -662,7 +664,7 @@ public class QuotePrecision {
 	 */
 	@Override
 	public String toString() {
-		StringBuilder buffy = new StringBuilder().append("QP");
+		StringBuilderTC buffy = new StringBuilderTC().append("QP");
 		buffy.append(Math.round( inverseMinPriceIncrement));
 		buffy.append("/");
 		buffy.append(significantDigits);
@@ -742,7 +744,7 @@ public class QuotePrecision {
 	/**
 	 *
 	 */
-	public static void format( double value, StringBuilder sb, boolean stripZerosAndPeriod, boolean isRoundable, double border, int defaultDecimalPlaces) {
+	public static void format(double value, StringBuilder sb, boolean stripZerosAndPeriod, boolean isRoundable, double border, int defaultDecimalPlaces) {
 		QuotePrecision qp = instances.get( DefaultPrintMode);
 		qp.format0( value, sb, stripZerosAndPeriod, isRoundable, border, defaultDecimalPlaces);
 	}
@@ -769,7 +771,7 @@ public class QuotePrecision {
 		return roundedValue;
 	}
 
-	public void format0( double value, StringBuilder sb, boolean stripZerosAndPeriod, boolean isRoundable, double border, int defaultDecimalPlaces) {
+	public void format0(double value, StringBuilder sb, boolean stripZerosAndPeriod, boolean isRoundable, double border, int defaultDecimalPlaces) {
 		if ( Double.isNaN( border) || ( ! isRoundable)) {
 			checkAndformat0( value, sb, stripZerosAndPeriod, defaultDecimalPlaces);
 		} else {
@@ -814,7 +816,7 @@ public class QuotePrecision {
 		return format0( value, stripZerosAndPeriod, places);	// unterhalb 1 drei Stellen
 	}
 
-	public void checkAndformat0( double value, StringBuilder sb, boolean stripZerosAndPeriod, int places) {
+	public void checkAndformat0(double value, StringBuilder sb, boolean stripZerosAndPeriod, int places) {
 		if ( Math.rint( value) == value) {
 			format0( value, sb, stripZerosAndPeriod, 0);		// ganze Zahl? -> 0 Stellen
 		} else {
@@ -936,7 +938,7 @@ public class QuotePrecision {
 	 * @param stripZerosAndPeriod
 	 * @return
 	 */
-	public static void stripZerosAndPeriod( StringBuilder numberS, int startOfNumber, boolean stripZerosAndPeriod) {
+	public static void stripZerosAndPeriod(StringBuilder numberS, int startOfNumber, boolean stripZerosAndPeriod) {
 		// wenn String auf "." endet, hacke den Punkt weg und raus: auch wenn stripZerosAndPeriod = false
 		if ( numberS.length() == startOfNumber) { // if ( numberS.isEmpty())
 			return;

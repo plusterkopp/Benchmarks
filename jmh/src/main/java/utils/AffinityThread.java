@@ -5,6 +5,7 @@ package utils;
 
 import net.openhft.affinity.*;
 import net.openhft.affinity.impl.LayoutEntities.*;
+import utils.nsb.*;
 
 import java.util.*;
 import java.util.function.*;
@@ -27,14 +28,14 @@ public class AffinityThread extends Thread {
 	int	skipCounter = 0;
 	int	skipCounterMax = 1;
 
-	static private final ThreadLocal<StringBuilder> scratchSB = new ThreadLocal<StringBuilder>() {
+	static private final ThreadLocal<StringBuilderTC> scratchSB = new ThreadLocal<StringBuilderTC>() {
 		@Override
-		protected StringBuilder initialValue() {
-			return new StringBuilder();
+		protected StringBuilderTC initialValue() {
+			return new StringBuilderTC();
 		}
 		@Override
-		public StringBuilder get() {
-			StringBuilder sb = super.get();
+		public StringBuilderTC get() {
+			StringBuilderTC sb = super.get();
 			sb.setLength( 0);
 			return sb;
 		}
@@ -52,7 +53,7 @@ public class AffinityThread extends Thread {
 		int	coreId = layout.coreId( cpuId);
 		int	socketId = layout.socketId( cpuId);
 
-		StringBuilder sb = scratchSB.get();
+		StringBuilderTC sb = scratchSB.get();
 		if ( layout instanceof GroupedCpuLayout) {
 			GroupedCpuLayout	g = ( GroupedCpuLayout) layout;
 			if ( g.groups() > 1) {

@@ -1,5 +1,7 @@
 package utils;
 
+import utils.nsb.*;
+
 import java.math.*;
 
 
@@ -115,8 +117,8 @@ public class DoubleToString {
 			1e305D, 1e306D, 1e307D, 1e308D};
 
 	public static StringBuilder appendFormatted(StringBuilder s, double d, int numFractDigits,
-	                                            char decimalPoint, char thousandsSeparator, int numDigitsSeparated,
-	                                            char negativePrefix, char negativeSuffix) {
+	                                              char decimalPoint, char thousandsSeparator, int numDigitsSeparated,
+	                                              char negativePrefix, char negativeSuffix) {
 		// First check for the special cases, +/-infinity, Not-a-number and -0.0
 		if (d == Double.NEGATIVE_INFINITY) {
 			// d == -Infinity
@@ -241,7 +243,7 @@ public class DoubleToString {
 	}
 
 	public static StringBuilder appendAsDouble(StringBuilder s, long l, long l_mag, int d_magnitude,
-	                                           int numFractDigits, char decimalPoint, char thousandsSeparator, int numDigitsSeparated) {
+	                                             int numFractDigits, char decimalPoint, char thousandsSeparator, int numDigitsSeparated) {
 		// If the magnitude is negative, we have a 0.xxx number
 		if (d_magnitude < 0) {
 //			if ( decimalPoint == '.') {
@@ -503,7 +505,7 @@ public class DoubleToString {
 		return s;
 	}
 
-	public static StringBuilder append(StringBuilder s, int i) {
+	public static StringBuilderTC append(StringBuilderTC s, int i) {
 		if (i < 0) {
 			if (i == Integer.MIN_VALUE) {
 				// cannot make this positive due to integer overflow
@@ -638,7 +640,7 @@ public class DoubleToString {
 //		if (value == 0.0) {
 //			result = "0.0";
 //		} else {
-//			StringBuilder	sb = new StringBuilder( 100);
+//			StringBuilderTC	sb = new StringBuilderTC( 100);
 //			DoubleToString.appendFormatted( sb, value, digits, '.',	'\'', 30, '-', '\uFFFF');
 //			result = sb.toString();
 //		}
