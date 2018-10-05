@@ -4,119 +4,12 @@
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/annotations" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/lib" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/test/main/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/annotations" isTestSource="false" generated="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../lib/asm-4.1.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jna-4.2.1.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/guava-16.0.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/junit-4.12.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/affinity-3.0.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jsr305-2.0.3.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/trove4j-3.0.3.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/disruptor-3.3.2.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jmh-core-1.11.1.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jopt-simple-4.6.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/commons-math3-3.2.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/commons-math3-3.5.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jna-4.2.1-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jna-4.2.1-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/auto-value-1.0-rc1.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/HdrHistogram-2.1.9.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jna-platform-4.2.1.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/junit-4.12-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/junit-4.12-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/affinity-3.0-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/auto-service-1.0-rc1.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/trove4j-3.0.3-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/trove4j-3.0.3-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/disruptor-3.3.2-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/disruptor-3.3.2-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jmh-core-1.11.1-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jmh-core-1.11.1-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jopt-simple-4.6-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jopt-simple-4.6-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/koloboke-api-jdk8-0.6.8.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/commons-collections4-4.0.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/koloboke-impl-jdk8-0.6.8.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/commons-math3-3.5-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/commons-math3-3.5-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/HdrHistogram-2.1.9-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/HdrHistogram-2.1.9-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jna-platform-4.2.1-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jna-platform-4.2.1-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jmh-generator-annprocess-1.11.1.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/commons-collections4-4.0-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/commons-collections4-4.0-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/koloboke-impl-jdk8-0.6.8-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/koloboke-impl-jdk8-0.6.8-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jmh-generator-annprocess-1.11.1-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jmh-generator-annprocess-1.11.1-sources.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <NATIVE>
-          <root url="file://$MODULE_DIR$/../lib" />
-        </NATIVE>
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/../lib/asm-4.1.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jna-4.2.1.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/guava-16.0.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/junit-4.12.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/affinity-3.0.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jsr305-2.0.3.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/trove4j-3.0.3.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/disruptor-3.3.2.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jmh-core-1.11.1.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jopt-simple-4.6.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/commons-math3-3.2.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/commons-math3-3.5.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jna-4.2.1-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jna-4.2.1-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/auto-value-1.0-rc1.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/HdrHistogram-2.1.9.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jna-platform-4.2.1.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/junit-4.12-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/junit-4.12-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/affinity-3.0-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/auto-service-1.0-rc1.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/trove4j-3.0.3-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/trove4j-3.0.3-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/disruptor-3.3.2-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/disruptor-3.3.2-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jmh-core-1.11.1-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jmh-core-1.11.1-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jopt-simple-4.6-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jopt-simple-4.6-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/koloboke-api-jdk8-0.6.8.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/commons-collections4-4.0.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/koloboke-impl-jdk8-0.6.8.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/commons-math3-3.5-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/commons-math3-3.5-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/HdrHistogram-2.1.9-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/HdrHistogram-2.1.9-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jna-platform-4.2.1-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jna-platform-4.2.1-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jmh-generator-annprocess-1.11.1.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/commons-collections4-4.0-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/commons-collections4-4.0-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/koloboke-impl-jdk8-0.6.8-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/koloboke-impl-jdk8-0.6.8-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jmh-generator-annprocess-1.11.1-javadoc.jar!/" />
-          <root url="jar://$MODULE_DIR$/../lib/jmh-generator-annprocess-1.11.1-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="library" scope="PROVIDED" name="org.hdrhistogram:HdrHistogram:2.1.9" level="project" />
-    <orderEntry type="library" exported="" scope="PROVIDED" name="affinity-3.0" level="project" />
-    <orderEntry type="library" name="org.testng:testng:6.14.3" level="project" />
     <orderEntry type="library" name="Maven: org.openjdk.jmh:jmh-core:1.21" level="project" />
     <orderEntry type="library" name="Maven: net.sf.jopt-simple:jopt-simple:4.6" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.openjdk.jmh:jmh-generator-annprocess:1.21" level="project" />
