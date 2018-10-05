@@ -1,11 +1,10 @@
 package de.icubic.mm.server.utils;
 
-import java.math.*;
-import java.text.*;
-import java.util.*;
+import de.icubic.mm.bench.base.BenchLogger;
 
-import de.icubic.mm.bench.base.*;
-import de.icubic.mm.server.utils.*;
+import java.math.*;
+import java.text.NumberFormat;
+import java.util.*;
 
 /**
  * von der Schnittstelle �bermittelte Informationen �ber relevante
@@ -383,7 +382,7 @@ public class QuotePrecision {
 	}
 
 	/**
-	 * @param minPriceIncrement The minPriceIncrement to set.
+	 * @param minTick The minTick to set.
 	 */
 	public void setMinPriceIncrement( double minTick) {
 		if ( minTick < DEFAULTMINPRICEINCREMENT) {

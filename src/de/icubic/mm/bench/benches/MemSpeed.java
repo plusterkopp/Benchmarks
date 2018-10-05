@@ -193,7 +193,7 @@ public class MemSpeed extends AbstractBenchRunnable {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.icubic.mm.bench.base.IBenchRunnable#getRunSize()
+	 * @see de.icubic.utils.bench.base.IBenchRunnable#getRunSize()
 	 */
 	@Override
 	public long getRunSize() {
@@ -357,7 +357,7 @@ public class MemSpeed extends AbstractBenchRunnable {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.icubic.mm.bench.base.AbstractBenchRunnable#getCSVHeader()
+	 * @see de.icubic.utils.bench.base.AbstractBenchRunnable#getCSVHeader()
 	 */
 	@Override
 	public String getCSVHeader() {
@@ -369,7 +369,7 @@ public class MemSpeed extends AbstractBenchRunnable {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.icubic.mm.bench.base.AbstractBenchRunnable#getCSVLine()
+	 * @see de.icubic.utils.bench.base.AbstractBenchRunnable#getCSVLine()
 	 */
 	@Override
 	public String getCSVLine() {

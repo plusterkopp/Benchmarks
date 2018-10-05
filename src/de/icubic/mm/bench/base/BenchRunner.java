@@ -4,12 +4,12 @@
  */
 package de.icubic.mm.bench.base;
 
-import static de.icubic.mm.bench.base.BenchLogger.*;
-
 import java.io.*;
 import java.text.*;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.TimeUnit;
+
+import static de.icubic.mm.bench.base.BenchLogger.LNF;
 
 /**
  * <p>@author ralf
@@ -247,7 +247,7 @@ public class BenchRunner implements IBenchRunner {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.icubic.mm.bench.base.IBenchRunner#getName()
+	 * @see de.icubic.utils.bench.base.IBenchRunner#getName()
 	 */
 	@Override
 	public String getName() {

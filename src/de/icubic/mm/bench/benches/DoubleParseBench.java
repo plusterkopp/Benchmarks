@@ -4,11 +4,14 @@
  */
 package de.icubic.mm.bench.benches;
 
-import java.text.*;
-import java.util.*;
-import java.util.concurrent.*;
-
 import de.icubic.mm.bench.base.*;
+
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>@author ralf
@@ -44,56 +47,51 @@ public class DoubleParseBench {
 
 	static boolean	useAQFormat = true;
 
+	static void runWith(IBenchRunner runner, IBenchRunnable bench, int seconds) {
+		runner.setRuntime( TimeUnit.SECONDS, seconds);
+		runner.setBenchRunner( bench);
+		runner.run();
+		runner.printResults();
+	}
+
+	// Renner
+	static final IBenchRunnable dPBench = new AbstractBenchRunnable("Double.valueOf1") {
+		public void run() {
+			for (String value : valueA) {
+				double v = Double.valueOf(value);
+			}
+		}
+
+		public long getRunSize() {
+			return valueL.size();
+		}
+
+		/* (non-Javadoc)
+		 * @see de.icubic.utils.bench.base.AbstractBenchRunnable#getName()
+		 */
+		@Override
+		public String getName() {
+			return super.getName();
+		}
+	};
+
 	/**
 	 * @param args
 	 */
 	public static void main( String[] args) {
-
-
-		// Renner
-		final IBenchRunnable dPBench = new AbstractBenchRunnable( "DoubleParse") {
-
-			private final long nruns = 50000;
-			public void run() {
-				for ( int i = 0;  i < nruns;  i++) {
-					for ( String value: valueA) {
-//						FloatingDecimal	fd =FloatingDecimal.readJavaFormatString( value);
-						double v = Double.valueOf( value);
-//						fd.doubleValue();
-					}
-				}
-			}
-
-			public long getRunSize() {
-				return nruns * valueL.size();
-			}
-
-			/* (non-Javadoc)
-			 * @see de.icubic.mm.bench.base.AbstractBenchRunnable#getName()
-			 */
-			@Override
-			public String getName() {
-				return super.getName();
-//				if ( useAQFormat)
-//					return super.getName() + "AQ";
-//				else
-//					return super.getName() + "DF";
-			}
-
-
-		};
 
 		setupStatics();
 
 		Thread	t = new Thread() {
 			@Override
 			public void run() {
-				IBenchRunner	runner = new BenchRunner( dPBench);
-				runner.setRuntime( TimeUnit.SECONDS, 20);
+				IBenchRunner	runner = new BenchRunner(dPBench);
 
-				runner.setBenchRunner( dPBench);
-				runner.run();
-				runner.printResults();
+				BenchLogger.sysinfo( "warmup 10s");
+				runWith( runner, dPBench, 10);
+
+				BenchLogger.sysinfo( "run 20s");
+				runWith( runner, dPBench, 20);
 			}
 		};
 		t.start();
