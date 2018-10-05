@@ -1,7 +1,6 @@
 package de.pkmd;
 
 import net.openhft.affinity.*;
-import org.apache.commons.math3.ml.clustering.*;
 
 import java.text.*;
 import java.util.*;
@@ -10,9 +9,7 @@ import java.util.concurrent.*;
 public class AffinityBench {
 
     static int RunTimeMillis = 1 * 1000;
-    static final CountDownLatch startLatch = new CountDownLatch( 2);
 
-    static int L2Size = 256 * 1024;
 
     static long producerLoopCount = 0;
     static long consumerLoopCount = 0;
@@ -20,8 +17,9 @@ public class AffinityBench {
     static byte blackHole = 0;
 
     private static class Item {
+	    static int L2Size = 256 * 1024;
+	    static int cacheLineSize = 64;
         byte[] l2cacheBytes = new byte[ L2Size];
-        int cacheLineSize = 64;
 
         public void write() {
             for ( int i = 0;  i < l2cacheBytes.length;  i += cacheLineSize) {
@@ -97,54 +95,65 @@ public class AffinityBench {
     }
 
     private static void runMultiSocket(IDefaultLayoutAffinity idla, BlockingQueue<Item> queue) {
-        CpuLayout cpuLayout = idla.getDefaultLayout();
-        int prodCPUid = findCPUOnCoreSocket( cpuLayout, -1, 0);
-        if (prodCPUid == -1) {
-            System.err.println( "did not find cpu on socket " + 0);
-            return;
-        }
-        int consCPUid = findCPUOnCoreSocket( cpuLayout, -1, 1);
-        if (consCPUid == -1) {
-            System.err.println( "did not find cpu on socket " + 1);
-            return;
-        }
-        final String cpuInfo = cpuInfo(idla, prodCPUid) + "-" + cpuInfo(idla, consCPUid);
-        Thread producer;
-        Thread consumer;
-//        producer = createProducer( prodCPUid, RunTimeMillis, queue, true);
-//        consumer = createConsumer( consCPUid, RunTimeMillis, queue, true);
-//        startJoin( producer, consumer, qShortName( queue) + " runSingleSocket r/w: " + cpuInfo);
-        producer = createProducer( prodCPUid, RunTimeMillis, queue, false);
-        consumer = createConsumer( consCPUid, RunTimeMillis, queue, false);
-        startJoin( producer, consumer, qShortName( queue) + " runSingleSocket dry: " + cpuInfo);
+        runMultiSocket(idla, queue, false);
+        runMultiSocket(idla, queue, true);
     }
 
-    private static class ResultInfo implements Clusterable {
-        int idProducer;
-        int idConsumer;
-        String info;
-        double[] valueA;
-
-        private ResultInfo(int idProducer, int idConsumer, String info, double value) {
-            this.idProducer = idProducer;
-            this.idConsumer = idConsumer;
-            this.info = info;
-            valueA = new double[ 1];
-            valueA[ 0] = value;
+    private static void runMultiSocket(IDefaultLayoutAffinity idla, BlockingQueue<Item> queue, boolean readWrite) {
+        CpuLayout cpuLayout = idla.getDefaultLayout();
+        SortedSet<Integer> sockets = new TreeSet<>(coresBySocket.keySet());
+        int maxSocketID = Collections.max( sockets);
+        double[][] resultA = new double[ maxSocketID + 1][ maxSocketID + 1];
+        for ( double[] line: resultA) {
+            Arrays.fill( line, Double.NaN);
         }
-
-        @Override
-        public double[] getPoint() {
-            return valueA;
+        for ( int prodSocket: sockets) {
+            for ( int consSocket: sockets) {
+                if ( prodSocket < consSocket) {
+                    int prodCPUid = findCPUOnCoreSocket( cpuLayout, -1, prodSocket);
+                    if (prodCPUid == -1) {
+                        System.err.println( "did not find cpu on socket " + 0);
+                        continue;
+                    }
+                    int consCPUid = findCPUOnCoreSocket( cpuLayout, -1, consSocket);
+                    if (consCPUid == -1) {
+                        System.err.println( "did not find cpu on socket " + 1);
+                        continue;
+                    }
+                    final String cpuInfo = cpuInfo(idla, prodCPUid) + "-" + cpuInfo(idla, consCPUid);
+                    Thread producer = createProducer( prodCPUid, RunTimeMillis, queue, readWrite);
+                    Thread consumer = createConsumer( consCPUid, RunTimeMillis, queue, readWrite);
+                    startJoin( producer, consumer,
+                            qShortName( queue) + " runSingleSocket " +( readWrite ? "r/w" : "dry") + ": " + cpuInfo);
+                    resultA[ prodSocket][ consSocket] = 1000.0 * producerLoopCount / RunTimeMillis;
+                }
+            }
         }
-
-        @Override
-        public String toString() {
-            return info;
+        System.out.print( " ; ");
+        for ( int socket: sockets) {
+            System.out.print( socket + "; ");
+        }
+        System.out.println();
+        for ( int prodSocket: sockets) {
+            System.out.print( prodSocket + "; ");
+            for ( int consSocket: sockets) {
+                final double v = resultA[prodSocket][consSocket];
+                if ( Double.isNaN( v)) {
+                    System.out.print( " ; ");
+                } else {
+                    System.out.print(v + "; ");
+                }
+            }
+            System.out.println();
         }
     }
 
     private static void runSingleSocket(IDefaultLayoutAffinity idla, BlockingQueue<Item> queue) {
+	    runSingleSocket(idla, queue, false);
+	    runSingleSocket(idla, queue, true);
+    }
+
+    private static void runSingleSocket(IDefaultLayoutAffinity idla, BlockingQueue<Item> queue, boolean readWrite) {
         CpuLayout cpuLayout = idla.getDefaultLayout();
         int socket = cpuLayout.sockets() - 1;
         int maxCoreID = Collections.max( coresBySocket.get( socket));
@@ -167,17 +176,14 @@ public class AffinityBench {
                         continue;
                     }
                     final String cpuInfo = cpuInfo(idla, prodCPUid) + "-" + cpuInfo(idla, consCPUid);
-                    Thread producer;
-                    Thread consumer;
-//                    producer = createProducer( prodCPUid, RunTimeMillis, queue, true);
-//                    consumer = createConsumer( consCPUid, RunTimeMillis, queue, true);
-//                    startJoin( producer, consumer,
-//                            qShortName(queue) + " runSingleSocket r/w: " + cpuInfo);
-                    producer = createProducer( prodCPUid, RunTimeMillis, queue, false);
-                    consumer = createConsumer( consCPUid, RunTimeMillis, queue, false);
+                    Thread producer = createProducer( prodCPUid, RunTimeMillis, queue, readWrite);
+                    Thread consumer = createConsumer( consCPUid, RunTimeMillis, queue, readWrite);
                     startJoin( producer, consumer,
-                            qShortName( queue) + " runSingleSocket dry: " + cpuInfo);
-                    resultA[ prodCore][ consCore] = 1.0 * producerLoopCount / RunTimeMillis;
+                            qShortName( queue)
+		                            + " runSingleSocket " +
+		                            ( readWrite ? "r/w" : "dry") +
+		                            ": " + cpuInfo);
+                    resultA[ prodCore][ consCore] = 1000.0 * producerLoopCount / RunTimeMillis;
                 }
             }
         }
@@ -200,23 +206,12 @@ public class AffinityBench {
         }
     }
 
-    private static String cpuInfo(IDefaultLayoutAffinity idla, int cpu) {
-        CpuLayout cpuLayout = idla.getDefaultLayout();
-        return String.format( "%02d/%02d/%d", cpu, cpuLayout.coreId(cpu), cpuLayout.socketId(cpu));
-    }
-
-    private static int findCPUOnCoreSocket(CpuLayout cpuLayout, int core, int socket) {
-        for ( int cpuID = 0;  cpuID < cpuLayout.cpus();  cpuID++) {
-            if ( core == -1 || cpuLayout.coreId( cpuID) == core) {  // -1 : ignore core (match every core)
-                if ( cpuLayout.socketId( cpuID) == socket) {
-                    return cpuID;
-                }
-            }
-        }
-        return -1;
-    }
-
     private static void runSingleCore(IDefaultLayoutAffinity idla, BlockingQueue<Item> queue) {
+        runSingleCore( idla, queue, false);
+        runSingleCore( idla, queue, true);
+    }
+
+    private static void runSingleCore(IDefaultLayoutAffinity idla, BlockingQueue<Item> queue, boolean readWrite) {
         CpuLayout cpuLayout = idla.getDefaultLayout();
         int prodCPUid = cpuLayout.cpus() - 1;
         int consCPUid = getCPUSameCoreSameSocket( cpuLayout, prodCPUid);
@@ -225,51 +220,25 @@ public class AffinityBench {
             return;
         }
         final String cpuInfo = cpuInfo(idla, prodCPUid) + "-" + cpuInfo(idla, consCPUid);
-        Thread producer;
-        Thread consumer;
-//        producer = createProducer( prodCPUid, RunTimeMillis, queue, true);
-//        consumer = createConsumer( consCPUid, RunTimeMillis, queue, true);
-//        startJoin( producer, consumer, qShortName( queue) + " runSingleCore r/w: " + cpuInfo);
-        producer = createProducer( prodCPUid, RunTimeMillis, queue, false);
-        consumer = createConsumer( consCPUid, RunTimeMillis, queue, false);
-        startJoin( producer, consumer, qShortName( queue) + " runSingleCore dry: " + cpuInfo);
-    }
-
-    private static int getCPUSameCoreSameSocket( CpuLayout cpuLayout, int prodCPUid) {
-        for ( int i = 0;  i < cpuLayout.cpus();  i++) {
-            if (i != prodCPUid) {
-                if ( cpuLayout.socketId( prodCPUid) == cpuLayout.socketId( i)) {
-                    if ( cpuLayout.coreId( prodCPUid) == cpuLayout.coreId( i)) {
-                        return i;
-                    }
-                }
-            }
-        }
-        return -1;
-    }
-
-    private static String qShortName( BlockingQueue q) {
-        if (q instanceof SynchronousQueue) {
-            return "SQ";
-        }
-        if (q instanceof ArrayBlockingQueue) {
-            return "AQ";
-        }
-        return "..";
+        Thread producer = createProducer( prodCPUid, RunTimeMillis, queue, readWrite);
+        Thread consumer = createConsumer( consCPUid, RunTimeMillis, queue, readWrite);
+        startJoin( producer, consumer, qShortName( queue) + " runSingleCore " + ( readWrite ? "r/w" : "dry") +
+                                               ": " + cpuInfo);
     }
 
     private static void runSingleLCPU(IDefaultLayoutAffinity idla, BlockingQueue<Item> queue) {
+	    runSingleLCPU( idla, queue, false);
+	    runSingleLCPU( idla, queue, true);
+    }
+
+    private static void runSingleLCPU(IDefaultLayoutAffinity idla, BlockingQueue<Item> queue, boolean readWrite) {
         CpuLayout cpuLayout = idla.getDefaultLayout();
         int cpuID = cpuLayout.cpus() - 1;
         final String cpuInfo = cpuInfo(idla, cpuID);
-        Thread producer;
-        Thread consumer;
-//        producer = createProducer( cpuID, RunTimeMillis, queue, true);
-//        consumer = createConsumer( cpuID, RunTimeMillis, queue, true);
-//        startJoin( producer, consumer, qShortName( queue) + " runSingleLCPU r/w: " + cpuInfo);
-        producer = createProducer( cpuID, RunTimeMillis, queue, false);
-        consumer = createConsumer( cpuID, RunTimeMillis, queue, false);
-        startJoin( producer, consumer, qShortName( queue) + " runSingleLCPU dry: " + cpuInfo);
+        Thread producer = createProducer( cpuID, RunTimeMillis, queue, readWrite);
+        Thread consumer = createConsumer( cpuID, RunTimeMillis, queue, readWrite);
+        startJoin( producer, consumer, qShortName( queue)
+                                               + " runSingleLCPU " + ( readWrite ? "r/w" : "dry") + ": " + cpuInfo);
     }
 
     private static void startJoin(Thread producer, Thread consumer, String name) {
@@ -348,5 +317,45 @@ public class AffinityBench {
         }, "consumer");
         return t;
     }
+
+	private static String cpuInfo(IDefaultLayoutAffinity idla, int cpu) {
+		CpuLayout cpuLayout = idla.getDefaultLayout();
+		return String.format( "%02d/%02d/%d", cpu, cpuLayout.coreId(cpu), cpuLayout.socketId(cpu));
+	}
+
+	private static int findCPUOnCoreSocket(CpuLayout cpuLayout, int core, int socket) {
+		for ( int cpuID = 0;  cpuID < cpuLayout.cpus();  cpuID++) {
+			if ( core == -1 || cpuLayout.coreId( cpuID) == core) {  // -1 : ignore core (match every core)
+				if ( cpuLayout.socketId( cpuID) == socket) {
+					return cpuID;
+				}
+			}
+		}
+		return -1;
+	}
+
+	private static int getCPUSameCoreSameSocket( CpuLayout cpuLayout, int prodCPUid) {
+		for ( int i = 0;  i < cpuLayout.cpus();  i++) {
+			if (i != prodCPUid) {
+				if ( cpuLayout.socketId( prodCPUid) == cpuLayout.socketId( i)) {
+					if ( cpuLayout.coreId( prodCPUid) == cpuLayout.coreId( i)) {
+						return i;
+					}
+				}
+			}
+		}
+		return -1;
+	}
+
+	private static String qShortName( BlockingQueue q) {
+		if (q instanceof SynchronousQueue) {
+			return "SQ";
+		}
+		if (q instanceof ArrayBlockingQueue) {
+			return "AQ";
+		}
+		return "..";
+	}
+
 
 }
