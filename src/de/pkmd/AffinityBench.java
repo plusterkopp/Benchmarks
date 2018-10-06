@@ -1,18 +1,20 @@
 package de.pkmd;
 
 import net.openhft.affinity.*;
+import org.openjdk.jmh.annotations.Threads;
 
 import java.text.*;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.LongAdder;
 
 public class AffinityBench {
 
-    static int RunTimeMillis = 1 * 1000;
+    static int RunTimeMillis = 10 * 1000;
 
-
-    static long producerLoopCount = 0;
-    static long consumerLoopCount = 0;
+    static LongAdder producerLoopCount = new LongAdder();
+    static LongAdder consumerLoopCount = new LongAdder();
+    static volatile boolean ProducerFinished;
 
     static byte blackHole = 0;
 
@@ -125,7 +127,7 @@ public class AffinityBench {
                     Thread consumer = createConsumer( consCPUid, RunTimeMillis, queue, readWrite);
                     startJoin( producer, consumer,
                             qShortName( queue) + " runSingleSocket " +( readWrite ? "r/w" : "dry") + ": " + cpuInfo);
-                    resultA[ prodSocket][ consSocket] = 1000.0 * producerLoopCount / RunTimeMillis;
+                    resultA[ prodSocket][ consSocket] = 1000.0 * producerLoopCount.longValue() / RunTimeMillis;
                 }
             }
         }
@@ -141,7 +143,7 @@ public class AffinityBench {
                 if ( Double.isNaN( v)) {
                     System.out.print( " ; ");
                 } else {
-                    System.out.print(v + "; ");
+                    System.out.print(String.format( "%.0f; ", v));
                 }
             }
             System.out.println();
@@ -183,7 +185,7 @@ public class AffinityBench {
 		                            + " runSingleSocket " +
 		                            ( readWrite ? "r/w" : "dry") +
 		                            ": " + cpuInfo);
-                    resultA[ prodCore][ consCore] = 1000.0 * producerLoopCount / RunTimeMillis;
+                    resultA[ prodCore][ consCore] = 1000.0 * producerLoopCount.longValue() / RunTimeMillis;
                 }
             }
         }
@@ -199,7 +201,7 @@ public class AffinityBench {
                 if ( Double.isNaN( v)) {
                     System.out.print( " ; ");
                 } else {
-                    System.out.print(v + "; ");
+                    System.out.print(String.format( "%.0f; ", v));
                 }
             }
             System.out.println();
@@ -251,18 +253,19 @@ public class AffinityBench {
         } catch ( InterruptedException ie) {
             System.out.println( "interrupted");
         }
-        if ( producerLoopCount != consumerLoopCount) {
+        if ( producerLoopCount.longValue() != consumerLoopCount.longValue()) {
             System.err.println( name + ": " + producerLoopCount + " != " + consumerLoopCount);
         }
         long durMS = System.currentTimeMillis() - then;
-        double runsPerS = producerLoopCount / ( 0.001 * durMS);
+        double runsPerS = producerLoopCount.longValue() / ( 0.001 * RunTimeMillis);
         NumberFormat nf = DecimalFormat.getIntegerInstance();
         nf.setGroupingUsed( true);
         System.out.println( name + ": " + nf.format( runsPerS) + " /sec");
     }
 
     private static Thread createProducer(int cpuID, int runTimeMillis, BlockingQueue<Item> queue, boolean readWrite) {
-        producerLoopCount = 0;
+        producerLoopCount.reset();
+        ProducerFinished = false;
         long stopAtTS = System.currentTimeMillis() + runTimeMillis;
         Thread t = new Thread( () -> {
             Affinity.setAffinity( cpuID);
@@ -272,7 +275,7 @@ public class AffinityBench {
                     item.write();
                 }
                 queue.put(item);
-                producerLoopCount++;
+                producerLoopCount.increment();
                 while (System.currentTimeMillis() < stopAtTS) {
                     if (item == item1) {
                         item = item2;
@@ -283,34 +286,46 @@ public class AffinityBench {
                         item.write();
                     }
                     queue.put(item);
-                    producerLoopCount++;
+                    producerLoopCount.increment();
                 }
             } catch ( InterruptedException ie) {
                 ie.printStackTrace();
+            } finally {
+                ProducerFinished = true;
             }
         }, "producer");
         return t;
     }
 
     private static Thread createConsumer(int cpuID, int runTimeMillis, BlockingQueue<Item> queue, boolean readWrite) {
-        consumerLoopCount = 0;
+        consumerLoopCount.reset();
         long startTS = System.currentTimeMillis();
         long stopAtTS = startTS + runTimeMillis;
         Thread t = new Thread( () -> {
             Affinity.setAffinity( cpuID);
             try {
                 Item item;
-                while ( ( item = queue.poll( 100, TimeUnit.MILLISECONDS)) != null) {
-                    if (readWrite) {
-                        item.read();
+                long loops = 0;
+                while ( ( ! ProducerFinished) || ! queue.isEmpty()) {
+                    loops++;
+                    while ( ( item = queue.poll( 20, TimeUnit.MICROSECONDS)) != null) {
+                        if (readWrite) {
+                            item.read();
+                        }
+                        consumerLoopCount.increment();
                     }
-                    consumerLoopCount++;
                 }
                 long now = System.currentTimeMillis();
-                if ( consumerLoopCount != producerLoopCount || now < stopAtTS) {
-                    System.out.println("c exit after " + (now - startTS) + " ms with "
-                            + consumerLoopCount + " consumed, " + producerLoopCount + " produced");
+                if ( consumerLoopCount.longValue() != producerLoopCount.longValue() /*|| now < stopAtTS*/) {    // sollte nicht passieren
+                    System.out.println(
+                            Thread.currentThread().getName()
+                            + " exit after " + (now - startTS) + " ms "
+                            + "(" + ( stopAtTS - now) + " ms early) with "
+                            + consumerLoopCount.longValue() + " consumed, " + producerLoopCount.longValue() + " produced");
                 }
+//                if ( loops > 0) {
+//                    System.out.println( String.format( "%,d loops", loops));
+//                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

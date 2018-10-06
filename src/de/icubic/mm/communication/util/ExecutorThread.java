@@ -6,8 +6,8 @@ package de.icubic.mm.communication.util;
 import java.util.concurrent.*;
 
 /**
- * Dieser Klasse merkt sich ihren Executor, um ihn dann später wieder abfragen zu können,
- * um neue Jobs an den gleichen Executor übergeben zu können
+ * Dieser Klasse merkt sich ihren Executor, um ihn dann spÃ¤ter wieder abfragen zu kÃ¶nnen,
+ * um neue Jobs an den gleichen Executor Ã¼bergeben zu kÃ¶nnen
  *
  * @author hpagenhardt
  */

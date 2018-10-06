@@ -191,8 +191,8 @@ public class DoubleToString {
 			if (fracPlusMag + 1 < l_tenthPowers.length) {
 				final long ltp_f1 = l_tenthPowers[fracPlusMag + 1];
 				final long lDiv = l_tenthPower / ltp_f1;
-				// bei langen Zahlen mit hohem numFractDigits kann es passieren, daß das hier 0 wird. Dann wollen wir
-				// aber auch nichts abschneiden oder runden und können den digit 4/5 Test überspringen
+				// bei langen Zahlen mit hohem numFractDigits kann es passieren, daÃŸ das hier 0 wird. Dann wollen wir
+				// aber auch nichts abschneiden oder runden und kÃ¶nnen den digit 4/5 Test Ã¼berspringen
 				if ( lDiv > 0) {
 					final long lQuot = l / lDiv;
 					long digit = lQuot % 10;
@@ -217,7 +217,7 @@ public class DoubleToString {
 
 			// check for magnitude change
 			if ( l > 10 * l_tenthPower) {
-				l /= 10;	// wir haben die führen 9 auf 10 aufgerundet, damit stimmt die Stellenanzahl nicht mehr: Zahl ein nach rechts schieben, Magnitude anpassen
+				l /= 10;	// wir haben die fÃ¼hrenden 9 auf 10 aufgerundet, damit stimmt die Stellenanzahl nicht mehr: Zahl ein nach rechts schieben, Magnitude anpassen
 				magnitude++;
 			}
 
