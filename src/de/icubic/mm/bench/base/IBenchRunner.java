@@ -13,8 +13,8 @@ import java.util.concurrent.*;
 public interface IBenchRunner extends Runnable {
 
 	/**
-	 * setzt die gewünschte Laufzeit des Tests. Dazu kommt noch die Laufzeit für
-	 * die Kalibrierungsläufe.
+	 * setzt die gewÃ¼nschte Laufzeit des Tests. Dazu kommt noch die Laufzeit fÃ¼r
+	 * die KalibrierungslÃ¤ufe.
 	 *
 	 * @param tu
 	 * @param units
@@ -29,17 +29,17 @@ public interface IBenchRunner extends Runnable {
 
 	/**
 	 * erst sinnvoll, nachdem run() aufgerufen wurde
-	 * @return Anzahl der Durchläufe innerhalb der gewünschten Laufzeit
+	 * @return Anzahl der DurchlÃ¤ufe innerhalb der gewÃ¼nschten Laufzeit
 	 */
 	long getRuns();
 
 	/**
-	 * @return Durchläufe je Sekunde
+	 * @return DurchlÃ¤ufe je Sekunde
 	 */
 	double getRunsPerSecond();
 
 	/**
-	 * @return tatsächliche Laufzeit in Sekunden
+	 * @return tatsÃ¤chliche Laufzeit in Sekunden
 	 */
 	double getRunSeconds();
 
