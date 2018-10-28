@@ -1,7 +1,5 @@
 package utils;
 
-import utils.nsb.*;
-
 import java.math.*;
 import java.text.NumberFormat;
 import java.util.*;
@@ -664,7 +662,7 @@ public class QuotePrecision {
 	 */
 	@Override
 	public String toString() {
-		StringBuilderTC buffy = new StringBuilderTC().append("QP");
+		StringBuilder buffy = new StringBuilder().append("QP");
 		buffy.append(Math.round( inverseMinPriceIncrement));
 		buffy.append("/");
 		buffy.append(significantDigits);
