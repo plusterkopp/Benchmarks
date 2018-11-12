@@ -101,7 +101,7 @@ public class MulDivBench {
 		        .mode( Mode.AverageTime)
 		        .measurementTime( TimeValue.seconds( 5))
 		        .timeUnit(TimeUnit.NANOSECONDS)
-		        .warmupIterations(5)
+		        .warmupIterations(1)
 		        .measurementIterations(5)
 		        .forks(1)
                 .build();

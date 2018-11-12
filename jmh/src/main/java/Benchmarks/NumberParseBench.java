@@ -6,7 +6,7 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
-import sun.misc.FloatingDecimal;
+//import sun.misc.FloatingDecimal;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -73,13 +73,13 @@ public class NumberParseBench {
 		}
 	}
 
-	@Benchmark
-	@OperationsPerInvocation( Size)
-	public void parseFloatingDecimal() {
-		for ( int i = valueA.length - 1;  i >= 0;  i--) {
-			dummyDA[ i] = FloatingDecimal.parseDouble( valueA[ i]);
-		}
-	}
+//	@Benchmark
+//	@OperationsPerInvocation( Size)
+//	public void parseFloatingDecimal() {
+//		for ( int i = valueA.length - 1;  i >= 0;  i--) {
+//			dummyDA[ i] = FloatingDecimal.parseDouble( valueA[ i]);
+//		}
+//	}
 
 	@Benchmark
 	@OperationsPerInvocation( Size)
@@ -92,11 +92,11 @@ public class NumberParseBench {
 	public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include( NumberParseBench.class.getSimpleName())
-		        .warmupIterations(5)
+		        .warmupIterations(2)
 		        .measurementTime(TimeValue.seconds( 20))
 				.measurementIterations( 3)
 				.mode( Mode.AverageTime)
-				.timeUnit( TimeUnit.MICROSECONDS)
+				.timeUnit( TimeUnit.NANOSECONDS)
 		        .forks(1)
                 .build();
         new Runner(opt).run();
