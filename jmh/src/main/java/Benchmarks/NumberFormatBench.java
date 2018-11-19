@@ -101,7 +101,7 @@ public class NumberFormatBench {
 	}
 
 	@Benchmark
-	@OperationsPerInvocation( Size)
+ 	@OperationsPerInvocation( Size)
 	public void formatBDDoubleNew() {
 		final int digits = nf.getMaximumFractionDigits();
 		final StringBuilder sb = new StringBuilder(CAPACITY);
