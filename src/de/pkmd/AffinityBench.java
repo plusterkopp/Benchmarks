@@ -9,10 +9,37 @@ import java.util.concurrent.atomic.*;
 
 public class AffinityBench {
 
-    static int RunTimeMillis = 10 * 1000;
+    static int RunTimeMillis = 30 * 1000;
 
-    static LongAdder producerLoopCount = new LongAdder();
-    static LongAdder consumerLoopCount = new LongAdder();
+    // Counter
+    static volatile long producerLoopCount = 0;
+    static void incrementP() {
+//        producerLoopCount.increment();
+        producerLoopCount++;
+    }
+    static long producerLoopCount() {
+//        return producerLoopCount.longValue();
+        return producerLoopCount;
+    }
+    static void producerLoopCountReset() {
+//        producerLoopCount.reset();
+        producerLoopCount = 0;
+    }
+
+    static volatile long consumerLoopCount = 0;
+    static void incrementC() {
+//        consumerLoopCount.increment();
+        consumerLoopCount++;
+    }
+    static long consumerLoopCount() {
+//        return consumerLoopCount.longValue();
+        return consumerLoopCount;
+    }
+    static void consumerLoopCountReset() {
+//        consumerLoopCount.reset();
+        consumerLoopCount = 0;
+    }
+
     static volatile boolean ProducerFinished;
 
     static byte blackHole = 0;
@@ -126,7 +153,7 @@ public class AffinityBench {
                     Thread consumer = createConsumer( consCPUid, RunTimeMillis, queue, readWrite);
                     startJoin( producer, consumer,
                             qShortName( queue) + " runSingleSocket " +( readWrite ? "r/w" : "dry") + ": " + cpuInfo);
-                    resultA[ prodSocket][ consSocket] = 1000.0 * producerLoopCount.longValue() / RunTimeMillis;
+                    resultA[ prodSocket][ consSocket] = 1000.0 * producerLoopCount() / RunTimeMillis;
                 }
             }
         }
@@ -184,7 +211,7 @@ public class AffinityBench {
 		                            + " runSingleSocket " +
 		                            ( readWrite ? "r/w" : "dry") +
 		                            ": " + cpuInfo);
-                    resultA[ prodCore][ consCore] = 1000.0 * producerLoopCount.longValue() / RunTimeMillis;
+                    resultA[ prodCore][ consCore] = 1000.0 * producerLoopCount() / RunTimeMillis;
                 }
             }
         }
@@ -252,18 +279,18 @@ public class AffinityBench {
         } catch ( InterruptedException ie) {
             System.out.println( "interrupted");
         }
-        if ( producerLoopCount.longValue() != consumerLoopCount.longValue()) {
-            System.err.println( name + ": " + producerLoopCount + " != " + consumerLoopCount);
+        if ( producerLoopCount() != consumerLoopCount()) {
+            System.err.println( name + ": " + producerLoopCount() + " != " + consumerLoopCount());
         }
         long durMS = System.currentTimeMillis() - then;
-        double runsPerS = producerLoopCount.longValue() / ( 0.001 * RunTimeMillis);
+        double runsPerS = producerLoopCount() / ( 0.001 * RunTimeMillis);
         NumberFormat nf = DecimalFormat.getIntegerInstance();
         nf.setGroupingUsed( true);
         System.out.println( name + ": " + nf.format( runsPerS) + " /sec");
     }
 
     private static Thread createProducer(int cpuID, int runTimeMillis, BlockingQueue<Item> queue, boolean readWrite) {
-        producerLoopCount.reset();
+        producerLoopCountReset();
         ProducerFinished = false;
         long stopAtTS = System.currentTimeMillis() + runTimeMillis;
         Thread t = new Thread( () -> {
@@ -274,7 +301,7 @@ public class AffinityBench {
                     item.write();
                 }
                 queue.put(item);
-                producerLoopCount.increment();
+                incrementP();
                 while (System.currentTimeMillis() < stopAtTS) {
                     if (item == item1) {
                         item = item2;
@@ -285,7 +312,7 @@ public class AffinityBench {
                         item.write();
                     }
                     queue.put(item);
-                    producerLoopCount.increment();
+                    incrementP();
                 }
             } catch ( InterruptedException ie) {
                 ie.printStackTrace();
@@ -297,7 +324,7 @@ public class AffinityBench {
     }
 
     private static Thread createConsumer(int cpuID, int runTimeMillis, BlockingQueue<Item> queue, boolean readWrite) {
-        consumerLoopCount.reset();
+        consumerLoopCountReset();
         long startTS = System.currentTimeMillis();
         long stopAtTS = startTS + runTimeMillis;
         Thread t = new Thread( () -> {
@@ -311,16 +338,16 @@ public class AffinityBench {
                         if (readWrite) {
                             item.read();
                         }
-                        consumerLoopCount.increment();
+                        incrementC();
                     }
                 }
                 long now = System.currentTimeMillis();
-                if ( consumerLoopCount.longValue() != producerLoopCount.longValue() /*|| now < stopAtTS*/) {    // sollte nicht passieren
+                if ( consumerLoopCount() != producerLoopCount() /*|| now < stopAtTS*/) {    // sollte nicht passieren
                     System.out.println(
                             Thread.currentThread().getName()
                             + " exit after " + (now - startTS) + " ms "
                             + "(" + ( stopAtTS - now) + " ms early) with "
-                            + consumerLoopCount.longValue() + " consumed, " + producerLoopCount.longValue() + " produced");
+                            + consumerLoopCount() + " consumed, " + producerLoopCount() + " produced");
                 }
 //                if ( loops > 0) {
 //                    System.out.println( String.format( "%,d loops", loops));
