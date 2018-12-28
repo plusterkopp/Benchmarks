@@ -1,10 +1,11 @@
 package utils;
 
-import utils.nsb.*;
-
-import java.math.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * von der Schnittstelle übermittelte Informationen über relevante
@@ -664,7 +665,7 @@ public class QuotePrecision {
 	 */
 	@Override
 	public String toString() {
-		StringBuilderTC buffy = new StringBuilderTC().append("QP");
+		StringBuilder buffy = new StringBuilder().append("QP");
 		buffy.append(Math.round( inverseMinPriceIncrement));
 		buffy.append("/");
 		buffy.append(significantDigits);

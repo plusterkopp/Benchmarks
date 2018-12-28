@@ -6,7 +6,7 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
-import sun.misc.FloatingDecimal;
+//import sun.misc.FloatingDecimal;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -73,14 +73,14 @@ public class NumberParseBench {
 		}
 	}
 
-	@Benchmark
-	@OperationsPerInvocation( Size)
-	public void parseFloatingDecimal() {
-		for ( int i = valueA.length - 1;  i >= 0;  i--) {
-			dummyDA[ i] = FloatingDecimal.parseDouble( valueA[ i]);
-		}
-	}
-
+//	@Benchmark
+//	@OperationsPerInvocation( Size)
+//	public void parseFloatingDecimal() {
+//		for ( int i = valueA.length - 1;  i >= 0;  i--) {
+//			dummyDA[ i] = FloatingDecimal.parseDouble( valueA[ i]);
+//		}
+//	}
+//
 	@Benchmark
 	@OperationsPerInvocation( Size)
 	public void parseBigDecimal() {

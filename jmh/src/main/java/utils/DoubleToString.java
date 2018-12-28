@@ -1,8 +1,6 @@
 package utils;
 
-import utils.nsb.*;
-
-import java.math.*;
+import java.math.RoundingMode;
 
 
 /**
@@ -505,7 +503,7 @@ public class DoubleToString {
 		return s;
 	}
 
-	public static StringBuilderTC append(StringBuilderTC s, int i) {
+	public static StringBuilder append(StringBuilder s, int i) {
 		if (i < 0) {
 			if (i == Integer.MIN_VALUE) {
 				// cannot make this positive due to integer overflow
