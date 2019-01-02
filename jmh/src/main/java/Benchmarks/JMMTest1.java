@@ -155,7 +155,7 @@ public class JMMTest1 {
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include( JMMTest1.class.getSimpleName())
-                .warmupIterations(3)
+                .warmupIterations(2)
                 .measurementTime(TimeValue.seconds( 10))
                 .measurementIterations( 5)
                 .timeUnit( TimeUnit.NANOSECONDS)
