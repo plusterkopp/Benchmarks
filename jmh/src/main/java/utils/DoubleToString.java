@@ -1,6 +1,6 @@
 package utils;
 
-import java.math.RoundingMode;
+import java.math.*;
 
 
 /**
@@ -638,7 +638,7 @@ public class DoubleToString {
 //		if (value == 0.0) {
 //			result = "0.0";
 //		} else {
-//			StringBuilderTC	sb = new StringBuilderTC( 100);
+//			StringBuilder	sb = new StringBuilder( 100);
 //			DoubleToString.appendFormatted( sb, value, digits, '.',	'\'', 30, '-', '\uFFFF');
 //			result = sb.toString();
 //		}

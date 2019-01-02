@@ -1,11 +1,8 @@
 package utils;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.math.*;
 import java.text.NumberFormat;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * von der Schnittstelle übermittelte Informationen über relevante

@@ -4,18 +4,15 @@
 package utils;
 
 import net.openhft.affinity.*;
-import net.openhft.affinity.impl.LayoutEntities.LayoutEntity;
-import net.openhft.affinity.impl.LayoutEntities.NumaNode;
-import net.openhft.affinity.impl.LayoutEntities.Socket;
+import net.openhft.affinity.impl.LayoutEntities.*;
 
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.function.*;
 import java.util.stream.Collectors;
 
 /**
  * Jeder Thread kann mit {@link Affinity#getThreadId()} seine native Thread ID feststellen, aber ein
- * {@link AffinityThread} verspricht, das auch hin und wieder zu tun, damit {@link ThreadMonitor} das abrufen kann.
+ * {@link AffinityThread} verspricht, das auch hin und wieder zu tun, damit ThreadMonitor das abrufen kann.
  *
  * @author rhelbing
  *

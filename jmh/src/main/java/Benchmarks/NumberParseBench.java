@@ -80,7 +80,7 @@ public class NumberParseBench {
 //			dummyDA[ i] = FloatingDecimal.parseDouble( valueA[ i]);
 //		}
 //	}
-//
+
 	@Benchmark
 	@OperationsPerInvocation( Size)
 	public void parseBigDecimal() {
@@ -92,11 +92,11 @@ public class NumberParseBench {
 	public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include( NumberParseBench.class.getSimpleName())
-		        .warmupIterations(5)
+		        .warmupIterations(2)
 		        .measurementTime(TimeValue.seconds( 20))
 				.measurementIterations( 3)
 				.mode( Mode.AverageTime)
-				.timeUnit( TimeUnit.MICROSECONDS)
+				.timeUnit( TimeUnit.NANOSECONDS)
 		        .forks(1)
                 .build();
         new Runner(opt).run();
