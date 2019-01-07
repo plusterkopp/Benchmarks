@@ -5,7 +5,6 @@ package utils;
 
 import net.openhft.affinity.*;
 import net.openhft.affinity.impl.LayoutEntities.*;
-import utils.nsb.*;
 
 import java.util.*;
 import java.util.function.*;
@@ -13,7 +12,7 @@ import java.util.stream.Collectors;
 
 /**
  * Jeder Thread kann mit {@link Affinity#getThreadId()} seine native Thread ID feststellen, aber ein
- * {@link AffinityThread} verspricht, das auch hin und wieder zu tun, damit {@link ThreadMonitor} das abrufen kann.
+ * {@link AffinityThread} verspricht, das auch hin und wieder zu tun, damit ThreadMonitor das abrufen kann.
  *
  * @author rhelbing
  *
@@ -28,14 +27,14 @@ public class AffinityThread extends Thread {
 	int	skipCounter = 0;
 	int	skipCounterMax = 1;
 
-	static private final ThreadLocal<StringBuilderTC> scratchSB = new ThreadLocal<StringBuilderTC>() {
+	static private final ThreadLocal<StringBuilder> scratchSB = new ThreadLocal<StringBuilder>() {
 		@Override
-		protected StringBuilderTC initialValue() {
-			return new StringBuilderTC();
+		protected StringBuilder initialValue() {
+			return new StringBuilder();
 		}
 		@Override
-		public StringBuilderTC get() {
-			StringBuilderTC sb = super.get();
+		public StringBuilder get() {
+			StringBuilder sb = super.get();
 			sb.setLength( 0);
 			return sb;
 		}
@@ -53,7 +52,7 @@ public class AffinityThread extends Thread {
 		int	coreId = layout.coreId( cpuId);
 		int	socketId = layout.socketId( cpuId);
 
-		StringBuilderTC sb = scratchSB.get();
+		StringBuilder sb = scratchSB.get();
 		if ( layout instanceof GroupedCpuLayout) {
 			GroupedCpuLayout	g = ( GroupedCpuLayout) layout;
 			if ( g.groups() > 1) {

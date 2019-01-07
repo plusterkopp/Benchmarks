@@ -1,7 +1,5 @@
 package utils;
 
-import utils.nsb.*;
-
 import java.math.*;
 
 
@@ -505,7 +503,7 @@ public class DoubleToString {
 		return s;
 	}
 
-	public static StringBuilderTC append(StringBuilderTC s, int i) {
+	public static StringBuilder append(StringBuilder s, int i) {
 		if (i < 0) {
 			if (i == Integer.MIN_VALUE) {
 				// cannot make this positive due to integer overflow
@@ -640,7 +638,7 @@ public class DoubleToString {
 //		if (value == 0.0) {
 //			result = "0.0";
 //		} else {
-//			StringBuilderTC	sb = new StringBuilderTC( 100);
+//			StringBuilder	sb = new StringBuilder( 100);
 //			DoubleToString.appendFormatted( sb, value, digits, '.',	'\'', 30, '-', '\uFFFF');
 //			result = sb.toString();
 //		}

@@ -1,6 +1,8 @@
 package de.pkmd;
 
 import net.openhft.affinity.*;
+import net.openhft.affinity.impl.WindowsCpuLayout;
+import net.openhft.affinity.impl.WindowsJNAAffinity;
 
 import java.text.*;
 import java.util.*;
@@ -293,7 +295,7 @@ public class AffinityBench {
         ProducerFinished = false;
         long stopAtTS = System.currentTimeMillis() + runTimeMillis;
         Thread t = new Thread( () -> {
-            Affinity.setAffinity( cpuID);
+            setAffinity( cpuID);
             try {
                 Item item = item1;
                 if (readWrite) {
@@ -327,7 +329,7 @@ public class AffinityBench {
         long startTS = System.currentTimeMillis();
         long stopAtTS = startTS + runTimeMillis;
         Thread t = new Thread( () -> {
-            Affinity.setAffinity( cpuID);
+            setAffinity( cpuID);
             try {
                 Item item;
                 long loops = 0;
@@ -358,7 +360,20 @@ public class AffinityBench {
         return t;
     }
 
-	private static String cpuInfo(IDefaultLayoutAffinity idla, int cpu) {
+    private static void setAffinity(int cpuID) {
+        IAffinity iaff = Affinity.getAffinityImpl();
+        if ( iaff instanceof WindowsJNAAffinity) {
+            WindowsJNAAffinity waff = (WindowsJNAAffinity) iaff;
+            WindowsCpuLayout wcpuLayout = (WindowsCpuLayout) waff.getDefaultLayout();
+            int groupID = wcpuLayout.groupId( cpuID);
+            long mask = wcpuLayout.mask( cpuID);
+            waff.setGroupAffinity( groupID, mask);
+        } else {
+            Affinity.setAffinity( cpuID);
+        }
+    }
+
+    private static String cpuInfo(IDefaultLayoutAffinity idla, int cpu) {
 		CpuLayout cpuLayout = idla.getDefaultLayout();
 		return String.format( "%02d/%02d/%d", cpu, cpuLayout.coreId(cpu), cpuLayout.socketId(cpu));
 	}

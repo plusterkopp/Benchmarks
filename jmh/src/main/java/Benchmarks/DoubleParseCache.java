@@ -12,6 +12,9 @@ import java.util.concurrent.*;
 @State(Scope.Benchmark)
 public class DoubleParseCache {
 
+	@Param( { "100", "1000", "10000", "100000", "1000000"}) // "
+	int size;
+
 	final int ArraySizeM = 1;
 	final int ArraySize = ArraySizeM * 1000 * 100;
 	final NumberFormat nf = DecimalFormat.getNumberInstance( Locale.US);
@@ -112,29 +115,16 @@ public class DoubleParseCache {
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void scanCached1M() {
-		final Map<String, Double> scanCache = new LRUMap<String, Double>(1_000_000);
+	public void scanCachedP() {
+		final Map<String, Double> scanCache = new LRUMap<String, Double>(size);
 		scanCached( scanCache);
 	}
 
+	@Fork( jvmArgsPrepend = {"-XX:+UnlockExperimentalVMOptions", "-XX:+EnableJVMCI", "-XX:+UseJVMCICompiler"})
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void scanCached1K() {
-		final Map<String, Double> scanCache = new LRUMap<String, Double>(1_000);
-		scanCached( scanCache);
-	}
-
-	@Benchmark
-	@OperationsPerInvocation(ArraySize)
-	public void scanCached100K() {
-		final Map<String, Double> scanCache = new LRUMap<String, Double>(100_000);
-		scanCached( scanCache);
-	}
-
-	@Benchmark
-	@OperationsPerInvocation(ArraySize)
-	public void scanCached10K() {
-		final Map<String, Double> scanCache = new LRUMap<String, Double>(10_000);
+	public void scanCachedPGraal() {
+		final Map<String, Double> scanCache = new LRUMap<String, Double>(size);
 		scanCached( scanCache);
 	}
 
@@ -157,29 +147,16 @@ public class DoubleParseCache {
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void scanCachedS1M() {
-		final Map<String, Double> scanCache = new LRUMap<String, Double>(1_000_000);
+	public void scanCachedSP() {
+		final Map<String, Double> scanCache = new LRUMap<String, Double>(size);
 		scanCachedS( scanCache);
 	}
 
+	@Fork( jvmArgsPrepend = {"-XX:+UnlockExperimentalVMOptions", "-XX:+EnableJVMCI", "-XX:+UseJVMCICompiler"})
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void scanCachedS1K() {
-		final Map<String, Double> scanCache = new LRUMap<String, Double>(1_000);
-		scanCachedS( scanCache);
-	}
-
-	@Benchmark
-	@OperationsPerInvocation(ArraySize)
-	public void scanCachedS100K() {
-		final Map<String, Double> scanCache = new LRUMap<String, Double>(100_000);
-		scanCachedS( scanCache);
-	}
-
-	@Benchmark
-	@OperationsPerInvocation(ArraySize)
-	public void scanCachedS10K() {
-		final Map<String, Double> scanCache = new LRUMap<String, Double>(10_000);
+	public void scanCachedSPGraal() {
+		final Map<String, Double> scanCache = new LRUMap<String, Double>(size);
 		scanCachedS( scanCache);
 	}
 
@@ -203,10 +180,10 @@ public class DoubleParseCache {
         Options opt = new OptionsBuilder()
                 .include( DoubleParseCache.class.getSimpleName())
 		        .mode( Mode.AverageTime)
-		        .measurementTime( TimeValue.seconds( 5))
 		        .timeUnit(TimeUnit.NANOSECONDS)
-		        .warmupIterations(5)
+		        .warmupIterations(2)
 		        .measurementIterations(3)
+				.measurementTime( TimeValue.seconds( 5))
 		        .forks(1)
                 .build();
         new Runner(opt).run();
