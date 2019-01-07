@@ -7,6 +7,7 @@ import net.openhft.affinity.impl.WindowsJNAAffinity;
 import java.text.*;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
 
 public class AffinityBench {
 
