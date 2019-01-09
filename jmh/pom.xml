@@ -71,7 +71,7 @@ questions.
             <artifactId>affinity</artifactId>
             <version>3.0</version>
             <scope>system</scope>
-            <systemPath>${basedir}/lib/affinity-3.0.jar</systemPath>
+            <systemPath>${basedir}/../lib/affinity-3.0.jar</systemPath>
         </dependency>
         <!--
         <dependency>
