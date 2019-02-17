@@ -8,7 +8,7 @@ import org.openjdk.jmh.runner.options.*;
 public class ILPBench {
 
 	private static final int ILPMAX = 16;
-	private static final int ArraySize = 1000 * ILPMAX;
+	private static final int ArraySize = 100 * ILPMAX;
 	private static double[] y;
 	private static double[] x;
 
