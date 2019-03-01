@@ -70,19 +70,10 @@ questions.
             <groupId>pkmd.affinity</groupId>
             <artifactId>affinity</artifactId>
             <version>3.0</version>
-            <!-- mvn install:install-file -Dfile=lib/affinity-3.0.jar -DgroupId=pkmd.affinity -DartifactId=affinity -Dversion=3.0 -Dpackaging=jar -DgeneratePom=true
- -->
-        <!--
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/affinity-3.0.jar</systemPath> -->
+            <!--
+            mvn install:install-file -Dfile=lib/affinity-3.0.jar -DgroupId=pkmd.affinity -DartifactId=affinity -Dversion=3.0 -Dpackaging=jar -DgeneratePom=true
+            -->
         </dependency>
-        <!--
-        <dependency>
-            <groupId>Benchmarks</groupId>
-            <artifactId>Benchmarks</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        -->
     </dependencies>
 
     <build>

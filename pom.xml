@@ -4,92 +4,16 @@
   <artifactId>Benchmarks</artifactId>
     <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
-    <modules>
+	<modules>
+		<module>non-jmh</module>
         <module>jmh</module>
     </modules>
-    <dependencies>
-  <dependency>
-  	<groupId>org.apache.commons</groupId>
-  	<artifactId>commons-math3</artifactId>
-  </dependency>
-  <dependency>
-  	<groupId>com.lmax</groupId>
-  	<artifactId>disruptor</artifactId>
-  </dependency>
-  <dependency>
-  	<groupId>net.openhft</groupId>
-  	<artifactId>koloboke-impl-jdk6-7</artifactId>
-  </dependency>
-  <dependency>
-  	<groupId>net.sf.trove4j</groupId>
-  	<artifactId>trove4j</artifactId>
-  </dependency>
-  <dependency>
-  	<groupId>org.slf4j</groupId>
-  	<artifactId>slf4j-simple</artifactId>
-  	<version>1.7.12</version>
-  </dependency>
-  <dependency>
-  	<groupId>net.java.dev.jna</groupId>
-  	<artifactId>jna-platform</artifactId>
-  	<version>4.1.0</version>
-  </dependency>
-  <dependency>
-  	<groupId>org.apache.commons</groupId>
-  	<artifactId>commons-collections4</artifactId>
-  	<version>4.0</version>
-  </dependency>
-  <dependency>
-  	<groupId>org.openjdk.jmh</groupId>
-  	<artifactId>jmh-core</artifactId>
-  	<version>1.11.1</version>
-  </dependency>
-  <dependency>
-  	<groupId>org.openjdk.jmh</groupId>
-  	<artifactId>jmh-generator-annprocess</artifactId>
-  	<version>1.11.1</version>
-  </dependency>
-	  <dependency>
-		  <groupId>junit</groupId>
-		  <artifactId>junit</artifactId>
-		  <version>4.11</version>
-	  </dependency>
-  </dependencies>
   <scm>
   	<url>https://github.com/plusterkopp/Benchmarks.git</url>
   </scm>
   <properties>
   	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-  <dependencyManagement>
-  	<dependencies>
-  		<dependency>
-  			<groupId>org.apache.commons</groupId>
-  			<artifactId>commons-math3</artifactId>
-  			<version>3.2</version>
-  		</dependency>
-  		<dependency>
-  			<groupId>com.lmax</groupId>
-  			<artifactId>disruptor</artifactId>
-  			<version>3.2.0</version>
-  		</dependency>
-  		<dependency>
-  			<groupId>net.openhft</groupId>
-  			<artifactId>koloboke-impl-jdk6-7</artifactId>
-  			<version>0.6.3</version>
-  		</dependency>
-  		<dependency>
-  			<groupId>net.sf.trove4j</groupId>
-  			<artifactId>trove4j</artifactId>
-  			<version>3.0.3</version>
-  		</dependency>
-  		<dependency>
-  			<groupId>net.openhft</groupId>
-  			<artifactId>affinity</artifactId>
-  			<version>3.0</version>
-  		</dependency>
-  	</dependencies>
-  </dependencyManagement>
   <build>
   	<plugins>
   		<plugin>
