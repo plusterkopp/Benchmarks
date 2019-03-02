@@ -1,16 +1,18 @@
 package de.pkmd;
 
-import com.sun.tools.doclint.*;
 import net.openhft.affinity.*;
 
-import java.text.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.TimeUnit;
 
 public class AffinityBench {
 
-    static int RunTimeMillis = 30 * 1000;
+    static int RunTimeMillis = 10 * 1000;
 
     // Counter
     static volatile long producerLoopCount = 0;
@@ -72,6 +74,7 @@ public class AffinityBench {
         }
         IDefaultLayoutAffinity idla = (IDefaultLayoutAffinity) iaff;
         findCoresBySocket( idla);
+        findCoresByNode( idla);
         printLayout( idla);
 
         SynchronousQueue<Item> sQueue = new SynchronousQueue<>();
@@ -144,11 +147,12 @@ public class AffinityBench {
         if ( cpuLayout.coresPerSocket() > 1) {
             runSingleSocket( idla, queue);
         }
+        if ( cpuLayout instanceof NumaCpuLayout && ( ( NumaCpuLayout) cpuLayout).numaNodes() > 1) {
+            runSingleNode( idla, queue);
+            runMultiNode( idla, queue);
+        }
         if ( cpuLayout.sockets() > 1) {
             runMultiSocket( idla, queue);
-        }
-        if ( cpuLayout instanceof NumaCpuLayout && ( ( NumaCpuLayout) cpuLayout).numaNodes() > 1) {
-            runMultiNode( idla, queue);
         }
     }
 
@@ -335,7 +339,28 @@ public class AffinityBench {
         Thread producer = createProducer( prodCPUid, RunTimeMillis, queue, readWrite);
         Thread consumer = createConsumer( consCPUid, RunTimeMillis, queue, readWrite);
         startJoin( producer, consumer, qShortName( queue) + " runSingleCore " + ( readWrite ? "r/w" : "dry") +
-                                               ": " + cpuInfo);
+                ": " + cpuInfo);
+    }
+
+    private static void runSingleNode(IDefaultLayoutAffinity idla, BlockingQueue<Item> queue) {
+        runSingleNode( idla, queue, false);
+        runSingleNode( idla, queue, true);
+    }
+
+    private static void runSingleNode(IDefaultLayoutAffinity idla, BlockingQueue<Item> queue, boolean readWrite) {
+        CpuLayout cpuLayout = idla.getDefaultLayout();
+        NumaCpuLayout nodeLayout = (NumaCpuLayout) cpuLayout;
+        int prodCPUid = cpuLayout.cpus() - 1;
+        int consCPUid = getCPUSameNodeDiffCore( cpuLayout, prodCPUid);
+        if (consCPUid == -1) {
+            System.err.println( "did not find cpu same node different core for " + prodCPUid);
+            return;
+        }
+        final String cpuInfo = cpuInfo(idla, prodCPUid) + "-" + cpuInfo(idla, consCPUid);
+        Thread producer = createProducer( prodCPUid, RunTimeMillis, queue, readWrite);
+        Thread consumer = createConsumer( consCPUid, RunTimeMillis, queue, readWrite);
+        startJoin( producer, consumer, qShortName( queue) + " runSingleCore " + ( readWrite ? "r/w" : "dry") +
+                ": " + cpuInfo);
     }
 
     private static void runSingleLCPU(IDefaultLayoutAffinity idla, BlockingQueue<Item> queue) {
@@ -445,6 +470,10 @@ public class AffinityBench {
 
 	private static String cpuInfo(IDefaultLayoutAffinity idla, int cpu) {
 		CpuLayout cpuLayout = idla.getDefaultLayout();
+		if ( cpuLayout instanceof NumaCpuLayout) {
+		    NumaCpuLayout nodeLayout = (NumaCpuLayout) cpuLayout;
+            return String.format( "%02d/%02d/%d/%d", cpu, cpuLayout.coreId(cpu), nodeLayout.numaNodeId( cpu), cpuLayout.socketId(cpu));
+        }
 		return String.format( "%02d/%02d/%d", cpu, cpuLayout.coreId(cpu), cpuLayout.socketId(cpu));
 	}
 
@@ -472,19 +501,36 @@ public class AffinityBench {
     }
 
     private static int getCPUSameCoreSameSocket( CpuLayout cpuLayout, int prodCPUid) {
-		for ( int i = 0;  i < cpuLayout.cpus();  i++) {
-			if (i != prodCPUid) {
-				if ( cpuLayout.socketId( prodCPUid) == cpuLayout.socketId( i)) {
-					if ( cpuLayout.coreId( prodCPUid) == cpuLayout.coreId( i)) {
-						return i;
-					}
-				}
-			}
-		}
-		return -1;
-	}
+        for ( int i = 0;  i < cpuLayout.cpus();  i++) {
+            if (i != prodCPUid) {
+                if ( cpuLayout.socketId( prodCPUid) == cpuLayout.socketId( i)) {
+                    if ( cpuLayout.coreId( prodCPUid) == cpuLayout.coreId( i)) {
+                        return i;
+                    }
+                }
+            }
+        }
+        return -1;
+    }
 
-	private static String qShortName( BlockingQueue q) {
+    private static int getCPUSameNodeDiffCore( CpuLayout cpuLayout, int prodCPUid) {
+        if ( ! ( cpuLayout instanceof NumaCpuLayout)) {
+            return getCPUSameCoreSameSocket( cpuLayout, prodCPUid);
+        }
+        NumaCpuLayout nodeLayout = (NumaCpuLayout) cpuLayout;
+        for ( int i = 0;  i < cpuLayout.cpus();  i++) {
+            if (i != prodCPUid) {
+                if ( nodeLayout.numaNodeId( prodCPUid) == nodeLayout.numaNodeId( i)) {
+                    if ( cpuLayout.coreId( prodCPUid) != cpuLayout.coreId( i)) {
+                        return i;
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+
+    private static String qShortName( BlockingQueue q) {
 		if (q instanceof SynchronousQueue) {
 			return "SQ";
 		}
