@@ -74,7 +74,26 @@ questions.
             mvn install:install-file -Dfile=lib/affinity-3.0.jar -DgroupId=pkmd -DartifactId=affinity -Dversion=3.0 -Dpackaging=jar -DgeneratePom=true
             -->
         </dependency>
+        <dependency>
+            <groupId>net.sf.trove4j</groupId>
+            <artifactId>trove4j</artifactId>
+            <version>3.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>net.openhft</groupId>
+            <artifactId>koloboke-impl-jdk6-7</artifactId>
+            <version>0.6.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.0</version>
+        </dependency>
     </dependencies>
+    <dependencyManagement>
+        <dependencies>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>

@@ -191,7 +191,7 @@ public class AffinityBench {
                     Thread producer = createProducer( prodCPUid, RunTimeMillis, queue, readWrite);
                     Thread consumer = createConsumer( consCPUid, RunTimeMillis, queue, readWrite);
                     startJoin( producer, consumer,
-                            qShortName( queue) + " runSingleSocket " +( readWrite ? "r/w" : "dry") + ": " + cpuInfo);
+                            qShortName( queue) + " runMultiSocket " +( readWrite ? "r/w" : "dry") + ": " + cpuInfo);
                     resultA[ prodSocket][ consSocket] = 1000.0 * producerLoopCount() / RunTimeMillis;
                 }
             }
