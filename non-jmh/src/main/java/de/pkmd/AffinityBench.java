@@ -99,7 +99,10 @@ public class AffinityBench {
 
     private static void findCoresByNode(IDefaultLayoutAffinity idla) {
         CpuLayout cpuLayout = idla.getDefaultLayout();
-        NumaCpuLayout numaCpuLayout = (NumaCpuLayout) idla.getDefaultLayout();
+        if ( ! ( cpuLayout instanceof NumaCpuLayout)) {
+            return;
+        }
+        NumaCpuLayout numaCpuLayout = (NumaCpuLayout) cpuLayout;
         for ( int cpuID = 0;  cpuID < cpuLayout.cpus();  cpuID++) {
             int core = cpuLayout.coreId( cpuID);
             int node = numaCpuLayout.numaNodeId( cpuID);
