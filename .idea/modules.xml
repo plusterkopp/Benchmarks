@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Benchmarks.iml" filepath="$PROJECT_DIR$/Benchmarks.iml" />
       <module fileurl="file://$PROJECT_DIR$/jmh/jmh.iml" filepath="$PROJECT_DIR$/jmh/jmh.iml" />
+      <module fileurl="file://$PROJECT_DIR$/non-jmh/non-jmh.iml" filepath="$PROJECT_DIR$/non-jmh/non-jmh.iml" />
     </modules>
   </component>
 </project>
