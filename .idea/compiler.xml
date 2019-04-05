@@ -7,11 +7,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="jmh" />
+        <module name="non-jmh" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="Benchmarks" target="1.8" />
       <module name="jmh" target="1.8" />
+      <module name="non-jmh" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

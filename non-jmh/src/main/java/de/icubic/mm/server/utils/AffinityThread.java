@@ -18,7 +18,7 @@ import net.openhft.affinity.impl.LayoutEntities.Socket;
 
 /**
  * Jeder Thread kann mit {@link Affinity#getThreadId()} seine native Thread ID feststellen, aber ein
- * {@link AffinityThread} verspricht, das auch hin und wieder zu tun, damit {@link ThreadMonitor} das abrufen kann.
+ * {@link AffinityThread} verspricht, das auch hin und wieder zu tun, damit {@li.nk ThreadMonitor} das abrufen kann.
  *
  * @author rhelbing
  *
