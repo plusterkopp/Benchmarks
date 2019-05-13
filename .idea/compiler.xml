@@ -13,7 +13,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="Benchmarks" target="1.8" />
-      <module name="jcstress" target="9" />
+      <module name="jcstress" target="8" />
       <module name="jmh" target="1.8" />
       <module name="non-jmh" target="1.8" />
     </bytecodeTargetLevel>
