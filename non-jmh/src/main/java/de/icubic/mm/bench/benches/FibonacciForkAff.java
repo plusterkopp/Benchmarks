@@ -1,6 +1,7 @@
 package de.icubic.mm.bench.benches;
 
 
+import java.text.*;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.ForkJoinPool.*;
@@ -18,6 +19,12 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
+
+	static ThreadLocal<NumberFormat> NFInt_TL = ThreadLocal.withInitial( () -> {
+		NumberFormat df = DecimalFormat.getIntegerInstance(Locale.US);
+		df.setGroupingUsed( true);
+		return df;
+	});
 
 	public FibonacciForkAff( long n) {
 		super();
@@ -110,17 +117,17 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 	private static AtomicLong forks = new AtomicLong( 0);
 
 	static class Result {
-		long	durMS;
+		long	durNS;
 		int	rekLimit;
 	}
 
 	public static void main( String[] args) {
 
-		int fiboArg = 49;
+		int fiboArg = 40;
 		BenchLogger.sysinfo( "Warmup max " + getCPUCount() + " Threads (" + Runtime.getRuntime().availableProcessors() + ")");
 		long	singleNS[] = getSingleThreadNanos( 20, 5e9);
 		BenchLogger.sysinfo( "Warmup complete");
-		singleNS = getSingleThreadNanos( fiboArg, 1e9);
+		singleNS = getSingleThreadNanos( fiboArg, 3e9);
 		BenchLogger.sysinfo( "Single Thread Times complete");
 		Result[] results = new Result[ fiboArg + 1];
 		for ( int rekLimit = 2;  rekLimit <= fiboArg;  rekLimit++) {
@@ -128,14 +135,15 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 			runWithRecursionLimit( rekLimit, fiboArg, singleNS[ rekLimit], results[ rekLimit]);
 		}
 		BenchLogger.sysout( "CSV results for Fibo " + fiboArg + "\n" + "RekLimit\t" + "Jobs ns\t" + "time ms");
+		NumberFormat nf = NFInt_TL.get();
 		for ( int rekLimit = 2;  rekLimit <= fiboArg;  rekLimit++) {
-			BenchLogger.sysout( rekLimit + "\t" + singleNS[ rekLimit] + "\t" + results[ rekLimit].durMS);
+			BenchLogger.sysout( rekLimit + "\t" + nf.format( singleNS[ rekLimit]) + "\t" + nf.format( results[ rekLimit].durNS));
 		}
 	}
 
 	private static long[] getSingleThreadNanos( final int n, final double minRuntimeNS) {
 		final long timesNS[] = new long[ n + 1];
-		ExecutorService	es = Executors.newFixedThreadPool( Math.max( 1, Runtime.getRuntime().availableProcessors() / 8));
+		ExecutorService	es = Executors.newFixedThreadPool( Math.max( 1, Runtime.getRuntime().availableProcessors() / 4));
 		for ( int i = 2;  i <= n;  i++) {
 			final int arg = i;
 			Runnable runner = new Runnable() {
@@ -165,8 +173,10 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 						fact *= 1.1;
 					}
 					timesNS[ arg] = ( long) ( durNS / ntimes);
-					BenchLogger.sysinfo( "Single Fib(" + arg + ")=" + result + " in " + ( timesNS[ arg] / 1e6) + "ms (" + ntimes + " loops in " + (durNS / 1e6)
-							+ " ms)");
+					NumberFormat nf = NFInt_TL.get();
+					BenchLogger.sysinfo( "Single Fib(" + arg + ")=" + nf.format( result)
+							+ " in " + nf.format( timesNS[ arg]) + " ns"
+							+ " (" + nf.format( ntimes) + " loops in " + nf.format( durNS) + " ns)");
 				}
 			};
 			es.execute( runner);
@@ -182,18 +192,20 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 
 	private static void runWithRecursionLimit( int r, int arg, long singleThreadNanos, Result result) {
 		rekLimit = r;
-		long	start = System.currentTimeMillis();
+		long	startNS = System.nanoTime();
 		long	fiboResult = fibonacci( arg);
-		long	end = System.currentTimeMillis();
+		long	endNS = System.nanoTime();
 		// Steals zählen
 		long	currentSteals = fjp.getStealCount();
 		long	newSteals = currentSteals - stealCount;
 		stealCount = currentSteals;
 		long	forksCount = forks.getAndSet( 0);
-		final long durMS = end-start;
-		BenchLogger.sysinfo( "Fib(" + arg + ")=" + fiboResult + " in " + durMS + "ms, recursion limit: " + r +
+		final long durNS = endNS - startNS;
+		NumberFormat nf = NFInt_TL.get();
+		BenchLogger.sysinfo( "Fib(" + arg + ")=" + nf.format( fiboResult)
+				+ " in " + nf.format( durNS) + " ns, recursion limit: " + r +
 				" at " + ( singleThreadNanos / 1e6) + "ms, steals: " + newSteals + " forks " + forksCount);
-		result.durMS = durMS;
+		result.durNS = durNS;
 		result.rekLimit = r;
 	}
 
