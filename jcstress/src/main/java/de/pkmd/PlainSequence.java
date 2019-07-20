@@ -46,23 +46,23 @@ import org.openjdk.jcstress.infra.results.*;
 @State
 public class PlainSequence {
 
-    int a = 0;
+	int a = 0;
 
-    @Actor
-    public void setterVol() {
-        a = 1;
-        a = 2;
-        a = 3;
-        a = 4;
-        a = 5;
-        a = 6;
-        a = 7;
-        a = 8;
-    }
+	@Actor
+	public void setterVol() {
+		a = 1;
+		a = 2;
+		a = 3;
+		a = 4;
+		a = 5;
+		a = 6;
+		a = 7;
+		a = 8;
+	}
 
-    @Actor
-    public void observerVol(I_Result r) {
-        r.r1 = a;
-    }
+	@Actor
+	public void observerVol(I_Result r) {
+		r.r1 = a;
+	}
 
 }
