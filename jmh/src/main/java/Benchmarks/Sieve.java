@@ -10,8 +10,9 @@ import java.util.concurrent.*;
 @State(Scope.Benchmark)
 public class Sieve {
 
-	int size = 1 << 15;
-	boolean flags[] = new boolean[ size + 1];
+	static final int size = 8190;
+	static final boolean flags[] = new boolean[ size + 1];
+	static final int runs = 1000;
 
 	@Setup(Level.Trial)
 	public void setup() {
@@ -20,15 +21,26 @@ public class Sieve {
 	}
 
 	@Benchmark
-    public int sieve() {
+	@BenchmarkMode(Mode.AverageTime)
+	@OutputTimeUnit(TimeUnit.MICROSECONDS)
+	@OperationsPerInvocation(runs)
+	public int sieve() {
+		int s = 0;
+		for ( int i = 0;  i < runs;  i++) {
+			s = sieve0();
+		}
+		return s;
+	}
+
+    public int sieve0() {
 	    int count = 0 ;
-	    for ( int i = 0;  i <= size;  i++)
+	    for ( int i = 0;  i < flags.length;  i++)
 		    flags[i] = true;
-	    for ( int   i = 0;  i <= size;  i++) {
+	    for ( int   i = 0;  i < flags.length;  i++) {
 		    if (flags[i]) {
 			    int prime = i + i + 3;
 			    int k = i + prime;
-			    while (k <= size) {
+			    while (k < flags.length) {
 				    flags[k] = false;
 				    k += prime;
 			    }
@@ -44,8 +56,8 @@ public class Sieve {
                 .include( Sieve.class.getSimpleName())
 		        .mode( Mode.AverageTime)
 		        .timeUnit(TimeUnit.MICROSECONDS)
-		        .warmupIterations(1)
-				.warmupTime( TimeValue.seconds( 1))
+		        .warmupIterations(5)
+				.warmupTime( TimeValue.seconds( 2))
 		        .measurementIterations(5)
 				.measurementTime( TimeValue.seconds( 5))
 		        .forks(1)
