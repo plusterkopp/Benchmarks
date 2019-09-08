@@ -1,0 +1,176 @@
+  *************************************************************
+
+     Whetstone Benchmark Java Version, Aug 18 2019, 22:08:44
+
+                                                       1 Pass
+  Test                  Result       MFLOPS     MOPS  millisecs
+
+  N1 floating point  -1,124750137   1237,91             0,0155
+  N2 floating point  -1,131330490   1135,14             0,1184
+  N3 if then else     1,000000000            1357,20    0,0763
+  N4 fixed point     12,000000000            3076,17    0,1024
+  N5 sin,cos etc.     0,499110132              80,00    1,0400
+  N6 floating point   0,999999821    648,79             0,8314
+  N7 assignments      3,000000000            1030,67    0,1793
+  N8 exp,sqrt etc.    0,935364604              46,02    0,8084
+
+  MWIPS                             3152,91             3,1717
+
+  Operating System    Windows 7, Arch. amd64, Version 6.1
+  Java Vendor         Oracle Corporation, Version  1.8.0_211
+  CPU Intel64 Family 6 Model 58 Stepping 9, GenuineIntel
+
+  *************************************************************
+
+     Whetstone Benchmark Java Version, Aug. 18 2019, 22:11:38
+
+                                                       1 Pass
+  Test                  Result       MFLOPS     MOPS  millisecs
+
+  N1 floating point  -1,124750137   1273,21             0,0151
+  N2 floating point  -1,131330490   1135,14             0,1184
+  N3 if then else     1,000000000            1051,83    0,0984
+  N4 fixed point     12,000000000            3005,73    0,1048
+  N5 sin,cos etc.     0,499110132             108,82    0,7646
+  N6 floating point   0,999999821    659,25             0,8182
+  N7 assignments      3,000000000            1092,84    0,1691
+  N8 exp,sqrt etc.    0,935364604              91,36    0,4072
+
+  MWIPS                             4006,76             2,4958
+
+  Operating System    Windows 7, Arch. amd64, Version 6.1
+  Java Vendor         N/A, Version  14-internal
+  CPU Intel64 Family 6 Model 58 Stepping 9, GenuineIntel
+
+  *************************************************************
+
+     Whetstone Benchmark Java Version, Aug. 18 2019, 23:05:30
+
+                                                       1 Pass
+  Test                  Result       MFLOPS     MOPS  millisecs
+
+  N1 floating point  -1,124750137   1269,84             0,0151
+  N2 floating point  -1,131330490   1135,14             0,1184
+  N3 if then else     1,000000000            1049,06    0,0987
+  N4 fixed point     12,000000000            3002,86    0,1049
+  N5 sin,cos etc.     0,499110132             108,00    0,7704
+  N6 floating point   0,999999821    658,93             0,8186
+  N7 assignments      3,000000000            1032,40    0,1790
+  N8 exp,sqrt etc.    0,935364604              91,27    0,4076
+
+  MWIPS                             3979,81             2,5127
+
+  Operating System    Windows 7, Arch. amd64, Version 6.1
+  Java Vendor         N/A, Version  13-internal
+  CPU Intel64 Family 6 Model 58 Stepping 9, GenuineIntel
+
+  *************************************************************
+
+     Whetstone Benchmark Java Version, Aug. 18 2019, 23:06:18
+
+                                                       1 Pass
+  Test                  Result       MFLOPS     MOPS  millisecs
+
+  N1 floating point  -1,124750137   1266,49             0,0152
+  N2 floating point  -1,131330490   1133,22             0,1186
+  N3 if then else     1,000000000            1099,66    0,0941
+  N4 fixed point     12,000000000            2991,45    0,1053
+  N5 sin,cos etc.     0,499110132             108,79    0,7648
+  N6 floating point   0,999999821    659,57             0,8178
+  N7 assignments      3,000000000            1015,94    0,1819
+  N8 exp,sqrt etc.    0,935364604              91,54    0,4064
+
+  MWIPS                             3993,48             2,5041
+
+  Operating System    Windows 7, Arch. amd64, Version 6.1
+  Java Vendor         N/A, Version  12-internal
+  CPU Intel64 Family 6 Model 58 Stepping 9, GenuineIntel
+
+  *************************************************************
+
+     Whetstone Benchmark Java Version, Aug. 18 2019, 23:07:29
+
+                                                       1 Pass
+  Test                  Result       MFLOPS     MOPS  millisecs
+
+  N1 floating point  -1,124750137   1261,50             0,0152
+  N2 floating point  -1,131330490   1137,06             0,1182
+  N3 if then else     1,000000000            1050,55    0,0985
+  N4 fixed point     12,000000000            3020,13    0,1043
+  N5 sin,cos etc.     0,499110132             108,67    0,7656
+  N6 floating point   0,999999821    658,77             0,8188
+  N7 assignments      3,000000000             996,76    0,1854
+  N8 exp,sqrt etc.    0,935364604              91,36    0,4072
+
+  MWIPS                             3978,93             2,5132
+
+  Operating System    Windows 7, Arch. amd64, Version 6.1
+  Java Vendor         Oracle Corporation, Version  11.0.1-internal
+  CPU Intel64 Family 6 Model 58 Stepping 9, GenuineIntel
+
+  *************************************************************
+
+     Whetstone Benchmark Java Version, Aug. 18 2019, 23:08:11
+
+                                                       1 Pass
+  Test                  Result       MFLOPS     MOPS  millisecs
+
+  N1 floating point  -1,124750137   1260,67             0,0152
+  N2 floating point  -1,131330490   1143,83             0,1175
+  N3 if then else     1,000000000            1216,50    0,0851
+  N4 fixed point     12,000000000            2911,28    0,1082
+  N5 sin,cos etc.     0,499110132             108,73    0,7652
+  N6 floating point   0,999999821    658,93             0,8186
+  N7 assignments      3,000000000            1070,06    0,1727
+  N8 exp,sqrt etc.    0,935364604              90,91    0,4092
+
+  MWIPS                             4013,31             2,4917
+
+  Operating System    Windows 7, Arch. amd64, Version 6.1
+  Java Vendor         Oracle Corporation, Version  10.0.2
+  CPU Intel64 Family 6 Model 58 Stepping 9, GenuineIntel
+
+  *************************************************************
+
+     Whetstone Benchmark Java Version, Aug. 18 2019, 23:08:58
+
+                                                       1 Pass
+  Test                  Result       MFLOPS     MOPS  millisecs
+
+  N1 floating point  -1,124750137   1263,99             0,0152
+  N2 floating point  -1,131330490   1134,18             0,1185
+  N3 if then else     1,000000000            1359,70    0,0761
+  N4 fixed point     12,000000000            2827,65    0,1114
+  N5 sin,cos etc.     0,499110132             108,70    0,7654
+  N6 floating point   0,999999821    654,45             0,8242
+  N7 assignments      3,000000000            1113,92    0,1659
+  N8 exp,sqrt etc.    0,935364604              90,91    0,4092
+
+  MWIPS                             4022,67             2,4859
+
+  Operating System    Windows 7, Arch. amd64, Version 6.1
+  Java Vendor         Oracle Corporation, Version  9-ea
+  CPU Intel64 Family 6 Model 58 Stepping 9, GenuineIntel
+
+  *************************************************************
+
+     Whetstone Benchmark Java Version, Aug. 18 2019, 23:09:50
+
+                                                       1 Pass
+  Test                  Result       MFLOPS     MOPS  millisecs
+
+  N1 floating point  -1,124750137   1272,37             0,0151
+  N2 floating point  -1,131330490   1144,80             0,1174
+  N3 if then else     1,000000000            1690,07    0,0612
+  N4 fixed point     12,000000000            3423,91    0,0920
+  N5 sin,cos etc.     0,499110132              94,78    0,8778
+  N6 floating point   0,999999821    662,00             0,8148
+  N7 assignments      3,000000000            1286,91    0,1436
+  N8 exp,sqrt etc.    0,825148463              36,51    1,0190
+
+  MWIPS                             3183,77             3,1409
+
+  Operating System    Windows 7, Arch. amd64, Version 6.1
+  Java Vendor         AdoptOpenJDK, Version  12.0.2
+  CPU Intel64 Family 6 Model 58 Stepping 9, GenuineIntel
+
