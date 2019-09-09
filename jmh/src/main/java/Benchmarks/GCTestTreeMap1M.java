@@ -57,28 +57,35 @@ public class GCTestTreeMap1M {
 	}
 
 	@Benchmark
-	@Fork(value = 1, jvmArgsPrepend = {"-XX:+UseParallelGC"})
+	@Fork(value = 1, jvmArgsPrepend = {"-Xmx16G", "-XX:+UseParallelGC"})
 	public Container addRemovePS() {
     	return addRemove();
 	}
 
 	@Benchmark
-	@Fork(value = 1, jvmArgsPrepend = {"-XX:+UseG1GC"})
+	@Fork(value = 1, jvmArgsPrepend = {"-Xmx16G", "-XX:+UseG1GC"})
 	public Container addRemoveG1() {
 		return addRemove();
 	}
 
 	@Benchmark
-	@Fork(value = 1, jvmArgsPrepend = {"-XX:+UseConcMarkSweepGC"})
+	@Fork(value = 1, jvmArgsPrepend = {"-Xmx16G", "-XX:+UseConcMarkSweepGC"})
 	public Container addRemoveCMS() {
 		return addRemove();
 	}
 
 	@Benchmark
-	@Fork(value = 1, jvmArgsPrepend = {"-XX:+UseShenandoahGC"})
+	@Fork(value = 1, jvmArgsPrepend = {"-Xmx16G", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseShenandoahGC"})
 	public Container addRemoveShen() {
 		return addRemove();
 	}
+
+	@Benchmark
+	@Fork(value = 1, jvmArgsPrepend = {"-Xmx16G", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseZGC"})
+	public Container addRemoveZGC() {
+		return addRemove();
+	}
+
 
 	public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()

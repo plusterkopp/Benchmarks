@@ -24,6 +24,7 @@ public class whetstc {
 
 	private static String xout;
 	private static double runTime;
+	private static double runTimeTarget = 30.0;
 	private static double mflops;
 
 	private static int section;
@@ -110,7 +111,7 @@ public class whetstc {
 					endTime = getTime();
 					runTime = endTime - startTime;
 				}
-				while (runTime < 1.0);
+				while (runTime < runTimeTarget);
 
 				Check = Check + e1[3];
 				loop_time[section] = runTime / (double) n1mult / (double) xtra;
@@ -146,7 +147,7 @@ public class whetstc {
 					endTime = getTime();
 					runTime = endTime - startTime;
 				}
-				while (runTime < 1.0);
+				while (runTime < runTimeTarget);
 				Check = Check + e1[3];
 				loop_time[section] = runTime / (double) xtra;
 				loop_mflops[section] = (double) (n2 * 96) / 1000000.0 / loop_time[section];
@@ -196,9 +197,9 @@ public class whetstc {
 					endTime = getTime();
 					runTime = endTime - startTime;
 				}
-				while (runTime < 1.0);
+				while (runTime < runTimeTarget);
 				Check = Check + (float) j;
-				loop_time[section] = runTime / (double) xtra;
+				loop_time[section] = ( runTime / (double) xtra);
 				loop_mflops[section] = 0.0;
 				loop_mops[section] = (double) (n3 * 3) / 1000000.0 / loop_time[section];
 				titles[section] = "N3 if then else  ";
@@ -238,9 +239,9 @@ public class whetstc {
 					endTime = getTime();
 					runTime = endTime - startTime;
 				}
-				while (runTime < 1.0);
+				while (runTime < runTimeTarget);
 				Check = Check + e1[0] + e1[1];
-				loop_time[section] = runTime / (double) xtra;
+				loop_time[section] = ( runTime / (double) xtra);
 				loop_mflops[section] = 0.0;
 				loop_mops[section] = (double) (n4 * 15) / 1000000.0 / loop_time[section];
 				titles[section] = "N4 fixed point   ";
@@ -280,9 +281,9 @@ public class whetstc {
 					endTime = getTime();
 					runTime = endTime - startTime;
 				}
-				while (runTime < 1.0);
+				while (runTime < runTimeTarget);
 				Check = Check + y;
-				loop_time[section] = runTime / (double) xtra;
+				loop_time[section] = ( runTime / (double) xtra);
 				loop_mflops[section] = 0.0;
 				loop_mops[section] = (double) (n5 * 26) / 1000000.0 / loop_time[section];
 				titles[section] = "N5 sin,cos etc.  ";
@@ -317,9 +318,9 @@ public class whetstc {
 					endTime = getTime();
 					runTime = endTime - startTime;
 				}
-				while (runTime < 1.0);
+				while (runTime < runTimeTarget);
 				Check = Check + z;
-				loop_time[section] = runTime / (double) xtra;
+				loop_time[section] = ( runTime / (double) xtra);
 				loop_mflops[section] = (double) (n6 * 6) / 1000000.0 / loop_time[section];
 				loop_mops[section] = 0.0;
 				titles[section] = "N6 floating point";
@@ -357,9 +358,9 @@ public class whetstc {
 					endTime = getTime();
 					runTime = endTime - startTime;
 				}
-				while (runTime < 1.0);
+				while (runTime < runTimeTarget);
 				Check = Check + e1[2];
-				loop_time[section] = runTime / (double) xtra;
+				loop_time[section] = ( runTime / (double) xtra);
 				loop_mflops[section] = 0.0;
 				loop_mops[section] = (double) (n7 * 3) / 1000000.0 / loop_time[section];
 				titles[section] = "N7 assignments   ";
@@ -392,9 +393,9 @@ public class whetstc {
 					endTime = getTime();
 					runTime = endTime - startTime;
 				}
-				while (runTime < 1.0);
+				while (runTime < runTimeTarget);
 				Check = Check + x;
-				loop_time[section] = runTime / (double) xtra;
+				loop_time[section] = ( runTime / (double) xtra);
 				loop_mflops[section] = 0.0;
 				loop_mops[section] = (double) (n8 * 4) / 1000000.0 / loop_time[section];
 				titles[section] = "N8 exp,sqrt etc. ";
