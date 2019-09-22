@@ -21,9 +21,12 @@ public class JitterTest {
 			int count = countA[ 0];
 			long sinceThenExpectedNS = delay + intervalNS * count;
 			long diffNS = sinceThenNS - sinceThenExpectedNS;
+			long sinceLastNS = now - lastA[0];
 			System.out.println( "round: " + count
-					+ " jitter: " + nf.format( diffNS)
-					+ " since last: " + nf.format( now - lastA[ 0]));
+					+ " later by: " + nf.format( diffNS)
+					+ " since last: " + nf.format(sinceLastNS)
+					+ " jitter since last: " + nf.format( sinceLastNS - intervalNS)
+			);
 			if ( sinceThenNS > 1_000_000_000) {
 				System.exit( 0);
 			}
