@@ -7,7 +7,7 @@ import org.openjdk.jmh.runner.options.*;
 import java.util.concurrent.*;
 
 @BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Warmup(iterations = 1, time = 10)
 @Measurement(iterations = 4, time = 30)
 @Fork(1)

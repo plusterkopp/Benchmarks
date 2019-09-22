@@ -39,16 +39,14 @@ public class GCTestTreeMap1M {
     SortedMap<Integer, Container> map = new TreeMap<>();
 	Random  rnd = new Random();
 
-	int	mapSize = 1_000_000;
+//	@Setup
+//    public void fillList() {
+//        for ( int i = 0;  i < mapSize;  i++) {
+//            map.put( i, new Container( fillSize));
+//        }
+//    }
 
-	@Setup
-    public void fillList() {
-        for ( int i = 0;  i < mapSize;  i++) {
-            map.put( i, new Container( fillSize));
-        }
-    }
-
-	private Container addRemove() {
+	private Container addRemove( int mapSize) {
 		int key = rnd.nextInt( mapSize);
 		Container c = new Container( fillSize);
 		c.array[ 0] = key;
@@ -56,36 +54,81 @@ public class GCTestTreeMap1M {
 		return container;
 	}
 
+	static int mapSizeFor16G = 1_000_000;
+	static int mapSizeFor4G = mapSizeFor16G / 4;
+	static int mapSizeFor1G = mapSizeFor4G / 4;
+
 	@Benchmark
 	@Fork(value = 1, jvmArgsPrepend = {"-Xmx16G", "-XX:+UseParallelGC"})
-	public Container addRemovePS() {
-    	return addRemove();
+	public Container addRemovePS_16G() {
+    	return addRemove( mapSizeFor16G);
 	}
 
 	@Benchmark
 	@Fork(value = 1, jvmArgsPrepend = {"-Xmx16G", "-XX:+UseG1GC"})
-	public Container addRemoveG1() {
-		return addRemove();
+	public Container addRemoveG1_16G() {
+		return addRemove( mapSizeFor16G);
 	}
 
 	@Benchmark
 	@Fork(value = 1, jvmArgsPrepend = {"-Xmx16G", "-XX:+UseConcMarkSweepGC"})
-	public Container addRemoveCMS() {
-		return addRemove();
+	public Container addRemoveCMS_16G() {
+		return addRemove( mapSizeFor16G);
 	}
 
 	@Benchmark
 	@Fork(value = 1, jvmArgsPrepend = {"-Xmx16G", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseShenandoahGC"})
-	public Container addRemoveShen() {
-		return addRemove();
+	public Container addRemoveShen_16G() {
+		return addRemove( mapSizeFor16G);
 	}
 
 	@Benchmark
 	@Fork(value = 1, jvmArgsPrepend = {"-Xmx16G", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseZGC"})
-	public Container addRemoveZGC() {
-		return addRemove();
+	public Container addRemoveZGC_16G() {
+		return addRemove( mapSizeFor16G);
 	}
 
+	
+	@Benchmark
+	@Fork(value = 1, jvmArgsPrepend = {"-Xmx4G", "-XX:+UseParallelGC"})
+	public Container addRemovePS_4G() { return addRemove( mapSizeFor4G); }
+
+	@Benchmark
+	@Fork(value = 1, jvmArgsPrepend = {"-Xmx4G", "-XX:+UseG1GC"})
+	public Container addRemoveG1_4G() { return addRemove( mapSizeFor4G); }
+
+	@Benchmark
+	@Fork(value = 1, jvmArgsPrepend = {"-Xmx4G", "-XX:+UseConcMarkSweepGC"})
+	public Container addRemoveCMS_4G() { return addRemove( mapSizeFor4G); }
+
+	@Benchmark
+	@Fork(value = 1, jvmArgsPrepend = {"-Xmx4G", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseShenandoahGC"})
+	public Container addRemoveShen_4G() { return addRemove( mapSizeFor4G); }
+
+	@Benchmark
+	@Fork(value = 1, jvmArgsPrepend = {"-Xmx4G", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseZGC"})
+	public Container addRemoveZGC_4G() { return addRemove( mapSizeFor4G); }
+
+
+	@Benchmark
+	@Fork(value = 1, jvmArgsPrepend = {"-Xmx1G", "-XX:+UseParallelGC"})
+	public Container addRemovePS_1G() { return addRemove( mapSizeFor1G); }
+
+	@Benchmark
+	@Fork(value = 1, jvmArgsPrepend = {"-Xmx1G", "-XX:+UseG1GC"})
+	public Container addRemoveG1_1G() { return addRemove( mapSizeFor1G); }
+
+	@Benchmark
+	@Fork(value = 1, jvmArgsPrepend = {"-Xmx1G", "-XX:+UseConcMarkSweepGC"})
+	public Container addRemoveCMS_1G() { return addRemove( mapSizeFor1G); }
+
+	@Benchmark
+	@Fork(value = 1, jvmArgsPrepend = {"-Xmx1G", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseShenandoahGC"})
+	public Container addRemoveShen_1G() { return addRemove( mapSizeFor1G); }
+
+	@Benchmark
+	@Fork(value = 1, jvmArgsPrepend = {"-Xmx1G", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseZGC"})
+	public Container addRemoveZGC_1G() { return addRemove( mapSizeFor1G); }
 
 	public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()

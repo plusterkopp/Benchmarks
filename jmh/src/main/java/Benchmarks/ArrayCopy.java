@@ -4,12 +4,19 @@ import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.*;
 import org.openjdk.jmh.runner.options.*;
 
+import java.util.concurrent.*;
+
+@Warmup(iterations = 5, time = 4, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 5, time = 10, timeUnit = TimeUnit.SECONDS)
+@Fork(value = 1)
+@BenchmarkMode(Mode.AverageTime)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
 @State(Scope.Benchmark)
 public class ArrayCopy {
 
 	private static final int Mega = 1024 * 1024;
 	private static final int LongSize = 8;
-	private static final int ArraySizeL = 64 * Mega;
+	private static final int ArraySizeL = 16 * Mega;
 	private static final int ArraySizeB = LongSize * ArraySizeL;
 	private static byte[] yBA;
 	private static byte[] xBA;

@@ -67,8 +67,14 @@ public class GCTestQueue {
 	}
 
 	@Benchmark
-	@Fork(value = 1, jvmArgsPrepend = {"-XX:+UseShenandoahGC"})
+	@Fork(value = 1, jvmArgsPrepend = {"-XX:+UnlockExperimentalVMOptions", "-XX:+UseShenandoahGC"})
 	public Container addRemoveShen() {
+		return addRemove();
+	}
+
+	@Benchmark
+	@Fork(value = 1, jvmArgsPrepend = {"-XX:+UnlockExperimentalVMOptions", "-XX:+UseZGC"})
+	public Container addRemoveZGC() {
 		return addRemove();
 	}
 

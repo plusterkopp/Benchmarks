@@ -11,6 +11,11 @@ import java.util.concurrent.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+@Warmup(iterations = 5, time = 4, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 5, time = 10, timeUnit = TimeUnit.SECONDS)
+@Fork(value = 1)
+@BenchmarkMode(Mode.AverageTime)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
 @State(Scope.Benchmark)
 public class ConsumerProducer {
 
@@ -184,85 +189,85 @@ public class ConsumerProducer {
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
-	public void n_to_nT_lt() {
+	public void n_to_nHH_lt() {
 		n_to_n( N_CORES_HALF, N_CORES_HALF, new LinkedTransferQueue<Pair>());
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
-	public void n_to_nT_lbq() {
+	public void n_to_nHH_lbq() {
 		n_to_n( N_CORES_HALF, N_CORES_HALF,new LinkedBlockingQueue<Pair>());
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
-	public void n_to_nT_abqfull() {
+	public void n_to_nHH_abqfull() {
 		n_to_n( N_CORES_HALF, N_CORES_HALF,new ArrayBlockingQueue<Pair>( LoopsMax));
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
-	public void n_to_nT_abq100() {
+	public void n_to_nHH_abq100() {
 		n_to_n( N_CORES_HALF, N_CORES_HALF,new ArrayBlockingQueue<Pair>( 100));
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
-	public void n_to_nT_cl() {
+	public void n_to_nHH_cl() {
 		n_to_n( N_CORES_HALF, N_CORES_HALF,new ConcurrentLinkedQueue<>());
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
-	public void n_to_1T_lt() {
+	public void n_to_1H_lt() {
 		n_to_n( N_CORES_HALF, 1, new LinkedTransferQueue<Pair>());
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
-	public void n_to_1TB_lt() {
+	public void n_to_1HBatched_lt() {
 		n_to_n( N_CORES_HALF, 1, new LinkedTransferQueue<Pair>(), 100);
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
-	public void n_to_1T_lbq() {
+	public void n_to_1H_lbq() {
 		n_to_n( N_CORES_HALF, 1,new LinkedBlockingQueue<Pair>());
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
-	public void n_to_1TB_lbq() {
+	public void n_to_1HBatched_lbq() {
 		n_to_n( N_CORES_HALF, 1,new LinkedBlockingQueue<Pair>(),100);
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
-	public void n_to_1T_abqfull() {
+	public void n_to_1H_abqfull() {
 		n_to_n( N_CORES_HALF, 1,new ArrayBlockingQueue<Pair>( LoopsMax));
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
-	public void n_to_1TB_abqfull() {
+	public void n_to_1HBatched_abqfull() {
 		n_to_n( N_CORES_HALF, 1,new ArrayBlockingQueue<Pair>( LoopsMax), 100);
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
-	public void n_to_1T_abq100() {
+	public void n_to_1H_abq100() {
 		n_to_n( N_CORES_HALF, 1,new ArrayBlockingQueue<Pair>( 100));
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
-	public void n_to_1TB_abq100() {
+	public void n_to_1HBatched_abq100() {
 		n_to_n( N_CORES_HALF, 1,new ArrayBlockingQueue<Pair>( 100), 100);
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( LoopsMax)
-	public void n_to_1T_cl() {
+	public void n_to_1H_cl() {
 		n_to_n( N_CORES_HALF, 1,new ConcurrentLinkedQueue<>());
 	}
 
