@@ -1,4 +1,4 @@
-package de.pkmd;
+package perf;
 
 import java.text.*;
 import java.util.concurrent.*;
