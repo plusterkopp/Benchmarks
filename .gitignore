@@ -1,3 +1,8 @@
 /target
 .idea
 .idea/workspace.xml
+/jcstress/target/generated-sources/annotations/
+/jmh/target/generated-sources/annotations/
+/jmh/target/
+/jcstress/target/
+/non-jmh/target/

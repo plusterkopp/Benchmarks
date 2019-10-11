@@ -82,11 +82,11 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 					protected void onStart() {
 						super.onStart();
 						int	group = groupCounter.getAndAccumulate( 1, cycleCounter);	// threadsicherer zyklische Zähler
-						// bionde an Gruppe
+						// binde an Gruppe
 						AffinityManager.INSTANCE.bindToGroup(group);
 						// Logging
-						List<LayoutEntity> boundTo = AffinityManager.INSTANCE.getBoundTo( Thread.currentThread());
-						BenchLogger.sysinfo( Thread.currentThread()  + " #" + threadCounter.incrementAndGet() + " bound to: " + boundTo.get( 0));
+//						List<LayoutEntity> boundTo = AffinityManager.INSTANCE.getBoundTo( Thread.currentThread());
+//						BenchLogger.sysinfo( Thread.currentThread()  + " #" + threadCounter.incrementAndGet() + " bound to: " + boundTo.get( 0));
 					}
 				};
 				return t;
@@ -193,8 +193,15 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 	private static void runWithRecursionLimit( int r, int arg, long singleThreadNanos, Result result) {
 		rekLimit = r;
 		long	startNS = System.nanoTime();
-		long	fiboResult = fibonacci( arg);
-		long	endNS = System.nanoTime();
+		long	fiboResult;
+		long	endNS;
+		int	loops = 0;
+		int timeGoalNS = 1_000_000_000;
+		do {
+			loops++;
+			fiboResult = fibonacci(arg);
+			endNS = System.nanoTime();
+		} while ( endNS - startNS < timeGoalNS);
 		// Steals zählen
 		long	currentSteals = fjp.getStealCount();
 		long	newSteals = currentSteals - stealCount;
@@ -202,10 +209,13 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 		long	forksCount = forks.getAndSet( 0);
 		final long durNS = endNS - startNS;
 		NumberFormat nf = NFInt_TL.get();
+		long stealsPerLoop = newSteals / loops;
+		long forksPerLoop = forksCount / loops;
+		long durNSPerLoop = durNS / loops;
 		BenchLogger.sysinfo( "Fib(" + arg + ")=" + nf.format( fiboResult)
-				+ " in " + nf.format( durNS) + " ns, recursion limit: " + r +
-				" at " + ( singleThreadNanos / 1e6) + "ms, steals: " + newSteals + " forks " + forksCount);
-		result.durNS = durNS;
+				+ " in " + nf.format(durNSPerLoop) + " ns, recursion limit: " + r +
+				" at " + ( singleThreadNanos / 1e6) + "ms, steals: " + stealsPerLoop + " forks " + forksPerLoop);
+		result.durNS = durNSPerLoop;
 		result.rekLimit = r;
 	}
 
