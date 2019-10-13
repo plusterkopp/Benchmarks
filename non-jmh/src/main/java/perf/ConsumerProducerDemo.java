@@ -1,12 +1,11 @@
 package perf;
 
-import de.icubic.mm.server.utils.ConcurrentLinkedBlockingQueue;
 import org.HdrHistogram.ConcurrentHistogram;
-import org.HdrHistogram.DoubleHistogram;
 import org.HdrHistogram.Histogram;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -55,7 +54,7 @@ public class ConsumerProducerDemo {
 		void run() {
 			t = new Thread( () -> start() , "Producer");
 			t.start();
-			System.out.println( "started " + t.getName());
+			System.out.println( "started " + t.getName() + " rate: " + String.format( "%.1f", 1000 / ratio) + "/s");
 		}
 
 		void setRatio(double r) {
@@ -158,7 +157,7 @@ public class ConsumerProducerDemo {
 
 	public static void main(String[] args) {
 		BlockingQueue queues[] = {
-				new ConcurrentLinkedBlockingQueue<Item>(),
+//				new ConcurrentLinkedBlockingQueue<Item>(),
 				new LinkedBlockingQueue<Item>(),
 				new LinkedTransferQueue<Item>(),
 				new ArrayBlockingQueue<Item>( 100),
@@ -194,21 +193,77 @@ public class ConsumerProducerDemo {
 		producer.run();
 		consumer.join();
 		producer.join();
-		printHistogram( histOfferBlock,
-				"offer blocked");
-		printHistogram( histQueueSize,
-				"queue size   ");
-		printHistogram( histPoll,
-				"poll wait    ");
-		printHistogram( histInQueue,
-				"ns in Queue  ");
-		printHistogram( histInJob,
-				"ns in Job    ");
-		printHistogram( histInTotal,
-				"ns total     ");
+		List<String>    reports = new ArrayList<>();
+		reports.add( printHistogram( histQueueSize, "queue_size"));
+		reports.add( printHistogram( histOfferBlock, "ns_for_offer"));
+		reports.add( printHistogram( histPoll,"ns_for_poll"));
+		reports.add( printHistogram( histInQueue,"ns_in_queue"));
+		reports.add( printHistogram( histInJob, "ns_in_job"));
+		reports.add( printHistogram( histInTotal, "ns_total"));
+		reports = tabulate( reports);
+		for ( String s: reports) {
+			System.out.println( s);
+		}
 		Histogram[] histos = { histOfferBlock, histQueueSize, histPoll, histInQueue, histInJob, histInTotal};
 		for (int i = 0; i < histos.length; i++) {
 			histos[ i].reset();
+		}
+	}
+
+	private static List<String> tabulate(List<String> reports) {
+		List<String>    result = new ArrayList<>( reports);
+		List<String[]> splits = new ArrayList<>();
+		for ( String s: reports) {
+			String[] split = s.split(" ");
+			splits.add( split);
+		}
+		List<Integer> maxL = new ArrayList<>();
+		for ( String[] split: splits) {
+			for ( int i = 0;  i < split.length;  i++) {
+				int l = split[ i].length();
+				// ensure element at i
+				while ( maxL.size() < i+1) {
+					maxL.add( 0);
+				}
+				if ( maxL.get( i) < l) {
+					maxL.set( i, l);
+				}
+			}
+		}
+		for ( int i = 0;  i < splits.size();  i++) {
+			String[] split = splits.get( i);
+			StringBuilder newSB = new StringBuilder();
+			for ( int j = 0;  j < split.length;  j++) {
+				int max = maxL.get( j);
+				String s = split[j];
+				int fillCount = max - s.length();
+				if ( fillCount <= 0) {
+					newSB.append( s).append( ' ');
+					continue;
+				}
+				StringBuilder sb = new StringBuilder( s);
+				for ( int f = 0;  f < fillCount;  f++) {
+					if ( isNumeric( s)) {
+						sb.insert( 0, ' ');
+					} else {
+						sb.append( ' ');
+					}
+				}
+				newSB.append( sb).append( ' ');
+			}
+			String newString = newSB.toString().replace( '_', ' ');
+			result.set( i, newString);
+		}
+		return result;
+	}
+
+	static final NumberFormat    nf = NumberFormat.getNumberInstance();
+	private static boolean isNumeric( String s) {
+		try {
+			nf.parse( s);
+			return true;
+		} catch ( ParseException e) {
+			return false;
 		}
 	}
 
@@ -229,7 +284,7 @@ public class ConsumerProducerDemo {
 		while ( System.nanoTime() < nanos);
 	}
 
-	private static void printHistogram( Histogram hist, String name) {
+	private static String printHistogram( Histogram hist, String name) {
 		double[] percentages = { 0, 5, 10, 25, 50, 75, 90, 95, 99, 99.9, 99.99, 100};
 		StringBuilder sb = new StringBuilder();
 		NumberFormat nf = DecimalFormat.getIntegerInstance();
@@ -238,7 +293,7 @@ public class ConsumerProducerDemo {
 			double perc = percentages[ i];
 			sb.append(perc + ": " + nf.format(hist.getValueAtPercentile(perc)) + "  ");
 		}
-		System.out.println(sb.toString());
+		return sb.toString();
 	}
 
 }
