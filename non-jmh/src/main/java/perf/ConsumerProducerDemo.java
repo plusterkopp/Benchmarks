@@ -61,7 +61,9 @@ public class ConsumerProducerDemo {
 		void run() {
 			t = new Thread( () -> start() , "Producer");
 			t.start();
-			System.out.print( "started " + t.getName());
+			System.out.print( "started " + t.getName()
+					+ " nanotime latency: "
+					+ String.format( "%.2f", 1.0 * BusyWaitNanos.longValue() / BusyWaitRounds.longValue()));
 		}
 
 		void setRatio(double r) {
@@ -89,7 +91,8 @@ public class ConsumerProducerDemo {
 //					Wait(1);
 					// einmal nanoLatency abziehen
 					long offerTookNS = System.nanoTime() - item.enterQueueNS;
-					long nanoLat = BusyWaitUntilNanos(item.enterQueueNS, (long) ( JobDurationNS * ratio));
+					long nanoLat = computeNanoTimeLatencyL();
+					BusyWaitUntilNanos(item.enterQueueNS, (long) ( JobDurationNS * ratio), nanoLat);
 					if ( offerTookNS > nanoLat) {
 						histOfferBlock.recordValue(offerTookNS - nanoLat);
 					} else {
@@ -160,7 +163,8 @@ public class ConsumerProducerDemo {
 					item.leaveQueue();
 					int size = queue.size();
 //					Wait(1);
-					long nanoLat = BusyWaitUntilNanos( item.leaveQueueNS, JobDurationNS);
+					long nanoLat = computeNanoTimeLatencyL();
+					BusyWaitUntilNanos( item.leaveQueueNS, JobDurationNS, nanoLat);
 					item.finishJob();
 					long pollTookNS = item.leaveQueueNS - beforePollNS;
 					if ( pollTookNS > nanoLat) {
@@ -193,6 +197,8 @@ public class ConsumerProducerDemo {
 
 	public static void main(String[] args) {
 		BusyWaitRounds.increment(); // damit ich keine Division durch 0 bekomme
+		// Werte für NanoLatency sammeln
+		BusyWaitUntilNanos( System.nanoTime(), 1_000_000, 1);
 		BlockingQueue queues[] = {
 //				new ConcurrentLinkedBlockingQueue<Item>(),
 //				new LinkedBlockingQueue<Item>(),
@@ -201,17 +207,20 @@ public class ConsumerProducerDemo {
 				new ArrayBlockingQueue<Item>( 1),
 				new SynchronousQueue<Item>(),
 		};
+		int ncpus2 = Runtime.getRuntime().availableProcessors() / 2;
 		// Warmup
 		System.out.println( "Warmup");
 		for ( BlockingQueue<Item> q : queues) {
-			runJoin( q, 1, 1);
+			runJoin( q, ncpus2, 1.0/( ncpus2 * 0.9));
 		}
 
 		System.gc();
 		// Echt
 		System.out.println( "\nHot running " + JobCount + " Jobs, "
 				+ JobDurationNS + " ns each, nanotime latency: "
-				+ String.format( "%.2f", 1.0 * BusyWaitNanos.longValue() / BusyWaitRounds.longValue()));
+				+ String.format( "%.2f", 1.0 * BusyWaitNanos.sumThenReset() / BusyWaitRounds.sumThenReset()));
+		BusyWaitUntilNanos( System.nanoTime(), 1_000_000, 1);
+
 		for ( BlockingQueue<Item> q : queues) {
 			runJoin( q, 1, 1);
 		}
@@ -222,13 +231,12 @@ public class ConsumerProducerDemo {
 			runJoin( q, 2, 51.0/100.0);
 		}
 		System.gc();
-		int ncpus2 = Runtime.getRuntime().availableProcessors() / 2;
 		for ( BlockingQueue<Item> q : queues) {
-			runJoin( q, 4, 1.0/( ncpus2 - 0.5));
+			runJoin( q, ncpus2, 1.0/( ncpus2 * 0.9));
 		}
 		System.gc();
 		for ( BlockingQueue<Item> q : queues) {
-			runJoin( q, ncpus2 * 4, 1.0/( ncpus2 * 2));
+			runJoin( q, ncpus2 * 4, 1.0/( ncpus2 * 4 * 0.9));
 		}
 	}
 
@@ -325,9 +333,15 @@ public class ConsumerProducerDemo {
 		}
 	}
 
-	static long BusyWaitUntilNanos( long now, long nanos) {
-		// wie lange dauerte bis jetzt System.nanoTime über alle Aufrufe hier durchschnittlich?
-		long    avgNanoTimeLatency = BusyWaitNanos.longValue() / BusyWaitRounds.longValue();
+	static long computeNanoTimeLatencyL() {
+		return BusyWaitNanos.longValue() / BusyWaitRounds.longValue();
+	}
+
+	static double computeNanoTimeLatencyD() {
+		return 1.0 * BusyWaitNanos.longValue() / BusyWaitRounds.longValue();
+	}
+
+	static void BusyWaitUntilNanos( long now, long nanos, long avgNanoTimeLatency) {
 		// ziehe eine halbe Latenz ab, damit wir nicht immer mit der Zeit drüber liegen
 		long    nanos2 = now + nanos - avgNanoTimeLatency / 2;
 		// Rundenzähler für den Adder später
@@ -337,8 +351,6 @@ public class ConsumerProducerDemo {
 		};
 		BusyWaitRounds.add( rounds);    // nicht jede Runde adden, sondern erst am Ende einmal
 		BusyWaitNanos.add( nanos);
-		avgNanoTimeLatency = BusyWaitNanos.longValue() / BusyWaitRounds.longValue();
-		return avgNanoTimeLatency;
 	}
 
 	private static String printHistogram( Histogram hist, String name) {
