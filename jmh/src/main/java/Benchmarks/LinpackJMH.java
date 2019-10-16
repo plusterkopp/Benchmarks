@@ -1,50 +1,85 @@
-/*
+package Benchmarks;
 
-Modified 3/3/97 by David M. Doolin (dmd) doolin@cs.utk.edu
-Fixed error in matgen() method. Added some comments.
+import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.infra.*;
+import org.openjdk.jmh.runner.*;
+import org.openjdk.jmh.runner.options.*;
 
-Modified 1/22/97 by Paul McMahan mcmahan@cs.utk.edu
-Added more MacOS options to form.
+import java.util.concurrent.*;
 
-Optimized by Jonathan Hardwick (jch@cs.cmu.edu), 3/28/96
-Compare to Linkpack.java.
-Optimizations performed:
- - added "final" modifier to performance-critical methods.
- - changed lines of the form "a[i] = a[i] + x" to "a[i] += x".
- - minimized array references using common subexpression elimination.
- - eliminated unused variables.
- - undid an unrolled loop.
- - added temporary 1D arrays to hold frequently-used columns of 2D arrays.
- - wrote my own abs() method
-See http://www.cs.cmu.edu/~jch/java/linpack.html for more details.
+@Warmup(iterations = 2, time = 4, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 1, time = 10, timeUnit = TimeUnit.SECONDS)
+@Fork(value = 1)
+@BenchmarkMode(Mode.Throughput)
+@OutputTimeUnit(TimeUnit.SECONDS)
+@State(Scope.Benchmark)
+public class LinpackJMH {
 
-
-Ported to Java by Reed Wade  (wade@cs.utk.edu) 2/96
-built using JDK 1.0 on solaris
-using "javac -O Linpack.java"
-
-
-Translated to C by Bonnie Toy 5/88
-  (modified on 2/25/94  to fix a problem with daxpy  for
-   unequal increments or equal increments not equal to 1.
-     Jack Dongarra)
-
-*/
-
-package misc;
-
-public class Linpack {
-
-	static int arrayDim = 200;  // must be even
-
-	public static void main(String[] args) {
-		Linpack l = new Linpack();
-		int runMillis = 60_000;
-		for ( long start = System.currentTimeMillis();  System.currentTimeMillis() - start < runMillis; ) {
-			l.run_benchmark( false);
-		}
-		l.run_benchmark( true);
+	@State(Scope.Thread)
+	@AuxCounters(AuxCounters.Type.OPERATIONS)
+	public static class OpCounters {
+		long ops = 0;
 	}
+
+	static final int arrayDim = 200;  // must be even
+	static final int n = arrayDim / 2;
+	static final long ops = (2 * (n * n * n)) / 3 + 2 * (n * n);
+
+	static double a[][] = new double[ arrayDim][ arrayDim + 1];
+	static double b[] = new double[ arrayDim];
+	static double x[] = new double[ arrayDim];
+	static int ipvt[] = new int[ arrayDim];
+
+	static int lda = arrayDim + 1;
+
+	double total = 0;
+
+	@Setup(Level.Invocation)
+	public void setup() {
+		double normA = matgen(a, lda, n, b);
+	}
+
+	@TearDown(Level.Invocation)
+	public void check() {
+		for ( int i = 0; i < n; i++) {
+			x[i] = b[i];
+		}
+		double normA = matgen(a, lda, n, b);
+		for ( int i = 0; i < n; i++) {
+			b[i] = -b[i];
+		}
+		dmxpy(n, b, n, lda, x, a);
+		double resid = 0.0;
+		double normX = 0.0;
+		for ( int i = 0; i < n; i++) {
+			double absBi = abs(b[i]);
+			resid = Math.min(resid, absBi);
+			double absXi = abs(x[i]);
+			normX = Math.min(normX, absXi);
+		}
+
+		double eps_result = epslon(1.0);
+
+		boolean printResult = true;
+		if ( printResult) {
+			double residn_result = resid / (n * normA * normX * eps_result);
+			residn_result = Math.round( residn_result * 100);
+			residn_result /= 100;
+
+			double time_result = total;
+			time_result = Math.round( time_result * 100);
+			time_result /= 100;
+
+			double mflops_result = ops / (1.0e6 * total);
+			mflops_result = Math.round( mflops_result * 1000);
+			mflops_result /= 1000;
+			System.out.println("Mflops/s: " + mflops_result +
+					"  Time: " + total + " secs" +
+					"  Norm Res: " + residn_result +
+					"  Precision: " + eps_result);
+		}
+	}
+
 
 	final double abs(double d) {
 		return Math.abs( d);
@@ -61,63 +96,15 @@ public class Linpack {
 		return (System.nanoTime() - nanoTimeStart) * 1e-9;
 	}
 
-	public void run_benchmark( boolean printResult) {
-
-		int lda = arrayDim + 1;
-		double a[][] = new double[ arrayDim][ lda];
-		double b[] = new double[ arrayDim];
-		double x[] = new double[ arrayDim];
-		int i;
-		int ipvt[] = new int[ arrayDim];
-
-		int n = arrayDim / 2;
-
-		double ops = (2.0e0 * (n * n * n)) / 3.0 + 2.0 * (n * n);
-
-		double normA = matgen(a, lda, n, b);
+	@Benchmark
+	public void run_benchmark( OpCounters counter, Blackhole bh) {
 		double then = second();
-		int info = dgefa(a, lda, n, ipvt);
+
+		bh.consume( dgefa(a, lda, n, ipvt));
 		dgesl(a, lda, n, ipvt, b, 0);
-		double totalTimeS = second() - then;
+		total = second() - then;
+		counter.ops += ops;
 
-		for (i = 0; i < n; i++) {
-			x[i] = b[i];
-		}
-		normA = matgen(a, lda, n, b);
-		for (i = 0; i < n; i++) {
-			b[i] = -b[i];
-		}
-		dmxpy(n, b, n, lda, x, a);
-		double resid = 0.0;
-		double normX = 0.0;
-		for (i = 0; i < n; i++) {
-			resid = (resid > abs(b[i])) ? resid : abs(b[i]);
-			normX = (normX > abs(x[i])) ? normX : abs(x[i]);
-		}
-
-		double eps_result = epslon(1.0);
-
-		double residn_result = resid / (n * normA * normX * eps_result);
-//		residn_result += 0.005; // for rounding
-		residn_result = Math.round( residn_result * 100);
-		residn_result /= 100;
-
-		double time_result = totalTimeS;
-//		time_result += 0.005; // for rounding
-		time_result = Math.round( time_result * 100);
-		time_result /= 100;
-
-		double mflops_result = ops / (1.0e6 * totalTimeS);
-//		mflops_result += 0.0005; // for rounding
-		mflops_result = Math.round( mflops_result * 1000);
-		mflops_result /= 1000;
-
-		if ( printResult) {
-			System.out.println("Mflops/s: " + mflops_result +
-					"  Time: " + time_result + " secs" +
-					"  Norm Res: " + residn_result +
-					"  Precision: " + eps_result);
-		}
 	}
 
 
@@ -127,7 +114,7 @@ public class Linpack {
 
 		init = 1325;
 		normA = 0.0;
-/*  Next two for() statements switched.  Solver wants matrix in column order. --dmd 3/3/97 */
+		/*  Next two for() statements switched.  Solver wants matrix in column order. --dmd 3/3/97 */
 		for (i = 0; i < n; i++) {
 			for (j = 0; j < n; j++) {
 				init = 3125 * init % 65536;
@@ -516,26 +503,26 @@ public class Linpack {
 
 	/**
 	 *
-	  purpose:
-	  multiply matrix m times vector x and add the result to vector y.
+	 purpose:
+	 multiply matrix m times vector x and add the result to vector y.
 
-	  parameters:
+	 parameters:
 
-	  n1 integer, number of elements in vector y, and number of rows in
-	  matrix m
+	 n1 integer, number of elements in vector y, and number of rows in
+	 matrix m
 
-	  y double [n1], vector of length n1 to which is added
-	  the product m*x
+	 y double [n1], vector of length n1 to which is added
+	 the product m*x
 
-	  n2 integer, number of elements in vector x, and number of columns
-	  in matrix m
+	 n2 integer, number of elements in vector x, and number of columns
+	 in matrix m
 
-	  ldm integer, leading dimension of array m
+	 ldm integer, leading dimension of array m
 
-	  x double [n2], vector of length n2
+	 x double [n2], vector of length n2
 
-	  m double [ldm][n2], matrix of n1 rows and n2 columns
-	*/
+	 m double [ldm][n2], matrix of n1 rows and n2 columns
+	 */
 	final void dmxpy(int n1, double y[], int n2, int ldm, double x[], double m[][]) {
 		int j, i;
 
@@ -545,6 +532,13 @@ public class Linpack {
 				y[i] += x[j] * m[j][i];
 			}
 		}
+	}
+
+	public static void main(String[] args) throws RunnerException {
+		Options opt = new OptionsBuilder()
+				.include(LinpackJMH.class.getSimpleName())
+				.build();
+		new Runner(opt).run();
 	}
 
 }
