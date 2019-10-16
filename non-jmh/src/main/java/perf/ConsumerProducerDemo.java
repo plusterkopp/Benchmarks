@@ -13,7 +13,9 @@ import java.util.concurrent.atomic.*;
 
 public class ConsumerProducerDemo {
 
-	static final int    JobCount = 10_000;
+	public static final int JobDurationNS = 100_000;
+	public static final int RunTimeS = 10;
+	static final int    JobCount = ( int) (1_000_000_000L * RunTimeS / JobDurationNS);
 
 	static final LongAdder BusyWaitRounds = new LongAdder();
 	static final LongAdder BusyWaitNanos = new LongAdder();
@@ -87,7 +89,7 @@ public class ConsumerProducerDemo {
 //					Wait(1);
 					// einmal nanoLatency abziehen
 					long offerTookNS = System.nanoTime() - item.enterQueueNS;
-					long nanoLat = BusyWaitUntilNanos(item.enterQueueNS, (long) (1_000_000 * ratio));
+					long nanoLat = BusyWaitUntilNanos(item.enterQueueNS, (long) ( JobDurationNS * ratio));
 					if ( offerTookNS > nanoLat) {
 						histOfferBlock.recordValue(offerTookNS - nanoLat);
 					} else {
@@ -158,7 +160,7 @@ public class ConsumerProducerDemo {
 					item.leaveQueue();
 					int size = queue.size();
 //					Wait(1);
-					long nanoLat = BusyWaitUntilNanos( item.leaveQueueNS, 1_000_000);
+					long nanoLat = BusyWaitUntilNanos( item.leaveQueueNS, JobDurationNS);
 					item.finishJob();
 					long pollTookNS = item.leaveQueueNS - beforePollNS;
 					if ( pollTookNS > nanoLat) {
@@ -207,7 +209,9 @@ public class ConsumerProducerDemo {
 
 		System.gc();
 		// Echt
-		System.out.println( "Hot");
+		System.out.println( "\nHot running " + JobCount + " Jobs, "
+				+ JobDurationNS + " ns each, nanotime latency: "
+				+ String.format( "%.2f", 1.0 * BusyWaitNanos.longValue() / BusyWaitRounds.longValue()));
 		for ( BlockingQueue<Item> q : queues) {
 			runJoin( q, 1, 1);
 		}
