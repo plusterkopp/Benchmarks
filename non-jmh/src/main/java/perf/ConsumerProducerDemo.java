@@ -26,6 +26,7 @@ public class ConsumerProducerDemo {
 	static Histogram histInTotal = new ConcurrentHistogram( 4);
 	static Histogram histOfferBlock = new ConcurrentHistogram( 4);
 	static Histogram histQueueSize = new ConcurrentHistogram( 4);
+	static Histogram histConsumerTPT = new ConcurrentHistogram( 4);
 
 	private static class Item {
 		final public long id;
@@ -53,6 +54,8 @@ public class ConsumerProducerDemo {
 		private Thread t = null;
 		private double ratio = 1;
 		private long startNS = 0;
+		private	long offersBlockedTotal = 0;
+		private	long offersDelayedTotal = 0;
 
 		public Producer(BlockingQueue<Item> q) {
 			queue = q;
@@ -77,10 +80,15 @@ public class ConsumerProducerDemo {
 				e.printStackTrace();
 			}
 			long durNS = System.nanoTime() - startNS;
-			System.out.print( " rate: " + String.format( "%.1f", 1e9 * JobCount / durNS) + "/s");
+			System.out.print( " rate: "
+					+ String.format( "%.1f", 1e9 * JobCount / durNS) + "/s "
+					+ String.format( "%,d", offersBlockedTotal) + " ns offers blocked, "
+					+ String.format( "%,d", offersDelayedTotal) + " ns total delay"
+			);
 		}
 
 		public void start() {
+			long nanosToWait = (long) (JobDurationNS * ratio);
 			startNS = System.nanoTime();
 			int i = 0;
 			try {
@@ -91,8 +99,13 @@ public class ConsumerProducerDemo {
 //					Wait(1);
 					// einmal nanoLatency abziehen
 					long offerTookNS = System.nanoTime() - item.enterQueueNS;
+					offersBlockedTotal += offerTookNS;
 					long nanoLat = computeNanoTimeLatencyL();
-					BusyWaitUntilNanos(item.enterQueueNS, (long) ( JobDurationNS * ratio), nanoLat);
+					if ( offerTookNS < nanosToWait) {
+						BusyWaitUntilNanos(item.enterQueueNS, nanosToWait, nanoLat);
+					} else {
+						offersDelayedTotal += offerTookNS - nanosToWait;
+					}
 					if ( offerTookNS > nanoLat) {
 						histOfferBlock.recordValue(offerTookNS - nanoLat);
 					} else {
@@ -112,6 +125,7 @@ public class ConsumerProducerDemo {
 		private int poolSize = 1;
 		private long startNS = 0;
 		private AtomicInteger jobsRemaining = new AtomicInteger( JobCount);
+		private long pollsBlockedTotalNS = 0;
 
 		public Consumer(BlockingQueue<Item> q) {
 			queue = q;
@@ -146,10 +160,14 @@ public class ConsumerProducerDemo {
 				e.printStackTrace();
 			}
 			long durNS = System.nanoTime() - startNS;
-			System.out.println( ", consumer rate: " + String.format( "%.1f", 1e9 * JobCount / durNS) + "/s");
+			System.out.println( ", consumer rate: "
+					+ String.format( "%.1f", 1e9 * JobCount / durNS) + "/s "
+					+ String.format( "%,d", pollsBlockedTotalNS) + " ns total delay"
+			);
 		}
 
 		public void start() {
+			long lastFinishedNS = 0;
 			int i = 0;
 			int pollTimeoutCount = 0;
 			try {
@@ -168,6 +186,7 @@ public class ConsumerProducerDemo {
 					item.finishJob();
 					long pollTookNS = item.leaveQueueNS - beforePollNS;
 					if ( pollTookNS > nanoLat) {
+						pollsBlockedTotalNS += pollTookNS - nanoLat;
 						histPoll.recordValue(pollTookNS - nanoLat);
 					} else {
 						histPoll.recordValue( 0);
@@ -184,6 +203,12 @@ public class ConsumerProducerDemo {
 					long totalNS = item.finishJobNS - item.enterQueueNS;
 					histInTotal.recordValue( ( totalNS - nanoLat * 3) > 0 ? ( totalNS - nanoLat * 3) : 0);
 					histQueueSize.recordValue( size);
+					if ( i > 0) {
+						long	nsSinceLastJob = item.finishJobNS - lastFinishedNS;
+						long	jobsPerSec = 1_000_000_000L / nsSinceLastJob;
+						histConsumerTPT.recordValue( jobsPerSec);
+					}
+					lastFinishedNS = item.finishJobNS;
 				}
 			} catch (InterruptedException e) {
 				System.err.println( Thread.currentThread().getName() + " interrupted at " + i);
@@ -258,11 +283,12 @@ public class ConsumerProducerDemo {
 		reports.add( printHistogram( histInQueue,"ns_in_queue"));
 		reports.add( printHistogram( histInJob, "ns_in_job"));
 		reports.add( printHistogram( histInTotal, "ns_total"));
+		reports.add( printHistogram( histConsumerTPT, "jobs/s"));
 		reports = tabulate( reports);
 		for ( String s: reports) {
 			System.out.println( s);
 		}
-		Histogram[] histos = { histOfferBlock, histQueueSize, histPoll, histInQueue, histInJob, histInTotal};
+		Histogram[] histos = { histOfferBlock, histQueueSize, histPoll, histInQueue, histInJob, histInTotal, histConsumerTPT};
 		for (int i = 0; i < histos.length; i++) {
 			histos[ i].reset();
 		}
