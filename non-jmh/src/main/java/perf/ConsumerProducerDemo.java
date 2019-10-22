@@ -2,6 +2,7 @@ package perf;
 
 import org.HdrHistogram.ConcurrentHistogram;
 import org.HdrHistogram.Histogram;
+import org.HdrHistogram.SynchronizedHistogram;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -20,17 +21,22 @@ public class ConsumerProducerDemo {
 //	static final LongAdder BusyWaitRounds = new LongAdder();
 //	static final LongAdder BusyWaitNanos = new LongAdder();
 
-	static Histogram histPoll = new ConcurrentHistogram( 4);
-	static Histogram histInQueue = new ConcurrentHistogram( 4);
-	static Histogram histInJob = new ConcurrentHistogram( 4);
-	static Histogram histInTotal = new ConcurrentHistogram( 4);
+	static Histogram histPoll = new SynchronizedHistogram( 4);
+	static Histogram histInQueue = new SynchronizedHistogram( 4);
+	static Histogram histInJob = new SynchronizedHistogram( 4);
+	static Histogram histInTotal = new SynchronizedHistogram( 4);
 	static Histogram histOfferBlock = new Histogram( 4);
-	static Histogram histQueueSize = new ConcurrentHistogram( 4);
-	static Histogram histConsumerTPT = new ConcurrentHistogram( 4);
+	static Histogram histQueueSize = new SynchronizedHistogram( 4);
+	static Histogram histConsumerTPT = new SynchronizedHistogram( 4);
 
 	private static class NanoTimeStats {
 		long	calls = 0;
 		long	nanos = 0;
+
+		public void reset() {
+			calls = 0;
+			nanos = 0;
+		}
 	}
 
 	private static ThreadLocal<NanoTimeStats> NanoTimeStatsTL = new ThreadLocal<NanoTimeStats>() {
@@ -185,7 +191,15 @@ public class ConsumerProducerDemo {
 		}
 
 		public void start() {
-			long lastFinishedNS = 0;
+			// lokale Histogramme pro Thread, um den Concurrency Overhead zu vermeiden.
+            Histogram histPollL = new Histogram( 4);
+            Histogram histInQueueL = new Histogram( 4);
+            Histogram histInJobL = new Histogram( 4);
+            Histogram histInTotalL = new Histogram( 4);
+            Histogram histQueueSizeL = new Histogram( 4);
+            Histogram histConsumerTPTL = new Histogram( 4);
+
+            long lastFinishedNS = 0;
 			int i = 0;
 			int pollTimeoutCount = 0;
 			long nanoLat = 1;
@@ -209,26 +223,26 @@ public class ConsumerProducerDemo {
 					long pollTookNS = item.leaveQueueNS - beforePollNS;
 					if ( pollTookNS > nanoLat) {
 						pollsBlockedTotalNS += pollTookNS - nanoLat;
-						histPoll.recordValue(pollTookNS - nanoLat);
+						histPollL.recordValue(pollTookNS - nanoLat);
 					} else {
-						histPoll.recordValue( 0);
+						histPollL.recordValue( 0);
 //						System.err.println( "poll took less than nanoLat: " + pollTookNS + " / " + nanoLat);
 					}
 					long inQueueNS = item.leaveQueueNS - item.enterQueueNS;
 					if ( inQueueNS > nanoLat) {
-						histInQueue.recordValue(inQueueNS - nanoLat);
+						histInQueueL.recordValue(inQueueNS - nanoLat);
 					} else {
-						histInQueue.recordValue( 0);
+						histInQueueL.recordValue( 0);
 					}
 					long inJobNS = item.finishJobNS - item.leaveQueueNS;
-					histInJob.recordValue( ( inJobNS - nanoLat * 2) > 0 ? ( inJobNS - nanoLat * 2) : 0);
+					histInJobL.recordValue( ( inJobNS - nanoLat * 2) > 0 ? ( inJobNS - nanoLat * 2) : 0);
 					long totalNS = item.finishJobNS - item.enterQueueNS;
-					histInTotal.recordValue( ( totalNS - nanoLat * 3) > 0 ? ( totalNS - nanoLat * 3) : 0);
-					histQueueSize.recordValue( size);
+					histInTotalL.recordValue( ( totalNS - nanoLat * 3) > 0 ? ( totalNS - nanoLat * 3) : 0);
+					histQueueSizeL.recordValue( size);
 					if ( i > 0) {
 						long	nsSinceLastJob = item.finishJobNS - lastFinishedNS;
 						long	jobsPerSec = 1_000_000_000L / nsSinceLastJob;
-						histConsumerTPT.recordValue( jobsPerSec);
+						histConsumerTPTL.recordValue( jobsPerSec);
 					}
 					lastFinishedNS = item.finishJobNS;
 				}
@@ -238,6 +252,12 @@ public class ConsumerProducerDemo {
 			if ( pollTimeoutCount > 0) {
 				System.err.println( "poll timeout count: " + pollTimeoutCount);
 			}
+			histConsumerTPT.add( histConsumerTPTL);
+			histInJob.add( histInJobL);
+			histInQueue.add( histInQueueL);
+			histInTotal.add( histInTotalL);
+			histPoll.add( histPollL);
+			histQueueSize.add( histQueueSizeL);
 		}
 
 	}
@@ -245,7 +265,8 @@ public class ConsumerProducerDemo {
 	public static void main(String[] args) {
 //		BusyWaitRounds.increment(); // damit ich keine Division durch 0 bekomme
 		// Werte für NanoLatency sammeln
-		BusyWaitUntilNanos( System.nanoTime(), 1_000_000, 1, null);
+		NanoTimeStats stats = NanoTimeStatsTL.get();
+		BusyWaitUntilNanos( System.nanoTime(), 1_000_000, 1, stats);
 		BlockingQueue queues[] = {
 //				new ConcurrentLinkedBlockingQueue<Item>(),
 //				new LinkedBlockingQueue<Item>(),
@@ -263,7 +284,8 @@ public class ConsumerProducerDemo {
 
 		// Echt
 		System.gc();
-		BusyWaitUntilNanos( System.nanoTime(), 1_000_000, 1, null);
+		stats.reset();
+		BusyWaitUntilNanos( System.nanoTime(), 1_000_000, 1, stats);
 		NanoTimeStats	nanoTimeStats = NanoTimeStatsTL.get();
 		System.out.println( "\nHot running " + JobCount + " Jobs, "
 				+ JobDurationNS + " ns each, nanotime latency: "
