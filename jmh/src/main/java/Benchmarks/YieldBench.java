@@ -46,7 +46,7 @@ public class YieldBench {
         Options opt = new OptionsBuilder()
                 .include( YieldBench.class.getSimpleName())
 		        .mode( Mode.AverageTime)
-		        .timeUnit(TimeUnit.MICROSECONDS)
+		        .timeUnit(TimeUnit.NANOSECONDS)
 		        .warmupIterations(1)
 				.warmupTime( TimeValue.seconds( 1))
 		        .measurementIterations(5)

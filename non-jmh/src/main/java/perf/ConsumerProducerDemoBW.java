@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
-public class ConsumerProducerDemo {
+public class ConsumerProducerDemoBW {
 
 	public static final int JobDurationNS = 100_000;
 	public static final int RunTimeS = 10;
@@ -185,7 +185,7 @@ public class ConsumerProducerDemo {
 			}
 			long durNS = System.nanoTime() - startNS;
 			System.out.println( ", consumer rate: "
-					+ String.format( "%.1f", 1e9 * JobCount / durNS) + "/s "
+					+ String.format( "%,.1f", 1e9 * JobCount / durNS) + "/s "
 					+ String.format( "%,d", pollsBlockedTotalNS) + " ns total delay"
 			);
 		}
@@ -205,10 +205,10 @@ public class ConsumerProducerDemo {
 			long nanoLat = 1;
 			NanoTimeStats stats = NanoTimeStatsTL.get();
 			try {
+				long beforePollNS = System.nanoTime();
 				for ( i = 0;  jobsRemaining.decrementAndGet() >= 0;  i++) {
-					long beforePollNS = System.nanoTime();
 					final Item item = queue.poll( 10, TimeUnit.SECONDS);
-					if ( item == null) {
+					if ( item == null) {    // sollte nicht auftreten
 						pollTimeoutCount++;
 						continue;
 					}
@@ -220,6 +220,7 @@ public class ConsumerProducerDemo {
 					}
 					BusyWaitUntilNanos( item.leaveQueueNS, JobDurationNS, nanoLat, stats);
 					item.finishJob();
+					// Zeiterfassung
 					long pollTookNS = item.leaveQueueNS - beforePollNS;
 					if ( pollTookNS > nanoLat) {
 						pollsBlockedTotalNS += pollTookNS - nanoLat;
@@ -245,6 +246,7 @@ public class ConsumerProducerDemo {
 						histConsumerTPTL.recordValue( jobsPerSec);
 					}
 					lastFinishedNS = item.finishJobNS;
+					beforePollNS = lastFinishedNS;
 				}
 			} catch (InterruptedException e) {
 				System.err.println( Thread.currentThread().getName() + " interrupted at " + i);
