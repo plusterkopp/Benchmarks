@@ -18,9 +18,11 @@ public class ConsumerProducerDemoSleep {
 	static Histogram histInQueue = new SynchronizedHistogram( 4);
 	static Histogram histInJob = new SynchronizedHistogram( 4);
 	static Histogram histInTotal = new SynchronizedHistogram( 4);
+	static Histogram histQueueSizeOnPoll = new SynchronizedHistogram( 4);
+	static Histogram histConsBatchSize = new SynchronizedHistogram( 4);
 	static Histogram histOfferBlock = new Histogram( 4);
 	static Histogram histOfferJobToJob = new Histogram( 4);
-	static Histogram histQueueSize = new SynchronizedHistogram( 4);
+	static Histogram histProdBatchSize = new Histogram( 4);
 //	static Histogram histConsumerTPT = new SynchronizedHistogram( 4);
 
 	private static class Item {
@@ -89,8 +91,12 @@ public class ConsumerProducerDemoSleep {
 				while ( i < JobCount) {
 					long    startLoopNS = System.nanoTime();
 					long    sinceStartNS = startLoopNS - startNS;
-					long    currentJobCount = (long) Math.min( JobCount, sinceStartNS / ( ratio * JobDurationNS));
-					while ( i < currentJobCount) {
+					// how many jobs should we have produced by now?
+					long    targetJobCount = (long) Math.min( JobCount, sinceStartNS / ( ratio * JobDurationNS));
+					// init afterPutNS, too for test, to limit while loop duration in case of long put delays
+					afterPutNS = startLoopNS;
+					int count = 0;
+					while ( i < targetJobCount && afterPutNS < startLoopNS + 1_000_000) {
 						Item item = new Item( i);
 						item.enterQueue();
 						queue.put( item);
@@ -103,7 +109,9 @@ public class ConsumerProducerDemoSleep {
 						}
 						lastEnterNS = item.enterQueueNS;
 						i++;
+						count++;
 					}
+					histProdBatchSize.recordValue( count);
 					Wait( 1);
 				}
 			} catch (InterruptedException e) {
@@ -175,6 +183,7 @@ public class ConsumerProducerDemoSleep {
             Histogram histInTotalL = new Histogram( 4);
 			Histogram histQueueSizeL = new Histogram( 4);
 			Histogram histConsumeJobToJobL = new Histogram( 4);
+			Histogram histConsBatchSizeL = new Histogram( 4);
 //            Histogram histConsumerTPTL = new Histogram( 4);
 
             Long lastFinishedNS = null;
@@ -193,16 +202,17 @@ public class ConsumerProducerDemoSleep {
 					item.finishJob();
 					record(item, beforePollNS, queue.size(), lastFinishedNS, histPollL, histInQueueL, histInJobL, histInTotalL, histQueueSizeL, histConsumeJobToJobL);
 					lastFinishedNS = item.finishJobNS;
-					// jetzt Zeit nehmen, messen, wie weit wir gehen können, ohne neu zu warten
+					// measure time: how far can we go until we must wait() again
 					long startLoopNS = System.nanoTime();
 					beforePollNS = startLoopNS;
 					long sinceStartNS = startLoopNS - startNS;
 					long catchUp = JobCount - sinceStartNS / JobDurationNS;
 					long currentJobCount = Math.max(0, catchUp);
-					remaining = jobsRemaining.get();
+//					remaining = jobsRemaining.get();
 //					System.out.println( Thread.currentThread().getName()
 //							+ " catching up " + ( remaining - currentJobCount) + "/" + ( remaining - catchUp)
 //							+ " jobs (" + remaining + "-" + currentJobCount + "), ");
+					int count = 1;  // how many did we take int this round, including the first (which was actually before the wait())
 					while (jobsRemaining.get() > currentJobCount) {
 						item = queue.poll( 10 * JobDurationNS, TimeUnit.NANOSECONDS);
 						if ( item == null) {
@@ -214,7 +224,9 @@ public class ConsumerProducerDemoSleep {
 						record(item, beforePollNS, queue.size(), lastFinishedNS, histPollL, histInQueueL, histInJobL, histInTotalL, histQueueSizeL, histConsumeJobToJobL);
 						lastFinishedNS = item.finishJobNS;
 						beforePollNS = lastFinishedNS;
+						count++;
 					}
+					histConsBatchSizeL.recordValue( count);
 				}
 			} catch (InterruptedException e) {
 				System.err.println( Thread.currentThread().getName() + " interrupted at " + jobsRemaining.get() + " remaining");
@@ -224,8 +236,9 @@ public class ConsumerProducerDemoSleep {
 			histInQueue.add( histInQueueL);
 			histInTotal.add( histInTotalL);
 			histPoll.add( histPollL);
-			histQueueSize.add( histQueueSizeL);
+			histQueueSizeOnPoll.add( histQueueSizeL);
 			histConsumeJobToJob.add( histConsumeJobToJobL);
+			histConsBatchSize.add( histConsBatchSizeL);
 //			System.out.print( " " + Thread.currentThread().getName() + " finished with " + histInJobL.getTotalCount() + " jobs");
 		}
 
@@ -301,20 +314,22 @@ public class ConsumerProducerDemoSleep {
 		consumer.join();
 
 		List<String>    reports = new ArrayList<>();
-		reports.add( printHistogram( histQueueSize, "queue_size"));
+		reports.add( printHistogram( histQueueSizeOnPoll, "queue_size"));
 		reports.add( printHistogram( histOfferBlock, "ns_for_offer"));
 		reports.add( printHistogram( histOfferJobToJob, "ns_offerToOffer"));
+		reports.add( printHistogram( histProdBatchSize, "prod_batch_size"));
 		reports.add( printHistogram( histPoll,"ns_for_poll"));
 		reports.add( printHistogram( histInQueue,"ns_in_queue"));
 		reports.add( printHistogram( histInJob, "ns_in_job"));
 		reports.add( printHistogram( histInTotal, "ns_total"));
 		reports.add( printHistogram( histConsumeJobToJob, "ns_jobTojob"));
+		reports.add( printHistogram( histConsBatchSize, "cons_batch_size"));
 //		reports.add( printHistogram( histConsumerTPT, "jobs/s"));
 		reports = tabulate( reports);
 		for ( String s: reports) {
 			System.out.println( s);
 		}
-		Histogram[] histos = { histQueueSize, histOfferBlock, histOfferJobToJob, histPoll, histInQueue, histInJob, histInTotal, histConsumeJobToJob};
+		Histogram[] histos = {histQueueSizeOnPoll, histOfferBlock, histOfferJobToJob, histProdBatchSize, histPoll, histInQueue, histInJob, histInTotal, histConsumeJobToJob, histConsBatchSize};
 		for (int i = 0; i < histos.length; i++) {
 			histos[ i].reset();
 		}
@@ -388,11 +403,18 @@ public class ConsumerProducerDemoSleep {
 	private static String printHistogram( Histogram hist, String name) {
 		double[] percentages = { 0, 5, 10, 25, 50, 75, 90, 95, 99, 99.9, 99.99, 100};
 		StringBuilder sb = new StringBuilder();
-		NumberFormat nf = DecimalFormat.getIntegerInstance();
-		sb.append(name + " " + nf.format(hist.getTotalCount()) + " entries, avg = " + nf.format(hist.getMean()) + " percentiles: ");
+		NumberFormat nfi = DecimalFormat.getIntegerInstance();
+		sb.append( name + " " + nfi.format(hist.getTotalCount()) + " entries, avg = ");
+		double mean = hist.getMean();
+		if ( mean < 100) {
+			sb.append( String.format( "%.2f", mean));
+		} else {
+			sb.append( nfi.format( mean));
+		}
+		sb.append( " percentiles: ");
 		for (int i = 0; i < percentages.length;  i++) {
 			double perc = percentages[ i];
-			sb.append(perc + ": " + nf.format(hist.getValueAtPercentile(perc)) + "  ");
+			sb.append(perc + ": " + nfi.format(hist.getValueAtPercentile(perc)) + "  ");
 		}
 		return sb.toString();
 	}
