@@ -20,19 +20,30 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	static ThreadLocal<NumberFormat> NFInt_TL = ThreadLocal.withInitial( () -> {
+	public static ThreadLocal<NumberFormat> NFInt_TL = ThreadLocal.withInitial( () -> {
 		NumberFormat df = DecimalFormat.getIntegerInstance(Locale.US);
 		df.setGroupingUsed( true);
 		return df;
 	});
 
-	public FibonacciForkAff( long n) {
-		super();
-		this.n = n;
-	}
-
-
 	static ForkJoinPool	fjp = new ForkJoinPool( getCPUCount(), createFJThreadFactory(), null, false);
+
+	public static long fibonacciNonRec(int n) {
+		if ( n < 2) {
+			return n;
+		}
+
+		long fib = 1;
+		long fib1 = 1;  // 1 davor
+		long fib2 = 1;  // 2 davor
+
+		for ( int i = 3;  i <= n;  i++) {
+			fib =  fib1 + fib2;
+			fib2 = fib1;
+			fib1 = fib;
+		}
+		return fib;
+	}
 
 	static long	fibonacci0( long n) {
 		if ( n < 2) {
@@ -95,7 +106,7 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 		return factory;
 	}
 
-	private static int getCPUCount() {
+	public static int getCPUCount() {
 		IAffinity aff = Affinity.getAffinityImpl();
 		if ( aff instanceof IDefaultLayoutAffinity) {
 			IDefaultLayoutAffinity idla = (IDefaultLayoutAffinity) aff;
@@ -106,18 +117,14 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 	}
 
 
-	static int	rekLimit = 8;
+	public static int	rekLimit = 8;
 
 	private static long stealCount;
 
-	long	n;
-
-	private long forkCount;
-
 	private static AtomicLong forks = new AtomicLong( 0);
 
-	static class Result {
-		long	durNS;
+	public static class Result {
+		public long	durNS;
 		int	rekLimit;
 	}
 
@@ -127,12 +134,12 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 		BenchLogger.sysinfo( "Warmup max " + getCPUCount() + " Threads (" + Runtime.getRuntime().availableProcessors() + ")");
 		long	singleNS[] = getSingleThreadNanos( 20, 5e9);
 		BenchLogger.sysinfo( "Warmup complete");
-		singleNS = getSingleThreadNanos( fiboArg, 3e9);
+		singleNS = getSingleThreadNanos( fiboArg, 3_000_000_000d);
 		BenchLogger.sysinfo( "Single Thread Times complete");
 		Result[] results = new Result[ fiboArg + 1];
 		for ( int rekLimit = 2;  rekLimit <= fiboArg;  rekLimit++) {
 			results[ rekLimit] = new Result();
-			runWithRecursionLimit( rekLimit, fiboArg, singleNS[ rekLimit], results[ rekLimit]);
+			runWithRecursionLimit( rekLimit, fiboArg, singleNS[ rekLimit], singleNS[ rekLimit - 1], results[ rekLimit]);
 		}
 		BenchLogger.sysout( "CSV results for Fibo " + fiboArg + "\n" + "RekLimit\t" + "Jobs ns\t" + "time ms");
 		NumberFormat nf = NFInt_TL.get();
@@ -141,7 +148,7 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 		}
 	}
 
-	private static long[] getSingleThreadNanos( final int n, final double minRuntimeNS) {
+	public static long[] getSingleThreadNanos(final int n, final double minRuntimeNS) {
 		final long timesNS[] = new long[ n + 1];
 		ExecutorService	es = Executors.newFixedThreadPool( Math.max( 1, Runtime.getRuntime().availableProcessors() / 4));
 		for ( int i = 2;  i <= n;  i++) {
@@ -190,7 +197,7 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 		return timesNS;
 	}
 
-	private static void runWithRecursionLimit( int r, int arg, long singleThreadNanos, Result result) {
+	public static void runWithRecursionLimit(int r, int n, long singleNSAtRekLimit, long singleNSAtRekLimit1, Result result) {
 		rekLimit = r;
 		long	startNS = System.nanoTime();
 		long	fiboResult;
@@ -199,7 +206,7 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 		int timeGoalNS = 1_000_000_000;
 		do {
 			loops++;
-			fiboResult = fibonacci(arg);
+			fiboResult = fibonacci( n);
 			endNS = System.nanoTime();
 		} while ( endNS - startNS < timeGoalNS);
 		// Steals zählen
@@ -208,13 +215,29 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 		stealCount = currentSteals;
 		long	forksCount = forks.getAndSet( 0);
 		final long durNS = endNS - startNS;
-		NumberFormat nf = NFInt_TL.get();
 		long stealsPerLoop = newSteals / loops;
 		long forksPerLoop = forksCount / loops;
+		// wie oft waren wir direkt am rekLimit
+		long stopsPerLoop0 = fibonacciNonRec( n - r + 1);
+		// wie oft waren wir eins unter dem rekLimit
+		long stopsPerLoop1 = fibonacciNonRec( n - r);
 		long durNSPerLoop = durNS / loops;
-		BenchLogger.sysinfo( "Fib(" + arg + ")=" + nf.format( fiboResult)
-				+ " in " + nf.format(durNSPerLoop) + " ns, recursion limit: " + r +
-				" at " + ( singleThreadNanos / 1e6) + "ms, steals: " + stealsPerLoop + " forks " + forksPerLoop);
+		// wir nehmen an, daß alle CPUs ausgelastet waren (was bei sehr vielen Jobs auch zutreffen sollte), dann hatten wir so viel CPU Zeit insgesamt
+		long totalCPUNSPerLoop = getCPUCount() * durNSPerLoop;
+		// davon haben wir so viel Zeit in den MiniJobs verbracht, der Rest war Overhead und join-Aufwand
+		long nonRekNS = singleNSAtRekLimit * stopsPerLoop0 + singleNSAtRekLimit1 * stopsPerLoop1;
+		double overheadPerc = 100 * ( 1 - 1.0 * nonRekNS / totalCPUNSPerLoop);
+		NumberFormat nf = NFInt_TL.get();
+		BenchLogger.sysinfo( "Fib(" + n + ")=" + nf.format( fiboResult)
+				+ " in " + nf.format(durNSPerLoop) + " ns,"
+				+ " recursion limit: " + r
+				+ " at " + ( singleNSAtRekLimit / 1e6) + "ms,"
+				+ " overhead: " + String.format( "%.2f", overheadPerc) + " %, "
+				+ " steals: " + stealsPerLoop
+				+ " forks " + forksPerLoop
+				+ " stops0 " + stopsPerLoop0
+				+ " stops1 " + stopsPerLoop1
+		);
 		result.durNS = durNSPerLoop;
 		result.rekLimit = r;
 	}
@@ -226,9 +249,17 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 		return result;
 	}
 
+	long	n;
+	private long forkCount = 0;
+
+	public FibonacciForkAff( long n) {
+		super();
+		this.n = n;
+	}
+
 	@Override
 	protected Long compute() {
-		// wenn Argument zu klein ist, daß sich aufteilen nicht mehr lohnt, dann berechne es ohne weitere Verteilung auf Jobs, aber innernoch rekursiv
+		// wenn Argument zu klein ist, daß sich aufteilen nicht mehr lohnt, dann berechne es ohne weitere Verteilung auf Jobs, aber immernoch rekursiv
 		if ( n <= rekLimit) {
 			return fibonacci0( n);
 		}
@@ -243,3 +274,4 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 	}
 
 }
+
