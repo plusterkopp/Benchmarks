@@ -1,4 +1,4 @@
-package de.icubic.mm.bench.benches;
+package benches;
 
 import java.text.NumberFormat;
 import java.util.*;

@@ -1,7 +1,7 @@
 /**
  *
  */
-package de.icubic.mm.bench.benches;
+package benches;
 
 import java.util.*;
 import java.util.concurrent.*;

@@ -1,5 +1,5 @@
 /* Created on 13.08.2007 */
-package de.icubic.mm.bench.benches;
+package benches;
 
 import java.util.*;
 import java.util.concurrent.*;

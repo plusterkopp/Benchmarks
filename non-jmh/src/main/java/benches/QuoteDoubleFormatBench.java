@@ -2,14 +2,14 @@
  * Created on 13.08.2007
  *
  */
-package de.icubic.mm.bench.benches;
+package benches;
 
 import java.text.*;
 import java.util.*;
 import java.util.concurrent.*;
 
 import de.icubic.mm.bench.base.*;
-import de.icubic.mm.bench.benches.DoubleFormatTest.*;
+import benches.DoubleFormatTest.*;
 import de.icubic.mm.communication.util.*;
 
 /**

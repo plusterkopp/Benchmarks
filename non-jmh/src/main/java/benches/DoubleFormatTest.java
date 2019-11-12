@@ -1,4 +1,4 @@
-package de.icubic.mm.bench.benches;
+package benches;
 
 import static org.junit.Assert.*;
 
