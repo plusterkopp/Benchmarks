@@ -137,7 +137,7 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 		Result[] results = new Result[ fiboArg + 1];
 		for ( int rekLimit = 2;  rekLimit <= fiboArg;  rekLimit++) {
 			results[ rekLimit] = new Result();
-			runWithRecursionLimit( rekLimit, fiboArg, singleNS[ rekLimit], singleNS[ rekLimit - 1], results[ rekLimit]);
+			runWithRecursionLimit( rekLimit, fiboArg, singleNS, results[ rekLimit]);
 		}
 		BenchLogger.sysout( "CSV results for Fibo " + fiboArg + "\n" + "RekLimit\t" + "Jobs ns\t" + "time ms");
 		NumberFormat nf = NFInt_TL.get();
@@ -146,16 +146,16 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 		}
 	}
 
-	public static long[] getSingleThreadNanos(final int n, final double minRuntimeNS) {
-		final long timesNS[] = new long[ n + 1];
+	public static long[] getSingleThreadNanos(final int nMax, final double minRuntimeNS) {
+		final long timesNS[] = new long[ nMax + 1];
 		ExecutorService	es = Executors.newFixedThreadPool( Math.max( 1, Runtime.getRuntime().availableProcessors() / 4));
-		for ( int i = 2;  i <= n;  i++) {
-			final int arg = i;
+		for ( int i = 2;  i <= nMax;  i++) {
+			final int n = i;
 			Runnable runner = new Runnable() {
 				@Override
 				public void run() {
 					long	start = System.nanoTime();
-					long result = fibonacci0( arg);
+					long result = fibonacci0( n);
 					long	end = System.nanoTime();
 					double	durNS = end - start;
 					long 		ntimes = 1;
@@ -171,16 +171,16 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 //						BenchLogger.sysinfo( "single for " + arg + " took " + nf.format( durNS / oldNTimes) + " ns/loop, starting " + nf.format( ntimes) + " loops");
 						start = System.nanoTime();
 						for ( long i = 0;  i < ntimes;  i++) {
-							result = fibonacci0( arg);
+							result = fibonacci0( n);
 						}
 						end = System.nanoTime();
 						durNS = end - start;
 						fact *= 1.1;
 					}
-					timesNS[ arg] = ( long) ( durNS / ntimes);
+					timesNS[ n] = ( long) ( durNS / ntimes);
 					NumberFormat nf = NFInt_TL.get();
-					BenchLogger.sysinfo( "Single Fib(" + arg + ")=" + nf.format( result)
-							+ " in " + nf.format( timesNS[ arg]) + " ns"
+					BenchLogger.sysinfo( "Single Fib(" + n + ")=" + nf.format( result)
+							+ " in " + nf.format( timesNS[ n]) + " ns"
 							+ " (" + nf.format( ntimes) + " loops in " + nf.format( durNS) + " ns)");
 				}
 			};
@@ -195,7 +195,7 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 		return timesNS;
 	}
 
-	public static void runWithRecursionLimit(int r, int n, long singleNSAtRekLimit, long singleNSAtRekLimit1, Result result) {
+	public static void runWithRecursionLimit(int r, int n, long singleNS[], Result result) {
 		rekLimit = r;
 		long	startNS = System.nanoTime();
 		long	fiboResult;
@@ -223,14 +223,15 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 		// wir nehmen an, daß alle CPUs ausgelastet waren (was bei sehr vielen Jobs auch zutreffen sollte), dann hatten wir so viel CPU Zeit insgesamt
 		long totalCPUNSPerLoop = getCPUCount() * durNSPerLoop;
 		// davon haben wir so viel Zeit in den MiniJobs verbracht, der Rest war Overhead und join-Aufwand
-		long nonRekNS = singleNSAtRekLimit * stopsPerLoop0 + singleNSAtRekLimit1 * stopsPerLoop1;
-		double overheadPerc = 100 * ( 1 - 1.0 * nonRekNS / totalCPUNSPerLoop);
+		long nonRekNS = singleNS[ r] * stopsPerLoop0 + singleNS[ r-1] * stopsPerLoop1;
+		double timeInJobsPerc = 100.0 * nonRekNS / totalCPUNSPerLoop;
 		NumberFormat nf = NFInt_TL.get();
 		BenchLogger.sysinfo( "Fib(" + n + ")=" + nf.format( fiboResult)
 				+ " in " + nf.format(durNSPerLoop) + " ns,"
 				+ " recursion limit: " + r
-				+ " at " + ( singleNSAtRekLimit / 1e6) + "ms,"
-				+ " overhead: " + String.format( "%.2f", overheadPerc) + " %, "
+				+ " at " + ( singleNS[ r] / 1e6) + "ms,"
+				+ " in jobs: " + String.format( "%.2f", timeInJobsPerc) + " %, "
+				+ " speedup: " + String.format( "%.2f", 1.0 * singleNS[ n] / durNSPerLoop)
 				+ " steals: " + stealsPerLoop
 				+ " forks " + forksPerLoop
 				+ " stops0 " + stopsPerLoop0
