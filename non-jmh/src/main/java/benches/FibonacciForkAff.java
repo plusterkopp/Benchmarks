@@ -1,15 +1,17 @@
 package benches;
 
 
-import java.text.*;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.concurrent.ForkJoinPool.*;
-import java.util.concurrent.atomic.*;
-import java.util.function.*;
-
-import de.icubic.mm.bench.base.*;
+import de.icubic.mm.bench.base.BenchLogger;
 import net.openhft.affinity.*;
+
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.concurrent.*;
+import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.IntBinaryOperator;
 
 public class FibonacciForkAff extends RecursiveTask<Long> {
 
@@ -21,6 +23,12 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 	public static ThreadLocal<NumberFormat> NFInt_TL = ThreadLocal.withInitial( () -> {
 		NumberFormat df = DecimalFormat.getIntegerInstance(Locale.US);
 		df.setGroupingUsed( true);
+		return df;
+	});
+	public static ThreadLocal<NumberFormat> NFFlt_TL = ThreadLocal.withInitial( () -> {
+		NumberFormat df = DecimalFormat.getNumberInstance( Locale.US);
+		df.setGroupingUsed( true);
+		df.setMinimumFractionDigits( 2);
 		return df;
 	});
 
@@ -133,9 +141,9 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 
 		int fiboArg = 40;
 		BenchLogger.sysinfo( "Warmup max " + getCPUCount() + " Threads (" + Runtime.getRuntime().availableProcessors() + ")");
-		long	singleNS[] = getSingleThreadNanos( 20, 5e9);
+		long	singleNS[] = getSingleThreadNanos( 20, 1e9);
 		BenchLogger.sysinfo( "Warmup complete");
-		singleNS = getSingleThreadNanos( fiboArg, 3_000_000_000d);
+		singleNS = getSingleThreadNanos( fiboArg, 3 * 1e9);
 		BenchLogger.sysinfo( "Single Thread Times complete");
 		Result[] results = new Result[ fiboArg + 1];
 		for ( int rekLimit = 2;  rekLimit <= fiboArg;  rekLimit++) {
@@ -143,14 +151,15 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 			runWithRecursionLimit( rekLimit, fiboArg, singleNS, results[ rekLimit]);
 		}
 		BenchLogger.sysout( "CSV results for Fibo " + fiboArg + "\n" + "RekLimit\t" + "Jobs ns\t" + "time ms");
-		NumberFormat nf = NFInt_TL.get();
+		NumberFormat nfi = NFInt_TL.get();
+		NumberFormat nfd = NFFlt_TL.get();
 		for ( int rekLimit = 2;  rekLimit <= fiboArg;  rekLimit++) {
 			Result result = results[rekLimit];
 			System.out.println( rekLimit + "\t"
-				+ nf.format( result.singleJobNSAvg) + "\t"
-				+ nf.format( result.durNS) + "\t"
-				+ nf.format( result.timeInJobsPerc) + "%\t"
-				+ nf.format( result.speedup) + "\t"
+				+ nfd.format( result.singleJobNSAvg) + "\t"
+				+ nfi.format( result.durNS) + "\t"
+				+ nfd.format( result.timeInJobsPerc) + "%\t"
+				+ nfd.format( result.speedup) + "\t"
 			);
 		}
 	}
@@ -189,8 +198,8 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 					timesNS[ n] = ( long) ( durNS / ntimes);
 					NumberFormat nf = NFInt_TL.get();
 					BenchLogger.sysinfo( "Single Fib(" + n + ")=" + nf.format( result)
-							+ " in " + nf.format( timesNS[ n]) + " ns"
-							+ " (" + nf.format( ntimes) + " loops in " + nf.format( durNS) + " ns)");
+						+ " in " + nf.format( timesNS[ n]) + " ns"
+						+ " (" + nf.format( ntimes) + " loops in " + nf.format( durNS) + " ns)");
 				}
 			};
 			es.execute( runner);
