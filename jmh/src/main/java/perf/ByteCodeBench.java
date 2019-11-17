@@ -27,6 +27,8 @@ public class ByteCodeBench {
 		return length;
 	}
 
+	// -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCI -XX:+UseJVMCICompiler
+
 	@Benchmark
 	@Fork( jvmArgsPrepend = {"-XX:+UnlockExperimentalVMOptions", "-XX:+EnableJVMCI", "-XX:+UseJVMCICompiler"})
 	public int simpleGraal() {

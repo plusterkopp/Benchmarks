@@ -123,6 +123,9 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 
 	public static class Result {
 		public long	durNS;
+		public double speedup;
+		public double timeInJobsPerc;
+		public double singleJobNSAvg;
 		int	rekLimit;
 	}
 
@@ -142,7 +145,13 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 		BenchLogger.sysout( "CSV results for Fibo " + fiboArg + "\n" + "RekLimit\t" + "Jobs ns\t" + "time ms");
 		NumberFormat nf = NFInt_TL.get();
 		for ( int rekLimit = 2;  rekLimit <= fiboArg;  rekLimit++) {
-			BenchLogger.sysout( rekLimit + "\t" + nf.format( singleNS[ rekLimit]) + "\t" + nf.format( results[ rekLimit].durNS));
+			Result result = results[rekLimit];
+			System.out.println( rekLimit + "\t"
+				+ nf.format( result.singleJobNSAvg) + "\t"
+				+ nf.format( result.durNS) + "\t"
+				+ nf.format( result.timeInJobsPerc) + "%\t"
+				+ nf.format( result.speedup) + "\t"
+			);
 		}
 	}
 
@@ -224,21 +233,26 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 		long totalCPUNSPerLoop = getCPUCount() * durNSPerLoop;
 		// davon haben wir so viel Zeit in den MiniJobs verbracht, der Rest war Overhead und join-Aufwand
 		long nonRekNS = singleNS[ r] * stopsPerLoop0 + singleNS[ r-1] * stopsPerLoop1;
+		double singleJobNSAvg = 1.0 * nonRekNS / ( stopsPerLoop0 + stopsPerLoop1);
 		double timeInJobsPerc = 100.0 * nonRekNS / totalCPUNSPerLoop;
 		NumberFormat nf = NFInt_TL.get();
+		double speedup = 1.0 * singleNS[n] / durNSPerLoop;
 		BenchLogger.sysinfo( "Fib(" + n + ")=" + nf.format( fiboResult)
 				+ " in " + nf.format(durNSPerLoop) + " ns,"
 				+ " recursion limit: " + r
-				+ " at " + ( singleNS[ r] / 1e6) + "ms,"
+				+ " at " + ( singleJobNSAvg / 1e6) + "ms,"
 				+ " in jobs: " + String.format( "%.2f", timeInJobsPerc) + " %, "
-				+ " speedup: " + String.format( "%.2f", 1.0 * singleNS[ n] / durNSPerLoop)
+				+ " speedup: " + String.format( "%.2f", speedup)
 				+ " steals: " + stealsPerLoop
 				+ " forks " + forksPerLoop
-				+ " stops0 " + stopsPerLoop0
-				+ " stops1 " + stopsPerLoop1
+//				+ " stops0 " + stopsPerLoop0
+//				+ " stops1 " + stopsPerLoop1
 		);
 		result.durNS = durNSPerLoop;
 		result.rekLimit = r;
+		result.speedup = speedup;
+		result.timeInJobsPerc = timeInJobsPerc;
+		result.singleJobNSAvg = singleJobNSAvg;
 	}
 
 	static long fibonacci( final long arg) {

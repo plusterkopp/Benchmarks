@@ -216,7 +216,7 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 
 	@Override
 	protected Long compute() {
-		// wenn Argument zu klein ist, daß sich aufteilen nicht mehr lohnt, dann berechne es ohne weitere Verteilung auf Jobs, aber innernoch rekursiv
+		// wenn Argument zu klein ist, daß sich aufteilen nicht mehr lohnt, dann berechne es ohne weitere Verteilung auf Jobs, aber immernoch rekursiv
 		if ( n <= rekLimit) {
 			return fibonacci0( n);
 		}
