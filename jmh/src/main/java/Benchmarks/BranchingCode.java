@@ -2,7 +2,6 @@ package Benchmarks;
 
 
 import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.*;
@@ -16,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @State(Scope.Benchmark)
-public class BranchPrediction {
+public class BranchingCode {
 
 	private static final int COUNT = 1024 * 1024;
 
@@ -107,10 +106,10 @@ public class BranchPrediction {
 
 	public static void main(String[] args) throws RunnerException {
 		Options opt = new OptionsBuilder()
-			.include( BranchPrediction.class.getSimpleName())
+			.include( BranchingCode.class.getSimpleName())
 			.warmupIterations(5)
-			.measurementTime(TimeValue.seconds( 1))
-			.measurementIterations( 3)
+			.measurementIterations( 5)
+			.measurementTime(TimeValue.seconds( 5))
 			.forks(1)
 			.build();
 		new Runner(opt).run();
