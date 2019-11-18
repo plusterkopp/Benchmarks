@@ -12,8 +12,8 @@ import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-@Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
-@Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations = 5, time = 2, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 5, time = 5, timeUnit = TimeUnit.SECONDS)
 @State(Scope.Benchmark)
 public class BranchingCode {
 
@@ -95,12 +95,12 @@ public class BranchingCode {
 
 	public static void main(String[] args) throws RunnerException {
 		Options opt = new OptionsBuilder()
-			.include( BranchingCode.class.getSimpleName())
-			.warmupIterations(5)
-			.measurementIterations( 5)
-			.measurementTime(TimeValue.seconds( 5))
-			.forks(1)
-			.build();
+				.include( BranchingCode.class.getSimpleName())
+				.warmupIterations(8)
+				.measurementIterations( 5)
+				.measurementTime(TimeValue.seconds( 5))
+				.forks(1)
+				.build();
 		new Runner(opt).run();
 	}
 
