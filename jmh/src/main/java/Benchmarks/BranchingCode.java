@@ -17,24 +17,13 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 public class BranchingCode {
 
-	private static final int COUNT = 1024 * 1024;
-
-	private byte[] sorted;
-	private byte[] unsorted;
-
 	int countFlags = 1024;
 	private boolean[][]   flagsA;
 	int flagIndex = 0;
 
 	@Setup
 	public void setup() {
-		sorted = new byte[COUNT];
-		unsorted = new byte[COUNT];
 		Random random = new Random(1234);
-		random.nextBytes(sorted);
-		random.nextBytes(unsorted);
-		Arrays.sort(sorted);
-
 		flagsA = new boolean[ countFlags][ 4];
 		for ( int i = 0;  i < flagsA.length;  i++) {
 			boolean[] flags = flagsA[i];
@@ -42,10 +31,10 @@ public class BranchingCode {
 				flags[ j] = random.nextBoolean();
 			}
 			// teste, ob alles zum gleichen Ergebnis führt
-			if ( largeIf( flags) != cascadeIfHalf( flags)) {
+			if ( largeIf( flags[ 0], flags[ 1], flags[ 2], flags[ 3]) != cascadeIfHalf( flags[ 0], flags[ 1], flags[ 2], flags[ 3])) {
 				System.err.println( "mismatch half at " + i + " for " + Arrays.toString( flags));
 			}
-			if ( largeIf( flags) != cascadeIfFull( flags)) {
+			if ( largeIf( flags[ 0], flags[ 1], flags[ 2], flags[ 3]) != cascadeIfFull( flags[ 0], flags[ 1], flags[ 2], flags[ 3])) {
 				System.err.println( "mismatch full at " + i + " for " + Arrays.toString( flags));
 			}
 		}
@@ -54,14 +43,14 @@ public class BranchingCode {
 	@Benchmark
 	public int largeIf() {
 		boolean flags[] = flagsA[ flagIndex++ & ( countFlags - 1)];
-		return largeIf( flags);
+		return largeIf( flags[ 0], flags[ 1], flags[ 2], flags[ 3]);
 	}
 
-	private int largeIf( boolean flags[]) {
+	private int largeIf( boolean f0, boolean f1, boolean f2, boolean f3) {
 		if (
-			( flags[ 0] && flags[ 1])
+			( f0 && f1)
 				||
-				( flags[ 2] && ! flags[ 3])
+				( f2 && ! f3)
 		) {
 			return 1;
 		}
@@ -71,14 +60,14 @@ public class BranchingCode {
 	@Benchmark
 	public int cascadeIfHalf() {
 		boolean flags[] = flagsA[ flagIndex++ & ( countFlags - 1)];
-		return cascadeIfHalf( flags);
+		return cascadeIfHalf( flags[ 0], flags[ 1], flags[ 2], flags[ 3]);
 	}
 
-	private int cascadeIfHalf( boolean flags[]) {
-		if ( flags[ 0] && flags[ 1]) {
+	private int cascadeIfHalf( boolean f0, boolean f1, boolean f2, boolean f3) {
+		if ( f0 && f1) {
 			return 1;
 		}
-		if ( flags[ 2] && ! flags[ 3]) {
+		if ( f2 && ! f3) {
 			return 1;
 		}
 		return 0;
@@ -87,17 +76,17 @@ public class BranchingCode {
 	@Benchmark
 	public int cascadeIfFull() {
 		boolean flags[] = flagsA[ flagIndex++ & ( countFlags - 1)];
-		return cascadeIfFull( flags);
+		return cascadeIfFull( flags[ 0], flags[ 1], flags[ 2], flags[ 3]);
 	}
 
-	private int cascadeIfFull( boolean flags[]) {
-		if ( flags[ 0]) {
-			if ( flags[ 1]) {
+	private int cascadeIfFull( boolean f0, boolean f1, boolean f2, boolean f3) {
+		if ( f0) {
+			if ( f1) {
 				return 1;
 			}
 		}
-		if ( flags[ 2]) {
-			if ( ! flags[ 3]) {
+		if ( f2) {
+			if ( ! f3) {
 				return 1;
 			}
 		}
