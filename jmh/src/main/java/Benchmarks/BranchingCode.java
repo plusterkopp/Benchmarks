@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 public class BranchingCode {
 
-	int countFlags = 1024;
+	static final int countFlags = 1024;
 	private boolean[][]   flagsA;
 	int flagIndex = 0;
 
@@ -40,9 +40,15 @@ public class BranchingCode {
 		}
 	}
 
+	private boolean[] getFlags() {
+		int index = flagIndex++ & (countFlags - 1);
+		boolean flags[] = flagsA[index];
+		return flags;
+	}
+
 	@Benchmark
 	public int largeIf() {
-		boolean flags[] = flagsA[ flagIndex++ & ( countFlags - 1)];
+		boolean flags[] = getFlags();
 		return largeIf( flags[ 0], flags[ 1], flags[ 2], flags[ 3]);
 	}
 
@@ -59,7 +65,7 @@ public class BranchingCode {
 
 	@Benchmark
 	public int cascadeIfHalf() {
-		boolean flags[] = flagsA[ flagIndex++ & ( countFlags - 1)];
+		boolean flags[] = getFlags();
 		return cascadeIfHalf( flags[ 0], flags[ 1], flags[ 2], flags[ 3]);
 	}
 
@@ -75,7 +81,7 @@ public class BranchingCode {
 
 	@Benchmark
 	public int cascadeIfFull() {
-		boolean flags[] = flagsA[ flagIndex++ & ( countFlags - 1)];
+		boolean flags[] = getFlags();
 		return cascadeIfFull( flags[ 0], flags[ 1], flags[ 2], flags[ 3]);
 	}
 
