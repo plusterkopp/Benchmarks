@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 public class BranchingCode {
 
-	static final int countFlags = 1024;
+	static final int countFlags = 1 << 10;
 	private boolean[][]   flagsA;
 	int flagIndex = 0;
 
@@ -37,12 +37,21 @@ public class BranchingCode {
 			if ( largeIf( flags[ 0], flags[ 1], flags[ 2], flags[ 3]) != cascadeIfFull( flags[ 0], flags[ 1], flags[ 2], flags[ 3])) {
 				System.err.println( "mismatch full at " + i + " for " + Arrays.toString( flags));
 			}
+			if ( largeIf( flags[ 0], flags[ 1], flags[ 2], flags[ 3]) != largeIfB( flags[ 0], flags[ 1], flags[ 2], flags[ 3])) {
+				System.err.println( "mismatch full at " + i + " for " + Arrays.toString( flags));
+			}
 		}
 	}
 
 	private boolean[] getFlags() {
 		int index = flagIndex++ & (countFlags - 1);
 		boolean flags[] = flagsA[index];
+		return flags;
+	}
+
+	@Benchmark
+	public boolean[] baseline() {
+		boolean flags[] = getFlags();
 		return flags;
 	}
 
@@ -54,9 +63,26 @@ public class BranchingCode {
 
 	private int largeIf( boolean f0, boolean f1, boolean f2, boolean f3) {
 		if (
-			( f0 && f1)
-				||
-				( f2 && ! f3)
+				( f0 && f1)
+						||
+						( f2 && ! f3)
+		) {
+			return 1;
+		}
+		return 0;
+	}
+
+	@Benchmark
+	public int largeIfB() {
+		boolean flags[] = getFlags();
+		return largeIfB( flags[ 0], flags[ 1], flags[ 2], flags[ 3]);
+	}
+
+	private int largeIfB( boolean f0, boolean f1, boolean f2, boolean f3) {
+		if (
+				( f0 & f1)
+					|
+				( f2 & ! f3)
 		) {
 			return 1;
 		}
