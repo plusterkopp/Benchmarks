@@ -129,7 +129,7 @@ public class TimersBench {
         ExecutorService service = Executors.newCachedThreadPool();
 
         pw.println();
-        pw.print("Burning up to figure out the exact CPU count...");
+        pw.print("Burning up to figure out the exact CPU count… ");
         pw.flush();
 
         int warmupTime = 1000;
@@ -152,7 +152,7 @@ public class TimersBench {
         }
 
         for (Future<?> f : futures) {
-            pw.print(".");
+            pw.print(":");
             f.cancel(true);
         }
 
@@ -160,7 +160,7 @@ public class TimersBench {
 
         service.awaitTermination(1, TimeUnit.DAYS);
 
-        pw.println(" done!");
+        pw.println(" done: " + max);
 
         return max;
     }

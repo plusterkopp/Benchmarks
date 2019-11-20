@@ -2,12 +2,13 @@ package Benchmarks;
 
 
 import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.results.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.*;
+import utils.*;
 
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)
@@ -38,7 +39,7 @@ public class BranchingCode {
 				System.err.println( "mismatch full at " + i + " for " + Arrays.toString( flags));
 			}
 			if ( largeIf( flags[ 0], flags[ 1], flags[ 2], flags[ 3]) != largeIfB( flags[ 0], flags[ 1], flags[ 2], flags[ 3])) {
-				System.err.println( "mismatch full at " + i + " for " + Arrays.toString( flags));
+				System.err.println( "mismatch bool at " + i + " for " + Arrays.toString( flags));
 			}
 		}
 	}
@@ -133,7 +134,8 @@ public class BranchingCode {
 				.measurementTime(TimeValue.seconds( 5))
 				.forks(1)
 				.build();
-		new Runner(opt).run();
+		Collection<RunResult> results = new Runner(opt).run();
+		JMHUtils.reportWithBaseline( results, "baseline");
 	}
 
 }
