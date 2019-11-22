@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 public class BranchingCode {
 
-	static final int countFlags = 1 << 10;
+	static final int countFlags = 1 << 8;
 	private boolean[][]   flagsA;
 	int flagIndex = 0;
 
@@ -131,7 +131,7 @@ public class BranchingCode {
 				.include( BranchingCode.class.getSimpleName())
 				.warmupIterations(8)
 				.measurementIterations( 5)
-				.measurementTime(TimeValue.seconds( 5))
+				.measurementTime(TimeValue.seconds( 10))
 				.forks(1)
 				.build();
 		Collection<RunResult> results = new Runner(opt).run();
