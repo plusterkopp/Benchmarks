@@ -2,13 +2,17 @@ package Benchmarks;
 
 
 import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.results.*;
+import org.openjdk.jmh.results.RunResult;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
-import org.openjdk.jmh.runner.options.*;
-import utils.*;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
+import org.openjdk.jmh.runner.options.TimeValue;
+import utils.JMHUtils;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)
@@ -64,9 +68,9 @@ public class BranchingCode {
 
 	private int largeIf( boolean f0, boolean f1, boolean f2, boolean f3) {
 		if (
-				( f0 && f1)
-						||
-						( f2 && ! f3)
+			( f0 && f1)
+				||
+				( f2 && ! f3)
 		) {
 			return 1;
 		}
