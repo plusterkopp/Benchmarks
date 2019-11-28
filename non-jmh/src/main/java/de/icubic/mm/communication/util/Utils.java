@@ -169,9 +169,9 @@ public class Utils {
 	 * package.
 	 *
 	 * @see http://www.javaworld.com/javaworld/javatips/jw-javatip113.html
-	 * @param pckgname
+	 * @param pckname
 	 *            the fully qualified name of the package
-	 * @param tosubclass
+	 * @param tosubclassname
 	 *            the name of the class to inherit from
 	 * @param includeSuperClass
 	 *            whether to include tosubclass in resultset or not
