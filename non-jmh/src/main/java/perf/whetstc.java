@@ -1,4 +1,4 @@
-package misc;// javac whetstc.java
+package perf;// javac whetstc.java
 // java whetstc
 
 

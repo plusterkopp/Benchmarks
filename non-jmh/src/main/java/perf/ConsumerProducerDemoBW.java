@@ -1,6 +1,5 @@
 package perf;
 
-import org.HdrHistogram.ConcurrentHistogram;
 import org.HdrHistogram.Histogram;
 import org.HdrHistogram.SynchronizedHistogram;
 
@@ -14,9 +13,9 @@ import java.util.concurrent.atomic.*;
 
 public class ConsumerProducerDemoBW {
 
-	public static final int JobDurationNS = 100_000;
+	public static final int JobDurationNS = 1000_000;
 	public static final int RunTimeS = 10;
-	static final int    JobCount = ( int) (1_000_000_000L * RunTimeS / JobDurationNS);
+	static final int    JobCount = ( int) (1e9 * RunTimeS / JobDurationNS);
 
 //	static final LongAdder BusyWaitRounds = new LongAdder();
 //	static final LongAdder BusyWaitNanos = new LongAdder();
@@ -73,7 +72,7 @@ public class ConsumerProducerDemoBW {
 		private double ratio = 1;
 		private long startNS = 0;
 		private	long offersBlockedTotal = 0;
-		private	long offersDelayedTotal = 0;
+		private	long offersDelayedExcess = 0;
 		private double nanoTimeLatencyD = 0;
 
 		public Producer(BlockingQueue<Item> q) {
@@ -100,7 +99,7 @@ public class ConsumerProducerDemoBW {
 			System.out.print( " rate: "
 					+ String.format( "%.1f", 1e9 * JobCount / durNS) + "/s "
 					+ String.format( "%,d", offersBlockedTotal) + " ns offers blocked, "
-					+ String.format( "%,d", offersDelayedTotal) + " ns total delay"
+					+ String.format( "%,d", offersDelayedExcess) + " ns excess delay"
 					+ " nanotime latency: "
 					+ String.format( "%.2f", nanoTimeLatencyD)
 			);
@@ -127,7 +126,7 @@ public class ConsumerProducerDemoBW {
 					if ( offerTookNS < nanosToWait) {
 						BusyWaitUntilNanos(item.enterQueueNS, nanosToWait, nanoLat, stats);
 					} else {
-						offersDelayedTotal += offerTookNS - nanosToWait;
+						offersDelayedExcess += offerTookNS - nanosToWait;
 					}
 					if ( offerTookNS > nanoLat) {
 						histOfferBlock.recordValue(offerTookNS - nanoLat);
@@ -186,7 +185,7 @@ public class ConsumerProducerDemoBW {
 			long durNS = System.nanoTime() - startNS;
 			System.out.println( ", consumer rate: "
 					+ String.format( "%,.1f", 1e9 * JobCount / durNS) + "/s "
-					+ String.format( "%,d", pollsBlockedTotalNS) + " ns total delay"
+					+ String.format( "%,d", pollsBlockedTotalNS) + " ns poll delay"
 			);
 		}
 
@@ -339,6 +338,7 @@ public class ConsumerProducerDemoBW {
 		for (int i = 0; i < histos.length; i++) {
 			histos[ i].reset();
 		}
+		System.out.println();
 	}
 
 	private static List<String> tabulate(List<String> reports) {

@@ -291,13 +291,15 @@ public class ConsumerProducerDemoSleep {
 
 //		System.out.println( "Pool Size: " + 2);
 		for ( BlockingQueue<Item> q : queues) {
-			runJoin( q, 2, 51.0/100.0);
+			runJoin( q, 2, 52.0/100.0);
 		}
+		int factor = 1;
 		for ( BlockingQueue<Item> q : queues) {
-			runJoin( q, ncpus2, 1.0/( ncpus2 * 0.9));
+			runJoin( q, ncpus2 * factor, 1.0/( ncpus2 * factor * 0.9));
 		}
+		factor = 4;
 		for ( BlockingQueue<Item> q : queues) {
-			runJoin( q, ncpus2 * 4, 1.0/( ncpus2 * 4 * 0.9));
+			runJoin( q, ncpus2 * factor, 1.0/( ncpus2 * factor * 0.9));
 		}
 	}
 

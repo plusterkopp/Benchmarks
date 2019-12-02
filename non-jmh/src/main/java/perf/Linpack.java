@@ -31,7 +31,7 @@ Translated to C by Bonnie Toy 5/88
 
 */
 
-package misc;
+package perf;
 
 public class Linpack {
 
