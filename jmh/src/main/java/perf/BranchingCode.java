@@ -1,4 +1,4 @@
-package Benchmarks;
+package perf;
 
 
 import org.openjdk.jmh.annotations.*;
