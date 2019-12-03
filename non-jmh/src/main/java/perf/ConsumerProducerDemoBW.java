@@ -288,8 +288,8 @@ public class ConsumerProducerDemoBW {
 		stats.reset();
 		BusyWaitUntilNanos( System.nanoTime(), 1_000_000, 1, stats);
 		NanoTimeStats	nanoTimeStats = NanoTimeStatsTL.get();
-		System.out.println( "\nHot running " + JobCount + " Jobs, "
-				+ JobDurationNS + " ns each, nanotime latency: "
+		System.out.println( "\nHot running "
+				+ String.format( "%,d Jobs %,d", JobCount, JobDurationNS) + " ns each, nanotime latency: "
 				+ String.format( "%.2f", 1.0 * nanoTimeStats.nanos / nanoTimeStats.calls));
 
 		for ( BlockingQueue<Item> q : queues) {
@@ -440,7 +440,9 @@ public class ConsumerProducerDemoBW {
 		double[] percentages = { 0, 5, 10, 25, 50, 75, 90, 95, 99, 99.9, 99.99, 100};
 		StringBuilder sb = new StringBuilder();
 		NumberFormat nf = DecimalFormat.getIntegerInstance();
-		sb.append(name + " " + nf.format(hist.getTotalCount()) + " entries, avg = " + nf.format(hist.getMean()) + " percentiles: ");
+		sb.append(name + " " + nf.format(hist.getTotalCount()) + " entries, avg = " + nf.format(hist.getMean()));
+		sb.append(" " + String.format( "%.1f", hist.getPercentileAtOrBelowValue( (long) hist.getMean())) + "%");
+		sb.append(" percentiles: ");
 		for (int i = 0; i < percentages.length;  i++) {
 			double perc = percentages[ i];
 			sb.append(perc + ": " + nf.format(hist.getValueAtPercentile(perc)) + "  ");
