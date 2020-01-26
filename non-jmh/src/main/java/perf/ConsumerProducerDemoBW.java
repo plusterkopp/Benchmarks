@@ -253,8 +253,8 @@ public class ConsumerProducerDemoBW {
 					histQueueSizeL.recordValue( size);
 					if ( i > 0) {
 						long	nsSinceLastJob = item.finishJobNS - lastFinishedNS;
-						long	jobsPerSec = 1_000_000_000L / nsSinceLastJob;
-						histConsumerTPTL.recordValue( jobsPerSec);
+//						long	jobsPerSec = 1_000_000_000L / nsSinceLastJob;
+						histConsumerTPTL.recordValue( nsSinceLastJob);
 					}
 					lastFinishedNS = item.finishJobNS;
 					beforePollNS = lastFinishedNS;
@@ -354,13 +354,13 @@ public class ConsumerProducerDemoBW {
 		consumer.join();
 
 		List<String>    reports = new ArrayList<>();
-		reports.add( printHistogram( histQueueSize, "queue_size"));
-		reports.add( printHistogram( histOfferBlock, "ns_for_offer"));
-		reports.add( printHistogram( histPoll,"ns_for_poll"));
-		reports.add( printHistogram( histInQueue,"ns_in_queue"));
-		reports.add( printHistogram( histInJob, "ns_in_job"));
-		reports.add( printHistogram( histInTotal, "ns_total"));
-		reports.add( printHistogram( histConsumerTPT, "jobs/s"));
+		reports.add( printHistogram( histQueueSize, "queue_size", false));
+		reports.add( printHistogram( histOfferBlock, "ns_for_offer", false));
+		reports.add( printHistogram( histPoll,"ns_for_poll", false));
+		reports.add( printHistogram( histInQueue,"ns_in_queue", false));
+		reports.add( printHistogram( histInJob, "ns_in_job", false));
+		reports.add( printHistogram( histInTotal, "ns_total", false));
+		reports.add( printHistogram( histConsumerTPT, "jobs/s", true));
 		reports = tabulate( reports);
 		for ( String s: reports) {
 			System.out.println( s);
@@ -467,14 +467,17 @@ public class ConsumerProducerDemoBW {
 		stats.nanos += nanos;
 	}
 
-	private static String printHistogram( Histogram hist, String name) {
-		double[] percentages = { 0, 5, 10, 25, 50, 75, 90, 95, 99, 99.9, 99.99, 100};
+	private static String printHistogram(Histogram hist, String name, boolean higherIsBetter) {
+		double[] percentages = { 0,
+			// 5, 10, 25,
+			50, 75, 90, 95, 99, 99.9, 99.99, 100};
 		StringBuilder sb = new StringBuilder();
 		NumberFormat nf = DecimalFormat.getIntegerInstance();
 		String totalCountS = nf.format(hist.getTotalCount());
-		String avgS = nf.format(hist.getMean());
+		double mean = hist.getMean();
+		String avgS = nf.format( higherIsBetter ? 1_000_000_000L / mean : mean);
 		sb.append(name + " " + totalCountS + " entries, avg = " + avgS);
-		String avgPctS = String.format("%.1f", hist.getPercentileAtOrBelowValue((long) hist.getMean())) + "%";
+		String avgPctS = String.format("%.1f", hist.getPercentileAtOrBelowValue((long) mean)) + "%";
 		sb.append(" " + avgPctS);
 		sb.append(" percentiles: ");
 		// writer
@@ -488,13 +491,21 @@ public class ConsumerProducerDemoBW {
 			writer.print( totalCountS + "; " + avgS + "; " + avgPctS + "; ");
 			for (int i = 0; i < percentages.length;  i++) {
 				double perc = percentages[ i];
-				writer.print( nf.format(hist.getValueAtPercentile(perc)) +"; ");
+				long valueAtPercentile = hist.getValueAtPercentile(perc);
+				if ( higherIsBetter) {
+					valueAtPercentile = 1_000_000_000L / valueAtPercentile;
+				}
+				writer.print( nf.format( valueAtPercentile) +"; ");
 			}
 			writer.println();
 		}
 		for (int i = 0; i < percentages.length;  i++) {
 			double perc = percentages[ i];
-			sb.append(perc + ": " + nf.format(hist.getValueAtPercentile(perc)) + "  ");
+			long valueAtPercentile = hist.getValueAtPercentile(perc);
+			if ( higherIsBetter) {
+				valueAtPercentile = 1_000_000_000L / valueAtPercentile;
+			}
+			sb.append(perc + ": " + nf.format( valueAtPercentile) + "  ");
 		}
 		return sb.toString();
 	}
