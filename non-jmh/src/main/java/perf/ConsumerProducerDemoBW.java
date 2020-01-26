@@ -3,11 +3,9 @@ package perf;
 import org.HdrHistogram.Histogram;
 import org.HdrHistogram.SynchronizedHistogram;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.text.*;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
@@ -27,6 +25,8 @@ public class ConsumerProducerDemoBW {
 	static Histogram histOfferBlock = new Histogram( 4);
 	static Histogram histQueueSize = new SynchronizedHistogram( 4);
 	static Histogram histConsumerTPT = new SynchronizedHistogram( 4);
+
+	static PrintWriter  writer = null;
 
 	private static class NanoTimeStats {
 		long	calls = 0;
@@ -264,6 +264,18 @@ public class ConsumerProducerDemoBW {
 	}
 
 	public static void main(String[] args) {
+		// csv Ausgabe initialisieren
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+		OutputStream oStream = null;
+		String outName = "ConsumerProducerDemo-" + df.format(new Date()) + ".out";
+		try {
+			oStream = new FileOutputStream(outName);
+			writer = new PrintWriter( oStream);
+		} catch (FileNotFoundException e) {
+			System.err.print( "can not output to " + outName + ": ");
+			e.printStackTrace( System.err);
+		}
+
 //		BusyWaitRounds.increment(); // damit ich keine Division durch 0 bekomme
 		// Werte für NanoLatency sammeln
 		NanoTimeStats stats = NanoTimeStatsTL.get();
@@ -440,9 +452,27 @@ public class ConsumerProducerDemoBW {
 		double[] percentages = { 0, 5, 10, 25, 50, 75, 90, 95, 99, 99.9, 99.99, 100};
 		StringBuilder sb = new StringBuilder();
 		NumberFormat nf = DecimalFormat.getIntegerInstance();
-		sb.append(name + " " + nf.format(hist.getTotalCount()) + " entries, avg = " + nf.format(hist.getMean()));
-		sb.append(" " + String.format( "%.1f", hist.getPercentileAtOrBelowValue( (long) hist.getMean())) + "%");
+		String totalCountS = nf.format(hist.getTotalCount());
+		String avgS = nf.format(hist.getMean());
+		sb.append(name + " " + totalCountS + " entries, avg = " + avgS);
+		String avgPctS = String.format("%.1f", hist.getPercentileAtOrBelowValue((long) hist.getMean())) + "%";
+		sb.append(" " + avgPctS);
 		sb.append(" percentiles: ");
+		// writer
+		if (writer != null) {
+			writer.print( name.replace( '_', ' ') + "; " + "avg; avg pct; ");
+			for (int i = 0; i < percentages.length;  i++) {
+				double perc = percentages[ i];
+				writer.print( perc +"; ");
+			}
+			writer.println();
+			writer.print( totalCountS + "; " + avgS + "; " + avgPctS + "; ");
+			for (int i = 0; i < percentages.length;  i++) {
+				double perc = percentages[ i];
+				writer.print( nf.format(hist.getValueAtPercentile(perc)) +"; ");
+			}
+			writer.println();
+		}
 		for (int i = 0; i < percentages.length;  i++) {
 			double perc = percentages[ i];
 			sb.append(perc + ": " + nf.format(hist.getValueAtPercentile(perc)) + "  ");
