@@ -80,9 +80,12 @@ public class ConsumerProducerDemoBW {
 		}
 
 		void run() {
-			t = new Thread( () -> start() , "Producer");
+			t = new Thread( () -> produce() , "Producer");
 			t.start();
 			System.out.print( "started " + t.getName());
+			if (writer != null) {
+				writer.print( "started " + t.getName());
+			}
 		}
 
 		void setRatio(double r) {
@@ -96,16 +99,19 @@ public class ConsumerProducerDemoBW {
 				e.printStackTrace();
 			}
 			long durNS = System.nanoTime() - startNS;
-			System.out.print( " rate: "
-					+ String.format( "%.1f", 1e9 * JobCount / durNS) + "/s "
-					+ String.format( "%,d", offersBlockedTotal) + " ns offers blocked, "
-					+ String.format( "%,d", offersDelayedExcess) + " ns excess delay"
-					+ " nanotime latency: "
-					+ String.format( "%.2f", nanoTimeLatencyD)
-			);
+			String finalOutS = " rate: "
+				+ String.format("%.1f", 1e9 * JobCount / durNS) + "/s "
+				+ String.format("%,d", offersBlockedTotal) + " ns offers blocked, "
+				+ String.format("%,d", offersDelayedExcess) + " ns excess delay"
+				+ " nanotime latency: "
+				+ String.format("%.2f", nanoTimeLatencyD);
+			System.out.print( finalOutS);
+			if ( writer != null) {
+				writer.print( finalOutS);
+			}
 		}
 
-		public void start() {
+		public void produce() {
 			long nanosToWait = (long) (JobDurationNS * ratio);
 			startNS = System.nanoTime();
 			int i = 0;
@@ -167,11 +173,14 @@ public class ConsumerProducerDemoBW {
 			for ( int i = 0;  i < poolSize;  i++) {
 				threads[ i].start();
 			}
-			System.out.print( "started Consumer(s) poolSize: " + poolSize + " " + queue.getClass().getSimpleName());
+			StringBuilder sb = new StringBuilder( "started Consumer(s) poolSize: " + poolSize + " " + queue.getClass().getSimpleName());
 			if ( queue.remainingCapacity() < Integer.MAX_VALUE) {
-				System.out.print( " capacity: " + queue.remainingCapacity());
+				sb.append( " capacity: " + queue.remainingCapacity());
 			}
-			System.out.println();
+			System.out.println( sb);
+			if ( writer != null) {
+				writer.println( sb);
+			}
 		}
 
 		void join() {
@@ -183,10 +192,13 @@ public class ConsumerProducerDemoBW {
 				e.printStackTrace();
 			}
 			long durNS = System.nanoTime() - startNS;
-			System.out.println( ", consumer rate: "
-					+ String.format( "%,.1f", 1e9 * JobCount / durNS) + "/s "
-					+ String.format( "%,d", pollsBlockedTotalNS) + " ns poll delay"
-			);
+			String logOutputS = ", consumer rate: "
+				+ String.format("%,.1f", 1e9 * JobCount / durNS) + "/s "
+				+ String.format("%,d", pollsBlockedTotalNS) + " ns poll delay";
+			System.out.println( logOutputS);
+			if ( writer != null) {
+				writer.println( logOutputS);
+			}
 		}
 
 		public void start() {
@@ -291,6 +303,9 @@ public class ConsumerProducerDemoBW {
 		int ncpus2 = Runtime.getRuntime().availableProcessors() / 2;
 		// Warmup
 		System.out.println( "Warmup");
+		if (writer != null) {
+			writer.println( "Warmup");
+		}
 		for ( BlockingQueue<Item> q : queues) {
 			runJoin( q, ncpus2, 1.0/( ncpus2 * 0.9));
 		}
@@ -300,9 +315,13 @@ public class ConsumerProducerDemoBW {
 		stats.reset();
 		BusyWaitUntilNanos( System.nanoTime(), 1_000_000, 1, stats);
 		NanoTimeStats	nanoTimeStats = NanoTimeStatsTL.get();
-		System.out.println( "\nHot running "
-				+ String.format( "%,d Jobs %,d", JobCount, JobDurationNS) + " ns each, nanotime latency: "
-				+ String.format( "%.2f", 1.0 * nanoTimeStats.nanos / nanoTimeStats.calls));
+		String hotOutputS = "\nHot running "
+			+ String.format("%,d Jobs %,d", JobCount, JobDurationNS) + " ns each, nanotime latency: "
+			+ String.format("%.2f", 1.0 * nanoTimeStats.nanos / nanoTimeStats.calls);
+		System.out.println(hotOutputS);
+		if (writer != null) {
+			writer.println( hotOutputS);
+		}
 
 		for ( BlockingQueue<Item> q : queues) {
 			runJoin( q, 1, 1);
