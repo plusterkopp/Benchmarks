@@ -281,7 +281,7 @@ public class ConsumerProducerDemoBW {
 		OutputStream oStream = null;
 		String outName = "ConsumerProducerDemo-" + df.format(new Date()) + ".out";
 		try {
-			oStream = new FileOutputStream(outName);
+			oStream = new FileOutputStream( outName);
 			writer = new PrintWriter( oStream);
 		} catch (FileNotFoundException e) {
 			System.err.print( "can not output to " + outName + ": ");
@@ -339,6 +339,10 @@ public class ConsumerProducerDemoBW {
 		System.gc();
 		for ( BlockingQueue<Item> q : queues) {
 			runJoin( q, ncpus2 * 4, 1.0/( ncpus2 * 4 * 0.9));
+		}
+		if (writer != null) {
+			writer.flush();
+			writer.close();
 		}
 	}
 
