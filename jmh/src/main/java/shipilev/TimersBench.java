@@ -17,10 +17,8 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.VerboseMode;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -76,6 +74,8 @@ public class TimersBench {
         pw.println(System.getProperty("java.runtime.name") + ", " + System.getProperty("java.runtime.version"));
         pw.println(System.getProperty("java.vm.name") + ", " + System.getProperty("java.vm.version"));
         pw.println(System.getProperty("os.name") + ", " + System.getProperty("os.version") + ", " + System.getProperty("os.arch"));
+        SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS");
+        pw.println("Nanos 0 at: " + df.format( getZeroNSDate()));
 
         int cpus = figureOutHotCPUs(pw);
 
@@ -170,6 +170,13 @@ public class TimersBench {
         public void run() {
             while (!Thread.interrupted()); // burn;
         }
+    }
+
+    static Date getZeroNSDate() {
+        long nanos = System.nanoTime();
+        long nanoMS = nanos / 1_000_000;
+        Date result = new Date( System.currentTimeMillis() - nanoMS);
+        return result;
     }
 
 }
