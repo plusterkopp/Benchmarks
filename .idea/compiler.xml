@@ -6,15 +6,15 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="jcstress" />
         <module name="jmh" />
+        <module name="jcstress" />
         <module name="non-jmh" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="Benchmarks" target="1.8" />
       <module name="jcstress" target="9" />
-      <module name="jmh" target="1.8" />
+      <module name="jmh" target="9" />
       <module name="non-jmh" target="1.8" />
     </bytecodeTargetLevel>
   </component>
