@@ -69,7 +69,6 @@ public class NumberFormatBench {
 		}
 
 		resultA = new String[ valueA.length];
-		System.out.println( "Using " + Runtime.getRuntime().availableProcessors() + " hw threads");
 	}
 
 	@Setup(Level.Trial)
@@ -79,15 +78,15 @@ public class NumberFormatBench {
 
 //	@Benchmark
 //	@OperationsPerInvocation( Size)
-	public void formatBDFull() {
+	public void formatBDExistingNoScale() {
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
 			resultA[ i] = dummyBDA[ i].toPlainString();
 		}
 	}
 
-//	@Benchmark
-//	@OperationsPerInvocation( Size)
-	public void formatBDSingle() {
+	@Benchmark
+	@OperationsPerInvocation( Size)
+	public void formatBDExistingSingle() {
 		final int digits = nf.getMaximumFractionDigits();
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
 			resultA[ i] = dummyBDA[ i].setScale(digits).toPlainString();
@@ -96,7 +95,7 @@ public class NumberFormatBench {
 
 	@Benchmark
 	@OperationsPerInvocation( Size)
-	public void formatBDDouble() {
+	public void formatBDExistingDouble() {
 		final int digits = nf.getMaximumFractionDigits();
 		final StringBuilder sb = new StringBuilder(CAPACITY);
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
@@ -107,7 +106,7 @@ public class NumberFormatBench {
 
 	@Benchmark
  	@OperationsPerInvocation( Size)
-	public void formatBDDoubleNew() {
+	public void formatBDNewDouble() {
 		final int digits = nf.getMaximumFractionDigits();
 		final StringBuilder sb = new StringBuilder(CAPACITY);
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
@@ -117,8 +116,8 @@ public class NumberFormatBench {
 		}
 	}
 
-//	@Benchmark
-//	@OperationsPerInvocation( Size)
+	@Benchmark
+	@OperationsPerInvocation( Size)
 	public void formatNF() {
 		final StringBuilder sb = new StringBuilder(CAPACITY);
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
@@ -209,13 +208,13 @@ public class NumberFormatBench {
         Options opt = new OptionsBuilder()
                 .include( NumberFormatBench.class.getSimpleName())
 		        .warmupIterations(1)
-		        .warmupTime( TimeValue.seconds( 10))
-				.measurementIterations( 3)
-		        .measurementTime(TimeValue.seconds( 20))
+		        .warmupTime( TimeValue.seconds( 3))
+				.measurementIterations( 5)
+		        .measurementTime(TimeValue.seconds( 5))
 //		        .addProfiler(GCProfiler.class)
 //		        .addProfiler(CompilerProfiler.class)
 				.mode( Mode.AverageTime)
-				.timeUnit( TimeUnit.MICROSECONDS)
+				.timeUnit( TimeUnit.NANOSECONDS)
 		        .forks(1)
                 .build();
         new Runner(opt).run();

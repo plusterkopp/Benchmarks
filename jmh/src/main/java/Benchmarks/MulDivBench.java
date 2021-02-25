@@ -4,6 +4,7 @@ import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.*;
 import org.openjdk.jmh.runner.options.*;
 
+import java.util.*;
 import java.util.concurrent.*;
 
 @Warmup(iterations = 5, time = 4, timeUnit = TimeUnit.SECONDS)
@@ -15,89 +16,158 @@ import java.util.concurrent.*;
 public class MulDivBench {
 
 	final int ArraySizeM = 1;
-	final int ArraySize = ArraySizeM * 1000 * 1000;
+	final int ArraySize = ArraySizeM * 1000;
 	static double	one = 1;
 
-	ThreadLocal<double[]> tl;
+	ThreadLocal<double[]> tlFromD;
+	ThreadLocal<double[]> tlToD;
+
+	ThreadLocal<long[]> tlFromL;
+	ThreadLocal<long[]> tlToL;
+
+	double divisorD = 1;
+	long divisorL = 3;
 
 	@Setup(Level.Trial)
 	public void setup() {
-		tl = new ThreadLocal<double[]>() {
-			@Override
-			protected double[] initialValue() {
-				final double[] arr = new double[ArraySize];
-				for ( int i = arr.length - 1; i >= 0; -- i) {
-					arr[ i] = 1;
-				}
-				return arr;
-			}
-		};
+		tlFromD = ThreadLocal.withInitial(() -> {
+			final double[] arr = new double[ArraySize];
+			Arrays.fill( arr, 1);
+			return arr;
+		});
+		tlToD = ThreadLocal.withInitial(() -> {
+			final double[] arr = new double[ArraySize];
+			Arrays.fill(arr, 1);
+			return arr;
+		});
+		divisorD = 1.3 + Math.random();
+
+
+		tlFromL = ThreadLocal.withInitial(() -> {
+			final long[] arr = new long[ArraySize];
+			Arrays.fill( arr, 1);
+			return arr;
+		});
+		tlToL = ThreadLocal.withInitial(() -> {
+			final long[] arr = new long[ArraySize];
+			Arrays.fill( arr, 1);
+			return arr;
+		});
+		divisorL = (long) (2 + (2 * Math.random()));
 	}
 
 	@Setup(Level.Iteration)
 	public void get() {
-		tl.get();
+		tlFromD.get();
 	}
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void byOther() {
+	public void d_byRandom() {
+		double[] from = tlFromD.get();
+		double[] to = tlToD.get();
+		for ( int i = from.length - 1; i >= 0; -- i) {
+			to[ i] = from[ i] / divisorD;
+		}
+	}
+
+	@Benchmark
+	@OperationsPerInvocation(ArraySize)
+	public void l_byRandom() {
+		long[] from = tlFromL.get();
+		long[] to = tlToL.get();
+		for ( int i = from.length - 1; i >= 0; -- i) {
+			to[ i] = from[ i] / divisorL;
+		}
+	}
+
+	@Benchmark
+	@OperationsPerInvocation(ArraySize)
+	public void l_byConst() {
+		long[] from = tlFromL.get();
+		long[] to = tlToL.get();
+		final long d = 3;
+		for ( int i = from.length - 1; i >= 0; -- i) {
+			to[ i] = from[ i] / d;
+		}
+	}
+
+
+	@Benchmark
+	@OperationsPerInvocation(ArraySize)
+	public void d_byRandomLocal() {
+		final double d = divisorD;
+		double[] from = tlFromD.get();
+		double[] to = tlToD.get();
+		for ( int i = from.length - 1; i >= 0; -- i) {
+			to[ i] = from[ i] / d;
+		}
+	}
+
+	@Benchmark
+	@OperationsPerInvocation(ArraySize)
+	public void d_byConst() {
 		final double d = 1.6;
-		double[] values = tl.get();
-		for ( int i = values.length - 1; i >= 0; -- i) {
-			values[ i] /= d;
+		double[] from = tlFromD.get();
+		double[] to = tlToD.get();
+		for ( int i = from.length - 1; i >= 0; -- i) {
+			to[ i] = from[ i] / d;
 		}
 	}
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void byOne() {
-		double[] values = tl.get();
-		for ( int i = values.length - 1; i >= 0; -- i) {
-			values[ i] /= one;
+	public void d_byOne() {
+		double[] from = tlFromD.get();
+		double[] to = tlToD.get();
+		for ( int i = from.length - 1; i >= 0; -- i) {
+			to[ i] = from[ i] / one;
 		}
 	}
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void byThree() {
+	public void d_byThree() {
 		final double d = 3;
-		double[] values = tl.get();
-		for ( int i = values.length - 1; i >= 0; -- i) {
-			values[ i] /= d;
+		double[] from = tlFromD.get();
+		double[] to = tlToD.get();
+		for ( int i = from.length - 1; i >= 0; -- i) {
+			to[ i] = from[ i] / d;
 		}
 	}
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void timesTwo() {
-		double[] values = tl.get();
+	public void d_timesTwo() {
+		double[] from = tlFromD.get();
 		final double factor = 2;
-		for ( int i = values.length - 1; i >= 0; -- i) {
-			values[ i] *= factor;
+		double[] to = tlToD.get();
+		for ( int i = from.length - 1; i >= 0; -- i) {
+			to[ i] = from[ i] * factor;
 		}
 	}
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void timesOtherNoCheck() {
-		double[] values = tl.get();
+	public void d_timesOther() {
+		double[] from = tlFromD.get();
+		double[] to = tlToD.get();
 		final double factor = 1.6;
-		for ( int i = values.length - 1; i >= 0; -- i) {
-			values[ i] *= factor;
+		for ( int i = from.length - 1; i >= 0; -- i) {
+			to[ i] = from[ i] * factor;
 		}
 	}
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void plusOther() {
-		double[] values = tl.get();
+	public void d_plusOther() {
+		double[] from = tlFromD.get();
+		double[] to = tlToD.get();
 		final double summand = 1.6;
-		for ( int i = values.length - 1; i >= 0; -- i) {
-			values[ i] += summand;
+		for ( int i = from.length - 1; i >= 0; -- i) {
+			to[ i] = from[ i] + summand;
 		}
 	}
-
 
 
 	public static void main(String[] args) throws RunnerException {
