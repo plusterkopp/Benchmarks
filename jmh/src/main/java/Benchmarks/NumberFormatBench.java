@@ -195,7 +195,7 @@ public class NumberFormatBench {
 	@OperationsPerInvocation( Size)
 	public void formatDoubleToStringN() {
 		final int digits = nf.getMaximumFractionDigits();
-		StringBuilder	sb = new StringBuilder();
+		StringBuilder	sb = new StringBuilder( CAPACITY);
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
 			sb.setLength( 0);
 			DoubleToString.appendFormatted( sb, dummyDA[ i],
