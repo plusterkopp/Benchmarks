@@ -45,8 +45,20 @@ public class StreamAndLoop {
 	}
 
 	@Benchmark
+	public long searchMaxListPStream() {
+		Optional<Long> result = list.parallelStream().max(Long::compare);
+		return result.get();
+	}
+
+	@Benchmark
 	public long searchMaxArrayStream() {
 		OptionalLong result = Arrays.stream(array).max();
+		return result.getAsLong();
+	}
+
+	@Benchmark
+	public long searchMaxArrayPStream() {
+		OptionalLong result = Arrays.stream(array).parallel().max();
 		return result.getAsLong();
 	}
 

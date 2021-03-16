@@ -7,8 +7,8 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="jmh" />
-        <module name="jcstress" />
         <module name="non-jmh" />
+        <module name="jcstress" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
