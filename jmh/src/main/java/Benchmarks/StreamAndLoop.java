@@ -17,6 +17,7 @@ public class StreamAndLoop {
 
 	@Param({
 		"1"
+		, "2"
 		, "10"
 		, "100"
 		, "100000"

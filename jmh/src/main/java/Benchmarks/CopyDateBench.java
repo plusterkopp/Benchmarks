@@ -1,27 +1,11 @@
 package Benchmarks;
 
-import gnu.trove.map.hash.TLongDoubleHashMap;
-import net.openhft.koloboke.collect.map.LongDoubleMap;
-import net.openhft.koloboke.collect.map.hash.HashLongDoubleMapFactory;
-import net.openhft.koloboke.collect.map.hash.HashLongDoubleMaps;
-import org.apache.commons.collections4.map.LRUMap;
 import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.runner.Runner;
-import org.openjdk.jmh.runner.RunnerException;
-import org.openjdk.jmh.runner.options.Options;
-import org.openjdk.jmh.runner.options.OptionsBuilder;
-import org.openjdk.jmh.runner.options.TimeValue;
-import utils.MMKF4JavaStub;
+import org.openjdk.jmh.runner.*;
+import org.openjdk.jmh.runner.options.*;
 
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 5, timeUnit = TimeUnit.SECONDS)

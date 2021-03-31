@@ -787,4 +787,34 @@ public class Utils {
 		return after;
 	}
 
+	/**
+	 * null-sichere equals-Methode
+	 *
+	 * @param o1
+	 * @param o2
+	 * @return
+	 */
+	public static boolean safeEquals( CharSequence o1, CharSequence o2) {
+		if (o1 == o2) {	// auch, wenn beide null sind
+			return true;
+		}
+		if ( o1 == null || o2 == null) {
+			return false; // nur einer ist null
+		}
+		// keiner ist null
+		int	l1 = o1.length();
+		int	l2 = o2.length();
+		if ( l1 != l2) {
+			return false;
+		}
+		for ( int i = 0;  i < l1; ++i) {
+			char	c1 = o1.charAt( i);
+			char	c2 = o2.charAt( i);
+			if ( c1 != c2) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 }// class Utils
