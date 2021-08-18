@@ -7,10 +7,7 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 10, timeUnit = TimeUnit.SECONDS)
@@ -24,20 +21,21 @@ public class TimerCancelBench {
 	ScheduledFuture<Integer>	fut;
 	int delayStart;
 	int delay;
+	final Callable<Integer> call42 = () -> delay;
 
 	@Setup(Level.Iteration)
 	public void setup() {
 		ses = new ScheduledThreadPoolExecutor( 1);
 		delayStart = 100;
 		delay = 0;
-		fut = ses.schedule(() -> 42, delayStart + delay, TimeUnit.MILLISECONDS);
+		fut = ses.schedule( call42, delayStart + delay, TimeUnit.MILLISECONDS);
 	}
 
 	@Benchmark
 	public void cancelAndRestart() {
 		fut.cancel(true);
 		delay++;
-		fut = ses.schedule(() -> 42, delayStart + delay, TimeUnit.MILLISECONDS);
+		fut = ses.schedule( call42, delayStart + delay, TimeUnit.MILLISECONDS);
 	}
 
 	@TearDown(Level.Iteration)
@@ -54,9 +52,11 @@ public class TimerCancelBench {
 				.timeUnit(TimeUnit.NANOSECONDS)
 				.warmupIterations(1)
 				.warmupTime( TimeValue.seconds( 1))
-				.measurementIterations(5)
-				.measurementTime( TimeValue.seconds( 5))
+				.measurementIterations(15)
+				.measurementTime( TimeValue.seconds( 1))
 				.forks(1)
+				.addProfiler( "gc")
+				.jvmArgsPrepend( "-XX:+UseShenandoahGC")
 				.build();
 		new Runner(opt).run();
 	}
