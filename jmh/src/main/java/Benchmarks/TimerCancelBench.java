@@ -28,7 +28,10 @@ public class TimerCancelBench {
 	}
 
 	private void cancel() {
-		fut.cancel(false);
+		if ( fut != null) {
+			fut.cancel(true);
+			fut = null;
+		}
 	}
 
 	@Setup(Level.Iteration)
@@ -36,7 +39,7 @@ public class TimerCancelBench {
 		ses = new ScheduledThreadPoolExecutor( 1);
 		delayStart = 100;
 		delay = 0;
-		schedule();
+//		schedule();
 	}
 
 	@Benchmark
@@ -50,11 +53,14 @@ public class TimerCancelBench {
 	public void tearDown() {
 		cancel();
 		ses.shutdown();
+		awaitTermination();
+//			System.gc();
+	}
+
+	private void awaitTermination() {
 		try {
 			ses.awaitTermination( 10, TimeUnit.SECONDS);
-			fut = null;
 			ses = null;
-//			System.gc();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -67,11 +73,11 @@ public class TimerCancelBench {
 				.mode( Mode.AverageTime)
 				.timeUnit(TimeUnit.NANOSECONDS)
 				.warmupIterations(1)
-				.warmupTime( TimeValue.seconds( 1))
-				.measurementIterations(5)
-				.measurementTime( TimeValue.milliseconds( 10000))
+				.warmupTime( TimeValue.seconds( 5))
+				.measurementIterations( 15)
+				.measurementTime( TimeValue.milliseconds( 1000))
 				.forks(1)
-				.addProfiler( "gc")
+//				.addProfiler( "gc")
 				.jvmArgsPrepend(
 //						"-XX:+UnlockExperimentalVMOptions",
 						"-XX:+UseShenandoahGC",
