@@ -21,27 +21,43 @@ public class TimerCancelBench {
 	ScheduledFuture<Integer>	fut;
 	int delayStart;
 	int delay;
-	final Callable<Integer> call42 = () -> delay;
+	final Callable<Integer> call42 = () -> Integer.valueOf( 1);
+
+	private void schedule() {
+		fut = ses.schedule( call42, delayStart, TimeUnit.MILLISECONDS);
+	}
+
+	private void cancel() {
+		fut.cancel(false);
+	}
 
 	@Setup(Level.Iteration)
 	public void setup() {
 		ses = new ScheduledThreadPoolExecutor( 1);
 		delayStart = 100;
 		delay = 0;
-		fut = ses.schedule( call42, delayStart + delay, TimeUnit.MILLISECONDS);
+		schedule();
 	}
 
 	@Benchmark
 	public void cancelAndRestart() {
-		fut.cancel(true);
+		cancel();
 		delay++;
-		fut = ses.schedule( call42, delayStart + delay, TimeUnit.MILLISECONDS);
+		schedule();
 	}
 
 	@TearDown(Level.Iteration)
 	public void tearDown() {
-		fut.cancel(true);
+		cancel();
 		ses.shutdown();
+		try {
+			ses.awaitTermination( 10, TimeUnit.SECONDS);
+			fut = null;
+			ses = null;
+//			System.gc();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 
@@ -52,11 +68,16 @@ public class TimerCancelBench {
 				.timeUnit(TimeUnit.NANOSECONDS)
 				.warmupIterations(1)
 				.warmupTime( TimeValue.seconds( 1))
-				.measurementIterations(15)
-				.measurementTime( TimeValue.seconds( 1))
+				.measurementIterations(5)
+				.measurementTime( TimeValue.milliseconds( 10000))
 				.forks(1)
 				.addProfiler( "gc")
-				.jvmArgsPrepend( "-XX:+UseShenandoahGC")
+				.jvmArgsPrepend(
+//						"-XX:+UnlockExperimentalVMOptions",
+						"-XX:+UseShenandoahGC",
+						"-Xms4G"
+				)
+//				.shouldDoGC( true)
 				.build();
 		new Runner(opt).run();
 	}
