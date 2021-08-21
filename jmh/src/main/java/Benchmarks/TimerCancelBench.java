@@ -7,10 +7,7 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 10, timeUnit = TimeUnit.SECONDS)
@@ -24,26 +21,49 @@ public class TimerCancelBench {
 	ScheduledFuture<Integer>	fut;
 	int delayStart;
 	int delay;
+	final Callable<Integer> call42 = () -> Integer.valueOf( 1);
+
+	private void schedule() {
+		fut = ses.schedule( call42, delayStart, TimeUnit.MILLISECONDS);
+	}
+
+	private void cancel() {
+		if ( fut != null) {
+			fut.cancel(true);
+			fut = null;
+		}
+	}
 
 	@Setup(Level.Iteration)
 	public void setup() {
 		ses = new ScheduledThreadPoolExecutor( 1);
 		delayStart = 100;
 		delay = 0;
-		fut = ses.schedule(() -> 42, delayStart + delay, TimeUnit.MILLISECONDS);
+//		schedule();
 	}
 
 	@Benchmark
 	public void cancelAndRestart() {
-		fut.cancel(true);
+		cancel();
 		delay++;
-		fut = ses.schedule(() -> 42, delayStart + delay, TimeUnit.MILLISECONDS);
+		schedule();
 	}
 
 	@TearDown(Level.Iteration)
 	public void tearDown() {
-		fut.cancel(true);
+		cancel();
 		ses.shutdown();
+		awaitTermination();
+//			System.gc();
+	}
+
+	private void awaitTermination() {
+		try {
+			ses.awaitTermination( 10, TimeUnit.SECONDS);
+			ses = null;
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 
@@ -53,10 +73,17 @@ public class TimerCancelBench {
 				.mode( Mode.AverageTime)
 				.timeUnit(TimeUnit.NANOSECONDS)
 				.warmupIterations(1)
-				.warmupTime( TimeValue.seconds( 1))
-				.measurementIterations(5)
-				.measurementTime( TimeValue.seconds( 5))
+				.warmupTime( TimeValue.seconds( 5))
+				.measurementIterations( 15)
+				.measurementTime( TimeValue.milliseconds( 1000))
 				.forks(1)
+//				.addProfiler( "gc")
+				.jvmArgsPrepend(
+//						"-XX:+UnlockExperimentalVMOptions",
+						"-XX:+UseShenandoahGC",
+						"-Xms4G"
+				)
+//				.shouldDoGC( true)
 				.build();
 		new Runner(opt).run();
 	}
