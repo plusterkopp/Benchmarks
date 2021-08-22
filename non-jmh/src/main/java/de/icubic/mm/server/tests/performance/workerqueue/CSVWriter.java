@@ -1,10 +1,9 @@
 package de.icubic.mm.server.tests.performance.workerqueue;
 
+import com.lmax.disruptor.collections.Histogram;
+import de.icubic.mm.server.tests.performance.workerqueue.WorkerQueueFactory.EWorkQueueType;
+
 import java.util.*;
-
-import com.lmax.disruptor.collections.*;
-
-import de.icubic.mm.server.tests.performance.workerqueue.WorkerQueueFactory.*;
 
 class CSVWriter {
 	Map<String, String> valueMap = new LinkedHashMap<String, String>();

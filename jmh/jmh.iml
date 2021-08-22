@@ -9,7 +9,7 @@
       <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/annotations" isTestSource="false" generated="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
-    <orderEntry type="jdk" jdkName="11" jdkType="JavaSDK" />
+    <orderEntry type="jdk" jdkName="12" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: org.openjdk.jmh:jmh-core:1.22" level="project" />
     <orderEntry type="library" name="Maven: net.sf.jopt-simple:jopt-simple:4.6" level="project" />
@@ -23,7 +23,7 @@
     <orderEntry type="library" name="Maven: net.openhft:koloboke-impl-jdk6-7:0.6.3" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:2.0.3" level="project" />
     <orderEntry type="library" name="Maven: net.openhft:koloboke-api-jdk6-7:0.6.3" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.commons:commons-collections4:4.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-collections4:4.1" level="project" />
     <orderEntry type="library" name="Maven: net.java.dev.jna:jna:5.5.0" level="project" />
     <orderEntry type="library" name="Maven: net.java.dev.jna:jna-platform:5.5.0" level="project" />
   </component>
