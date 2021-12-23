@@ -8,7 +8,7 @@ import net.openhft.affinity.impl.LayoutEntities.*;
 
 import java.util.*;
 import java.util.function.*;
-import java.util.stream.Collectors;
+import java.util.stream.*;
 
 /**
  * Jeder Thread kann mit {@link Affinity#getThreadId()} seine native Thread ID feststellen, aber ein

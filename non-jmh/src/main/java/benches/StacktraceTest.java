@@ -4,9 +4,9 @@
  */
 package benches;
 
-import java.util.concurrent.*;
-
 import de.icubic.mm.bench.base.*;
+
+import java.util.concurrent.*;
 
 /**
  * <p>@author ralf

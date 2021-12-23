@@ -1,9 +1,10 @@
 package de.icubic.mm.bench.tests;
+
+import de.icubic.mm.bench.base.*;
+
 import java.text.*;
 import java.util.*;
 import java.util.concurrent.atomic.*;
-
-import de.icubic.mm.bench.base.*;
 
 @SuppressWarnings("boxing")
 public class NanoTimeGranularity {

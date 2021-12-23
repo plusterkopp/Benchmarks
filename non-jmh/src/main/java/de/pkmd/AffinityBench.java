@@ -1,16 +1,11 @@
 package de.pkmd;
 
 import net.openhft.affinity.*;
-import net.openhft.affinity.impl.WindowsCpuLayout;
-import net.openhft.affinity.impl.WindowsJNAAffinity;
+import net.openhft.affinity.impl.*;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+import java.text.*;
 import java.util.*;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class AffinityBench {
 

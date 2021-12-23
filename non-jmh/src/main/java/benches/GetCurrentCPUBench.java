@@ -4,16 +4,16 @@
  */
 package benches;
 
-import java.text.*;
-import java.util.*;
-import java.util.concurrent.*;
-
 import de.icubic.mm.bench.base.*;
 import de.icubic.mm.server.utils.*;
 import net.openhft.affinity.*;
 import net.openhft.affinity.impl.*;
 import net.openhft.affinity.impl.WindowsJNAAffinity.*;
 import net.openhft.affinity.impl.WindowsJNAAffinity.PROCESSOR_NUMBER.*;
+
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
 
 /**
  * <p>@author ralf

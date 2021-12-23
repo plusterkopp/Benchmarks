@@ -1,9 +1,9 @@
 package de.icubic.mm.server.tests.performance.workerqueue;
 
+import de.icubic.mm.bench.base.*;
+
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
-
-import de.icubic.mm.bench.base.*;
 
 public class WorkStealingQueue extends AWorkQueue {
 	private AtomicInteger queue_no = new AtomicInteger();
@@ -33,7 +33,7 @@ public class WorkStealingQueue extends AWorkQueue {
 
 	@Override
 	public void createQueue(int threadIndex) {
-		// TODO Auto-generated method stub		
+		// TODO Auto-generated method stub
 	}
 
 	/* Executes the given task in the future. Queues the task and notifies the waiting thread. Also it makes the Work

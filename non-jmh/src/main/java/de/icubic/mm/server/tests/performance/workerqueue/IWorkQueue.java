@@ -1,9 +1,8 @@
 package de.icubic.mm.server.tests.performance.workerqueue;
 
-import java.util.concurrent.*;
+import net.openhft.affinity.impl.LayoutEntities.*;
 
-import net.openhft.affinity.AffinityManager.*;
-import net.openhft.affinity.impl.LayoutEntities.LayoutEntity;
+import java.util.concurrent.*;
 
 public interface IWorkQueue {
 

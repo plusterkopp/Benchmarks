@@ -1,9 +1,9 @@
 package main.java.utils;
 
-import java.lang.Thread.State;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReferenceArray;
-import java.util.concurrent.locks.LockSupport;
+import java.lang.Thread.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
+import java.util.concurrent.locks.*;
 
 public class ParkWaitStrategy implements WaitStrategy {
 

@@ -1,11 +1,8 @@
 package de.tsp;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Arrays;
-import java.util.Random;
+import java.io.*;
+import java.text.*;
+import java.util.*;
 
 public class Tsp9 {
 

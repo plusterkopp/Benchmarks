@@ -1,17 +1,11 @@
 package fefe;
 
-import java.io.BufferedReader;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.Reader;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Stream;
+import java.io.*;
+import java.nio.channels.*;
+import java.nio.charset.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.stream.*;
 
 
 public class wpck {

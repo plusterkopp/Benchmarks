@@ -1,21 +1,14 @@
 package Benchmarks;
 
-import org.HdrHistogram.DoubleHistogram;
+import org.HdrHistogram.*;
 import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.runner.Runner;
-import org.openjdk.jmh.runner.RunnerException;
-import org.openjdk.jmh.runner.options.Options;
-import org.openjdk.jmh.runner.options.OptionsBuilder;
-import org.openjdk.jmh.runner.options.TimeValue;
+import org.openjdk.jmh.runner.*;
+import org.openjdk.jmh.runner.options.*;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.text.*;
+import java.util.*;
 import java.util.concurrent.*;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
+import java.util.function.*;
 
 @Warmup(iterations = 5, time = 4, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 10, timeUnit = TimeUnit.SECONDS)

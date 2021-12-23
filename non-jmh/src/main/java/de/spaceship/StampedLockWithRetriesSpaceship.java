@@ -1,5 +1,6 @@
 package de.spaceship;
-import java.util.concurrent.locks.StampedLock;
+
+import java.util.concurrent.locks.*;
 
 public class StampedLockWithRetriesSpaceship implements Spaceship {
 	private static final int RETRIES = 5;

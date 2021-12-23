@@ -1,10 +1,9 @@
 package misc;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.*;
-
 import gnu.trove.set.hash.*;
+
+import java.text.*;
+import java.util.*;
 
 class SpeedTest {
 

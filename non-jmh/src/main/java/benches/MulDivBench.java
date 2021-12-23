@@ -1,10 +1,10 @@
 package benches;
 
-import java.util.*;
-import java.util.concurrent.*;
-
 import de.icubic.mm.bench.base.*;
 import de.icubic.mm.server.utils.*;
+
+import java.util.*;
+import java.util.concurrent.*;
 
 public class MulDivBench {
 

@@ -1,10 +1,10 @@
 package benches;
 
 
+import de.icubic.mm.bench.base.*;
+
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
-
-import de.icubic.mm.bench.base.*;
 
 public class FibonacciFork extends RecursiveTask<Long> {
 

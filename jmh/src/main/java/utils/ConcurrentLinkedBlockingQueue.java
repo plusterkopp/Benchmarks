@@ -5,7 +5,7 @@ package main.java.utils;
 
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.*;
 
 /**
  * Soll als Ersatz für {@link LinkedBlockingQueue} dienen. Erweitert die {@link ConcurrentLinkedQueue} um das

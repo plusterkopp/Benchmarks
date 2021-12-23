@@ -1,5 +1,6 @@
 package de.spaceship;
-import java.util.concurrent.locks.StampedLock;
+
+import java.util.concurrent.locks.*;
 
 public class StampedLockSpaceship implements Spaceship {
 	private final StampedLock lock = new StampedLock();

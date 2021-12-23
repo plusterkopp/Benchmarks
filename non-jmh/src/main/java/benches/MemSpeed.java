@@ -3,12 +3,12 @@
  */
 package benches;
 
+import de.icubic.mm.bench.base.*;
+import de.icubic.mm.communication.util.*;
+
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
-
-import de.icubic.mm.bench.base.*;
-import de.icubic.mm.communication.util.*;
 
 /**
  * @author rhelbing

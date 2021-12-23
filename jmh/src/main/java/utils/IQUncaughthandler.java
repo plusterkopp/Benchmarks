@@ -1,6 +1,6 @@
 package main.java.utils;
 
-import java.lang.Thread.UncaughtExceptionHandler;
+import java.lang.Thread.*;
 
 /******************************************************************************
  * Alle Threads im IQuote Server sollten diesen Handler implementieren und koennen somit auf unerwartete Exceptions

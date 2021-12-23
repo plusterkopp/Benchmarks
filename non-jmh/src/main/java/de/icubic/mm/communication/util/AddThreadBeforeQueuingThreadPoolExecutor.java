@@ -3,10 +3,10 @@
  */
 package de.icubic.mm.communication.util;
 
+import de.icubic.mm.bench.base.*;
+
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
-
-import de.icubic.mm.bench.base.*;
 
 /**
  * Diese Klasse �ndert das Verhalten von ThreadPoolExecutor dahingehend, dass neue Thread

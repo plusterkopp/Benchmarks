@@ -1,7 +1,6 @@
 package perf;
 
-import org.HdrHistogram.Histogram;
-import org.HdrHistogram.SynchronizedHistogram;
+import org.HdrHistogram.*;
 
 import java.io.*;
 import java.text.*;

@@ -1,20 +1,18 @@
 package de.icubic.mm.server.tests.performance.workerqueue;
 
-import java.text.*;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.*;
-
 import com.lmax.disruptor.*;
 import com.lmax.disruptor.dsl.*;
-
 import de.icubic.mm.bench.base.*;
 import de.icubic.mm.communication.util.*;
 import de.icubic.mm.server.utils.*;
 import net.openhft.affinity.*;
 import net.openhft.affinity.AffinityManager.*;
-import net.openhft.affinity.impl.LayoutEntities.LayoutEntity;
-import net.openhft.affinity.impl.LayoutEntities.Socket;
+import net.openhft.affinity.impl.LayoutEntities.*;
+
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
 
 public class DisruptorQueue implements IWorkQueue {
 

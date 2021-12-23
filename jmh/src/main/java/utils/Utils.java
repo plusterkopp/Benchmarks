@@ -5,9 +5,9 @@ import java.net.*;
 import java.nio.*;
 import java.nio.charset.*;
 import java.util.*;
-import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.*;
 import java.util.jar.*;
-import java.util.zip.ZipEntry;
+import java.util.zip.*;
 
 /**
  * Diverse Hilfsmethoden

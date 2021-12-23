@@ -3,7 +3,7 @@
  */
 package utils;
 
-import java.util.concurrent.Executor;
+import java.util.concurrent.*;
 
 /**
  * Dieser Klasse merkt sich ihren Executor, um ihn dann sp�ter wieder abfragen zu k�nnen,

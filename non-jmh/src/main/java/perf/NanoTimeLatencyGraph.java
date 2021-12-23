@@ -1,7 +1,6 @@
 package perf;
 
 import org.HdrHistogram.*;
-import org.apache.commons.math3.distribution.*;
 import perf.perfutils.*;
 
 import javax.swing.*;

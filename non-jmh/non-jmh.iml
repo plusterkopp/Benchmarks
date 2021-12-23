@@ -12,7 +12,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: com.lmax:disruptor:3.2.0" level="project" />
-    <orderEntry type="library" name="Maven: de.pkmd:affinity:3.2-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: de.pkmd:affinity:3.4" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.12" level="project" />
     <orderEntry type="library" name="Maven: org.kohsuke.jetbrains:annotations:9.0" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:4.13.2" level="project" />

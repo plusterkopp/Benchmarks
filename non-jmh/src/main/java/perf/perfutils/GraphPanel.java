@@ -1,22 +1,11 @@
 package perf.perfutils;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.RenderingHints;
-import java.awt.Stroke;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.geom.*;
 import java.text.*;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import java.util.*;
 
 /*
  * To change this template, choose Tools | Templates

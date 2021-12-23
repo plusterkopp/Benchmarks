@@ -2,7 +2,7 @@ package utils;
 
 import java.io.*;
 import java.text.*;
-import java.util.Locale;
+import java.util.*;
 
 public class BenchLogger {
 

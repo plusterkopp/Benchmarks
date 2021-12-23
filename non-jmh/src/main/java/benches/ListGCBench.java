@@ -1,9 +1,9 @@
 package benches;
 
-import java.text.NumberFormat;
-import java.util.*;
-
 import de.icubic.mm.bench.base.*;
+
+import java.text.*;
+import java.util.*;
 
 public class ListGCBench {
 

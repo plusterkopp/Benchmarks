@@ -3,18 +3,13 @@
  */
 package de.icubic.mm.server.utils;
 
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import de.icubic.mm.bench.base.BenchLogger;
-import de.icubic.mm.server.*;
+import de.icubic.mm.bench.base.*;
 import net.openhft.affinity.*;
-import net.openhft.affinity.AffinityManager.*;
-import net.openhft.affinity.impl.LayoutEntities.LayoutEntity;
-import net.openhft.affinity.impl.LayoutEntities.NumaNode;
-import net.openhft.affinity.impl.LayoutEntities.Socket;
+import net.openhft.affinity.impl.LayoutEntities.*;
+
+import java.util.*;
+import java.util.function.*;
+import java.util.stream.*;
 
 /**
  * Jeder Thread kann mit {@link Affinity#getThreadId()} seine native Thread ID feststellen, aber ein

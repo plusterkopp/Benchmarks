@@ -1,8 +1,8 @@
 package de.icubic.mm.server.tests.performance.workerqueue;
 
-import java.util.concurrent.*;
+import de.icubic.mm.bench.base.*;
 
-import de.icubic.mm.bench.base.BenchLogger;
+import java.util.concurrent.*;
 
 public abstract class SimpleWorkQueue extends AWorkQueue {
 	private BlockingQueue<Runnable> queue;

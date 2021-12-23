@@ -1,8 +1,8 @@
 package de.icubic.mm.server.tests.performance.workerqueue;
 
-import java.util.concurrent.*;
-
 import de.icubic.mm.server.utils.*;
+
+import java.util.concurrent.*;
 
 public class WorkerQueueFactory {
 

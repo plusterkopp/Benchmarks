@@ -4,13 +4,13 @@
  */
 package benches;
 
+import benches.DoubleFormatTest.*;
+import de.icubic.mm.bench.base.*;
+import de.icubic.mm.communication.util.*;
+
 import java.text.*;
 import java.util.*;
 import java.util.concurrent.*;
-
-import de.icubic.mm.bench.base.*;
-import benches.DoubleFormatTest.*;
-import de.icubic.mm.communication.util.*;
 
 /**
  * <p>@author ralf

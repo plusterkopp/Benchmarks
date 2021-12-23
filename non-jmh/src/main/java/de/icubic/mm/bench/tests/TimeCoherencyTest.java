@@ -1,8 +1,8 @@
 package de.icubic.mm.bench.tests;
 
-import java.text.*;
-
 import de.icubic.mm.bench.base.*;
+
+import java.text.*;
 
 /**
  * test coherency between {@link System#currentTimeMillis()} and {@link System#nanoTime()}

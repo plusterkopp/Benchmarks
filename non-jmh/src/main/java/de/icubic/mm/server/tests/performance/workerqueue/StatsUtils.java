@@ -1,10 +1,9 @@
 package de.icubic.mm.server.tests.performance.workerqueue;
 
+import de.icubic.mm.bench.base.*;
+
 import java.text.*;
 import java.util.*;
-
-import de.icubic.mm.bench.base.*;
-import de.icubic.mm.server.tests.performance.workerqueue.MainClass.*;
 
 class StatsUtils {
 
@@ -15,12 +14,12 @@ class StatsUtils {
 		}
 		long	l;
 		int	i;
-	
+
 		@Override
 		public String toString() {
 			return "<" + l + ", " + i + ">";
 		}
-	
+
 	}
 
 		List<Double>	xtileBounds;

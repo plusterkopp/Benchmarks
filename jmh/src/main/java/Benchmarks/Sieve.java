@@ -4,7 +4,6 @@ import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.*;
 import org.openjdk.jmh.runner.options.*;
 
-import java.util.*;
 import java.util.concurrent.*;
 
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)

@@ -7,9 +7,9 @@ package de.icubic.mm.bench.base;
 import java.io.*;
 import java.text.*;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
-import static de.icubic.mm.bench.base.BenchLogger.LNF;
+import static de.icubic.mm.bench.base.BenchLogger.*;
 
 /**
  * <p>@author ralf

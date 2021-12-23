@@ -4,10 +4,10 @@
  */
 package benches;
 
+import de.icubic.mm.bench.base.*;
+
 import java.util.*;
 import java.util.concurrent.*;
-
-import de.icubic.mm.bench.base.*;
 
 /**
  * <p>@author ralf

@@ -1,5 +1,6 @@
 package de.spaceship;
-import java.util.concurrent.atomic.AtomicReference;
+
+import java.util.concurrent.atomic.*;
 
 public class LockFreeSpaceship implements Spaceship {
 	private final AtomicReference<Position> position = new AtomicReference<>(new Position(0, 0));

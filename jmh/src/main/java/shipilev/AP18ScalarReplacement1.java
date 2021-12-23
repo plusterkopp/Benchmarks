@@ -1,7 +1,8 @@
 package shipilev;
 
 import org.openjdk.jmh.annotations.*;
-import java.util.concurrent.TimeUnit;
+
+import java.util.concurrent.*;
 
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)

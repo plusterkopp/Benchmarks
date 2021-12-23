@@ -4,7 +4,7 @@
 package utils;
 
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.*;
 
 /**
  * Diese Klasse �ndert das Verhalten von ThreadPoolExecutor dahingehend, dass neue Thread

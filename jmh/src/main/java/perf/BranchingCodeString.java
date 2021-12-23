@@ -5,12 +5,10 @@ import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.results.*;
 import org.openjdk.jmh.runner.*;
 import org.openjdk.jmh.runner.options.*;
-import utils.JMHUtils;
+import utils.*;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)

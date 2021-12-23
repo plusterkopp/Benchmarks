@@ -5,14 +5,14 @@ package benches;
  */
 
 
+import de.icubic.mm.bench.base.*;
+
 import java.text.*;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 import java.util.concurrent.locks.*;
 import java.util.function.*;
-
-import de.icubic.mm.bench.base.*;
 
 /**
  * incrementiere Variable unter Lock, mit verschiedenen Locks.<br>

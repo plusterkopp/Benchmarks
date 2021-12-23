@@ -1,12 +1,13 @@
 package de.spaceship;
+
+import org.apache.commons.math3.stat.descriptive.*;
+
 import java.text.*;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 import java.util.function.*;
 import java.util.stream.*;
-
-import org.apache.commons.math3.stat.descriptive.*;
 
 public class PerfTest {
 	private static final long TEST_COOL_OFF_MS = 10;

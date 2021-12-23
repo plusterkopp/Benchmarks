@@ -1,9 +1,10 @@
 package benches;
 
 //by Erik Wrenholt
-import java.util.*;
 
 import de.icubic.mm.bench.base.*;
+
+import java.util.*;
 
 class Mandelbrot{
 	private static final int SIZE = 500;

@@ -31,23 +31,15 @@
 package samples;
 
 import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.infra.Blackhole;
-import org.openjdk.jmh.profile.ClassloaderProfiler;
-import org.openjdk.jmh.profile.DTraceAsmProfiler;
-import org.openjdk.jmh.profile.LinuxPerfProfiler;
-import org.openjdk.jmh.profile.StackProfiler;
-import org.openjdk.jmh.runner.Runner;
-import org.openjdk.jmh.runner.RunnerException;
-import org.openjdk.jmh.runner.options.Options;
-import org.openjdk.jmh.runner.options.OptionsBuilder;
+import org.openjdk.jmh.infra.*;
+import org.openjdk.jmh.profile.*;
+import org.openjdk.jmh.runner.*;
+import org.openjdk.jmh.runner.options.*;
 
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
+import java.net.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
 
 public class JMHSample_35_Profilers {
 

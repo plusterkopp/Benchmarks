@@ -1,15 +1,14 @@
 package de.icubic.mm.server.tests.performance.workerqueue;
 
-import java.text.*;
-import java.util.*;
-import java.util.function.*;
-
+import de.icubic.mm.bench.base.*;
+import de.icubic.mm.communication.util.Utils.*;
 import org.apache.commons.math3.analysis.*;
 import org.apache.commons.math3.analysis.solvers.*;
 import org.apache.commons.math3.exception.*;
 
-import de.icubic.mm.bench.base.*;
-import de.icubic.mm.communication.util.Utils.*;
+import java.text.*;
+import java.util.*;
+import java.util.function.*;
 
 public class ProblemSizer {
 

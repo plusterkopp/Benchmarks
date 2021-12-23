@@ -1,7 +1,6 @@
 package de.spaceship;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import java.util.concurrent.locks.*;
 
 public class ReadWriteLockSpaceShip implements Spaceship {
 	private final ReadWriteLock lock = new ReentrantReadWriteLock();

@@ -1,17 +1,16 @@
 package benches;
 
-import static org.junit.Assert.*;
+import de.icubic.mm.bench.base.*;
+import de.icubic.mm.server.utils.*;
+import de.icubic.mm.server.utils.QuotePrecision.*;
+import org.junit.*;
 
 import java.text.*;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
-import org.junit.*;
-
-import de.icubic.mm.bench.base.*;
-import de.icubic.mm.server.utils.*;
-import de.icubic.mm.server.utils.QuotePrecision.*;
+import static org.junit.Assert.*;
 
 public class DoubleFormatTest {
 

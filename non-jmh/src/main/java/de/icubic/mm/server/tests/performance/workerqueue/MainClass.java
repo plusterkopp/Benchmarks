@@ -1,12 +1,12 @@
 package de.icubic.mm.server.tests.performance.workerqueue;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
-
 import de.icubic.mm.bench.base.*;
 import de.icubic.mm.server.tests.performance.workerqueue.WorkerQueueFactory.*;
 import net.openhft.affinity.*;
+
+import java.io.*;
+import java.text.*;
+import java.util.*;
 
 public class MainClass {
 

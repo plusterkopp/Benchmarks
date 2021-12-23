@@ -1,7 +1,6 @@
 package de.icubic.mm.server.utils;
 
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.*;
 
 public class LockWaitStrategy implements WaitStrategy {
 

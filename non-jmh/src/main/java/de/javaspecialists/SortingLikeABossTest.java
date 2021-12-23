@@ -1,12 +1,12 @@
 package de.javaspecialists;
 
-import org.junit.Test;
+import org.junit.*;
 
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.*;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class SortingLikeABossTest {
     @Test

@@ -2,8 +2,8 @@ package perf;// javac whetstc.java
 // java whetstc
 
 
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 public class whetstc {
 

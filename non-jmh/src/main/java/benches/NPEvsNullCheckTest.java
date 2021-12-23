@@ -4,9 +4,9 @@
  */
 package benches;
 
-import java.util.concurrent.*;
-
 import de.icubic.mm.bench.base.*;
+
+import java.util.concurrent.*;
 
 /**
  * nimm ein Feld mit vielen Integers, und tu (fast) nur echte Werte rein, aber

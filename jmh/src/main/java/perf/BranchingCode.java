@@ -2,18 +2,13 @@ package perf;
 
 
 import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.results.RunResult;
-import org.openjdk.jmh.runner.Runner;
-import org.openjdk.jmh.runner.RunnerException;
-import org.openjdk.jmh.runner.options.Options;
-import org.openjdk.jmh.runner.options.OptionsBuilder;
-import org.openjdk.jmh.runner.options.TimeValue;
-import utils.JMHUtils;
+import org.openjdk.jmh.results.*;
+import org.openjdk.jmh.runner.*;
+import org.openjdk.jmh.runner.options.*;
+import utils.*;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)

@@ -1,9 +1,9 @@
 package de.icubic.mm.server.tests.performance.workerqueue;
 
+import de.icubic.mm.bench.base.*;
+
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
-
-import de.icubic.mm.bench.base.BenchLogger;
 
 public abstract class MultiWorkQueue extends AWorkQueue {
 	private AtomicInteger queue_no = new AtomicInteger();

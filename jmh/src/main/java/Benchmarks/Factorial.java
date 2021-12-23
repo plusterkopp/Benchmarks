@@ -1,12 +1,11 @@
 package Benchmarks;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.concurrent.TimeUnit;
-
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.*;
 import org.openjdk.jmh.runner.options.*;
+
+import java.math.*;
+import java.util.concurrent.*;
 
 @Warmup(iterations = 5, time = 4, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 10, timeUnit = TimeUnit.SECONDS)
@@ -17,12 +16,12 @@ import org.openjdk.jmh.runner.options.*;
 public class Factorial {
 
 	final int	arg = 100;
-	
+
 	static int	count100outResult = 0;
 	static double	factResult = 0;
 
 	private static int count1outResult = 0;
-	
+
 	@Setup(Level.Trial)
 	public static void setup() {
 		count100outResult = 0;
@@ -46,7 +45,7 @@ public class Factorial {
 			System.out.println( "double fact = " + fact + " * 10^" + ( 100*count100out));
 		}
 		count100outResult = count100out;
-		factResult = fact;		
+		factResult = fact;
 	}
 
 	@Benchmark

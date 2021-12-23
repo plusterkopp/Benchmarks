@@ -1,7 +1,7 @@
 package encounters;
 
 import org.openjdk.jcstress.annotations.*;
-import org.openjdk.jcstress.infra.results.I_Result;
+import org.openjdk.jcstress.infra.results.*;
 
 @JCStressTest
 

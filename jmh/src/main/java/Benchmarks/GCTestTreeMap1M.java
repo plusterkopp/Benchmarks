@@ -1,16 +1,11 @@
 package Benchmarks;
 
 import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.runner.Runner;
-import org.openjdk.jmh.runner.RunnerException;
-import org.openjdk.jmh.runner.options.Options;
-import org.openjdk.jmh.runner.options.OptionsBuilder;
-import org.openjdk.jmh.runner.options.TimeValue;
+import org.openjdk.jmh.runner.*;
+import org.openjdk.jmh.runner.options.*;
 
-import java.util.Random;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -88,7 +83,7 @@ public class GCTestTreeMap1M {
 		return addRemove( mapSizeFor16G);
 	}
 
-	
+
 	@Benchmark
 	@Fork(value = 1, jvmArgsPrepend = {"-Xmx4G", "-XX:+UseParallelGC"})
 	public Container addRemovePS_4G() { return addRemove( mapSizeFor4G); }
