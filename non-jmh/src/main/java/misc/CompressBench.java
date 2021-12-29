@@ -40,9 +40,12 @@ public class CompressBench {
 	private static final int	maxThreads = Runtime.getRuntime().availableProcessors();
 
 	private static final DateFormat	df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+	private static final DateFormat outFormat = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
 	private static final DecimalFormat nfI = new DecimalFormat( "#,###", new DecimalFormatSymbols( Locale.US));
+	public static final String COMPRESS_BENCH = "compressBench-";
+	public static final String CSV = ".csv";
 
-	private enum EMethod {
+	private static enum EMethod {
 		LZMA2 {
 			@Override
 			public String getSuffix() {
@@ -202,6 +205,20 @@ public class CompressBench {
 			this.level = level;
 		}
 
+		public static RunSpec getInstance( String methodName, String levelS, String threadsS, String dictS) {
+			try {
+				EMethod method = EMethod.valueOf( methodName);
+				int l = Integer.parseInt( levelS);
+				int t = Integer.parseInt( threadsS);
+				int d = Integer.parseInt( dictS);
+				RunSpec spec = new RunSpec(method, t, d, l);
+				return spec;
+			} catch ( Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
 		@Override
 		public int compareTo(@NotNull RunSpec other) {
 			if ( method != other.method) {
@@ -221,6 +238,38 @@ public class CompressBench {
 
 		public List<String> createArgsList(String archive, List<String> sources) {
 			return method.createArgsList( this, archive, sources);
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			RunSpec spec = (RunSpec) o;
+
+			if (threads != spec.threads) return false;
+			if (dictExp != spec.dictExp) return false;
+			if (level != spec.level) return false;
+			return method == spec.method;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = method != null ? method.hashCode() : 0;
+			result = 31 * result + threads;
+			result = 31 * result + dictExp;
+			result = 31 * result + level;
+			return result;
+		}
+
+		@Override
+		public String toString() {
+			return "RunSpec{" +
+					" " + method +
+					", lvl=" + level +
+					", thr=" + threads +
+					", dict=" + dictExp +
+					'}';
 		}
 	}
 
@@ -251,7 +300,7 @@ public class CompressBench {
 		final int threadsExpMin = 0;
 		final int threadsExpMax = 7;
 		final int dictExpMin = 24;
-		final int dictExpMax = 29;
+		final int dictExpMax = 31;
 		final int levelMin = 0;
 		final int levelMax = 9;
 
@@ -321,6 +370,10 @@ public class CompressBench {
 				.reduce( 0L, ( s, l) -> s + l);
 
 		List<RunSpec> specs = generateSpecs();
+		File oldCSV = findOldCSV( files.get( 0).getParentFile());
+		if ( oldCSV != null) {
+			removeOldSpecs( oldCSV, specs);
+		}
 
 		String outName = buildOutName();
 		writeHeaders( outName);
@@ -330,20 +383,68 @@ public class CompressBench {
 			Result result = new Result( spec, 0, 0, 0);
 			long then = System.currentTimeMillis();
 			System.out.print( "\n" + "started " + df.format( new Date( then)));
-			runBenchmark( result, namesList);
-			long durMS = System.currentTimeMillis() - then;
-			System.out.print( "\n" + "finished " + df.format( new Date( then + durMS)) + " (" + nfI.format( durMS) + " ms)");
-			result.durMS = durMS;
-			result.ratio = ( ( double) totalSize) / result.size;
-			writeTo( outName, out -> writeResult( result, out));
+			try {
+				runBenchmark(result, namesList);
+				long durMS = System.currentTimeMillis() - then;
+				System.out.print("\n" + "finished " + df.format(new Date(then + durMS)) + " (" + nfI.format(durMS) + " ms)");
+				result.durMS = durMS;
+				result.ratio = ((double) totalSize) / result.size;
+				writeTo(outName, out -> writeResult(result, out));
+			} catch ( Throwable t) {
+				System.err.println( "error running spec: " + spec);
+				t.printStackTrace();
+			}
 		}
 	}
 
+	private static void removeOldSpecs(File csv, List<RunSpec> specs) {
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(csv));
+			String  line;
+			System.out.println( "looking for old results in: " + csv);
+			while ( ( line = reader.readLine()) != null) {
+				String[] contentA = line.split("\t");
+				if ( contentA != null && contentA.length >= 4) {
+					RunSpec spec = RunSpec.getInstance(contentA[0], contentA[1], contentA[2], contentA[3]);
+					if ( spec == null) {
+						System.out.println( "not a run spec: " + line);
+					} else {
+						boolean removed = specs.remove(spec);
+						if ( removed) {
+							System.out.println( "not repeating spec: " + line);
+						}
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static File findOldCSV( File folder) {
+		String[] fileNames = folder.list();
+		if ( fileNames == null) {
+			System.err.println( "not a directory: " + folder);
+			return null;
+		}
+		SortedSet<String> csvNamesSorted = new TreeSet<>();
+		for (String fileName : fileNames) {
+			File file = new File(fileName);
+			if ( file.isFile()) {
+				if (fileName.startsWith(COMPRESS_BENCH) && fileName.endsWith(CSV)) {
+					csvNamesSorted.add(fileName);
+		}   }   }
+		if ( csvNamesSorted.isEmpty()) {
+			return null;
+		}
+		String latest = csvNamesSorted.last();
+		return new File( latest);
+	}
+
 	private static String buildOutName() {
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
 		Date d = new Date();
-		String	dateS = df.format( d);
-		return "compressBench- " + dateS + ".csv";
+		String	dateS = outFormat.format( d);
+		return COMPRESS_BENCH + dateS + CSV;
 	}
 
 	private static void writeResult( Result r, PrintWriter out) {
