@@ -1,6 +1,3 @@
-/**
- *
- */
 package misc;
 
 import org.jetbrains.annotations.*;
@@ -23,11 +20,6 @@ import java.util.stream.*;
 public class CompressBench {
 
 	private static final String CSV_SEP = "\t";
-//	private static final String LZMA2 = "LZMA2";
-//	private static final String PPMD = "PPMd";
-//	private static final String RAR = "RAR";
-//	private static final String JZIP = "JZIP";
-//	private static final String ZIP7 = "ZIP7";
 	private static final String levelPrefix = "-mx=";
 	private static final String threadPrefix = "-mmt=";
 	private static final String typePrefix = "-t";
@@ -45,7 +37,7 @@ public class CompressBench {
 	public static final String COMPRESS_BENCH = "compressBench-";
 	public static final String CSV = ".csv";
 
-	private static enum EMethod {
+	private enum EMethod {
 		LZMA2 {
 			@Override
 			public String getSuffix() {
@@ -190,7 +182,7 @@ public class CompressBench {
 		 * erzeugt Pattern mit #0: EXE, #1: SRC, #2: DEST
 		 * */
 		public abstract List<String> createArgsList( RunSpec spec, String archivePath, List<String> sources);
-	};
+	}
 
 	private static class RunSpec implements Comparable<RunSpec> {
 		final EMethod method;
@@ -211,8 +203,7 @@ public class CompressBench {
 				int l = Integer.parseInt( levelS);
 				int t = Integer.parseInt( threadsS);
 				int d = Integer.parseInt( dictS);
-				RunSpec spec = new RunSpec(method, t, d, l);
-				return spec;
+				return new RunSpec(method, t, d, l);
 			} catch ( Exception e) {
 				e.printStackTrace();
 			}
@@ -255,7 +246,7 @@ public class CompressBench {
 
 		@Override
 		public int hashCode() {
-			int result = method != null ? method.hashCode() : 0;
+			int result = method.hashCode();
 			result = 31 * result + threads;
 			result = 31 * result + dictExp;
 			result = 31 * result + level;
@@ -286,30 +277,30 @@ public class CompressBench {
 		}
 	}
 
-	public static void main( String args[]) {
+	public static void main(String[] args) {
 		// Dateien zum Komprimieren suchen: aktuelles Verzeichnis, alle Logs
 		try {
 			List<File> files = findFiles();
-			runBenchmarks( files);
+			if (files == null || files.isEmpty()) {
+				System.out.println( "no files to compress: " + Arrays.toString( args));
+			} else {
+				runBenchmarks(files);
+			}
 		} catch ( Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	private static List<RunSpec> generateSpecs() {
-		final int threadsExpMin = 0;
-		final int threadsExpMax = 7;
 		final int dictExpMin = 24;
 		final int dictExpMax = 31;
-		final int levelMin = 0;
-		final int levelMax = 9;
 
 		List<Integer> threadsList = new ArrayList<>();
 		for ( int t = 1;  t <= maxThreads;  t *= 2) {
 			threadsList.add( t);
 		}
 
-		int levelsA[] = { 0, 1, 3, 5, 7, 9};
+		int[] levelsA = { 0, 1, 3, 5, 7, 9};
 
 		List<RunSpec> specs = new ArrayList<>();
 		RunSpec spec;
@@ -361,13 +352,13 @@ public class CompressBench {
 		return specs;
 	}
 
-	private static void runBenchmarks(List<File> files) throws Exception {
+	private static void runBenchmarks(List<File> files) {
 		List<String>	namesList = files.stream()
-				.map( f -> f.getName())
+				.map( File::getName)
 				.collect( Collectors.toList());
 		final long totalSize = files.stream()
-				.map( f -> f.length())
-				.reduce( 0L, ( s, l) -> s + l);
+				.map( File::length)
+				.reduce( 0L, Long::sum);
 
 		List<RunSpec> specs = generateSpecs();
 		File oldCSV = findOldCSV( files.get( 0).getParentFile());
@@ -378,7 +369,6 @@ public class CompressBench {
 		String outName = buildOutName();
 		writeHeaders( outName);
 
-		StringBuilder	sb = new StringBuilder( "Compress Bench on " + namesList);
 		for ( RunSpec spec: specs) {
 			Result result = new Result( spec, 0, 0, 0);
 			long then = System.currentTimeMillis();
@@ -404,7 +394,7 @@ public class CompressBench {
 			System.out.println( "looking for old results in: " + csv);
 			while ( ( line = reader.readLine()) != null) {
 				String[] contentA = line.split("\t");
-				if ( contentA != null && contentA.length >= 4) {
+				if ( contentA.length >= 4) {
 					RunSpec spec = RunSpec.getInstance(contentA[0], contentA[1], contentA[2], contentA[3]);
 					if ( spec == null) {
 						System.out.println( "not a run spec: " + line);
@@ -463,7 +453,7 @@ public class CompressBench {
 
 	private static void writeHeaders( String filename) {
 		writeTo( filename, out -> {
-			String headersA[] = { "Method", "Level", "Threads", "Dict", "Size", "Ratio", "Time"};
+			String[] headersA = { "Method", "Level", "Threads", "Dict", "Size", "Ratio", "Time"};
 			for ( String h : headersA) {
 				out.print( h + CSV_SEP);
 			}
@@ -512,9 +502,9 @@ public class CompressBench {
 		Thread watch = new Thread( "io capture") {
 			@Override
 			public void run() {
-				String line = null;
+				String line;
 				try {
-					while ( (line = reader.readLine()) != null) {
+					while ( ( line = reader.readLine()) != null) {
 						sb.append(line);
 						sb.append(System.getProperty("line.separator"));
 					}
@@ -540,7 +530,6 @@ public class CompressBench {
 
 	/**
 	 * @return kompletter Pfad zum 7z-Executable
-	 * @throws IOException
 	 * @param binName Name des Binary
 	 * @param installFolder Namensteil des Installverzeichnisses
 	 */
@@ -586,7 +575,7 @@ public class CompressBench {
 		final Path path = new File( System.getProperty( "user.dir")).toPath();
 		try ( Stream<Path> files = Files.list( path)) {
 			List<File>	result = files
-					.map( p -> p.toFile())
+					.map(Path::toFile)
 					.filter( f -> f.getName().endsWith( ".log"))
 					.collect( Collectors.toList());
 			files.close();
