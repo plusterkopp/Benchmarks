@@ -300,7 +300,7 @@ public class CompressBench {
 		final int threadsExpMin = 0;
 		final int threadsExpMax = 7;
 		final int dictExpMin = 24;
-		final int dictExpMax = 31;
+		final int dictExpMax = 33;  // wahrscheinlich nur bis 32 (4G) möglich
 		final int levelMin = 0;
 		final int levelMax = 9;
 
