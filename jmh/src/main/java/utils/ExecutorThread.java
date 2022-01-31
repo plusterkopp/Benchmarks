@@ -11,14 +11,13 @@ import java.util.concurrent.*;
  *
  * @author hpagenhardt
  */
-public class ExecutorThread extends main.java.utils.IQuoteThread {
+public class ExecutorThread extends IQuoteThread {
 	final Executor executor;
 
 	/**
 	 * @param executor
 	 */
 	public ExecutorThread(Executor executor) {
-		super();
 		this.executor = executor;
 	}
 

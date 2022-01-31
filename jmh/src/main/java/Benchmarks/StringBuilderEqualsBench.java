@@ -1,11 +1,13 @@
 package Benchmarks;
 
+import java.util.*;
+import java.util.concurrent.*;
+
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.*;
 import org.openjdk.jmh.runner.options.*;
 
-import java.util.*;
-import java.util.concurrent.*;
+import utils.*;
 
 
 @Warmup(iterations = 5, time = 4, timeUnit = TimeUnit.SECONDS)
@@ -40,7 +42,7 @@ public class StringBuilderEqualsBench {
 		// Teste gegen Utils
 		boolean equalsAsUtils[] = new boolean[ seqArray.length];
 		for (int i = 0; i < seqArray.length; i++) {
-			equalsAsUtils[ i] = main.java.utils.Utils.safeEquals( seqA, seqArray[ i]);
+			equalsAsUtils[ i] = Utils.safeEquals( seqA, seqArray[ i]);
 		}
 		if ( ! Arrays.equals( equalsAsString, equalsAsUtils)) {
 			throw new RunnerException( "equals mismatch string: " + Arrays.toString( equalsAsString) + " utils: " + Arrays.toString( equalsAsUtils));
@@ -62,7 +64,7 @@ public class StringBuilderEqualsBench {
 	public boolean equalsUtils() {
 		boolean result = false;
 		for ( int i = 0;  i < seqArray.length;  i++) {
-			result ^= main.java.utils.Utils.safeEquals( seqA, seqArray[ i]);
+			result ^= Utils.safeEquals( seqA, seqArray[ i]);
 		}
 		return result;
 	}
@@ -72,7 +74,7 @@ public class StringBuilderEqualsBench {
 	public boolean equalsSBCompare() {
 		boolean result = false;
 		for ( int i = 0;  i < seqArray.length;  i++) {
-			StringBuilder seqASB = (StringBuilder) this.seqA;
+			StringBuilder seqASB = (StringBuilder) seqA;
 			StringBuilder another = (StringBuilder) seqArray[i];
 			result ^= ( seqASB.compareTo( another) == 0);
 		}

@@ -1,4 +1,4 @@
-package main.java.utils;
+package utils;
 
 import java.io.*;
 import java.net.*;
@@ -147,7 +147,7 @@ public class Utils {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> Class<T>[] findDescendants(String tosubclassname, boolean includeSuperClass) {
-		ArrayList<Class<T>> result = new ArrayList<Class<T>>();
+		ArrayList<Class<T>> result = new ArrayList<>();
 		try {
 			Class<?> tosubclass = Class.forName(tosubclassname);
 			Package[] pcks = Package.getPackages();
@@ -233,7 +233,7 @@ public class Utils {
 		if (url == null)
 			return (Class<T>[])new Class<?>[0];
 
-		ArrayList<Class<T>> result = new ArrayList<Class<T>>();
+		ArrayList<Class<T>> result = new ArrayList<>();
 		try {
 			File directory = new File(URLDecoder.decode(url.getFile(), "ISO-8859-1"));
 			if (directory.exists()) {
@@ -437,6 +437,7 @@ public class Utils {
 			return value;
 		}
 
+		@Override
 		public final int compareTo(Integer i) {
 			int thisVal = value;
 			int anotherVal = i.intValue();
@@ -466,7 +467,7 @@ public class Utils {
 		}
 
 		public final Integer getInteger() {
-			return Integer.valueOf( this.value);
+			return value;
 		}
 	}
 
@@ -500,6 +501,7 @@ public class Utils {
 			return value;
 		}
 
+		@Override
 		public final int compareTo(Double d) {
 			double thisVal = value;
 			double anotherVal = d.intValue();
@@ -701,6 +703,7 @@ public class Utils {
 			return value;
 		}
 
+		@Override
 		public final int compareTo( Long other) {
 			return Long.valueOf( value).compareTo( other);
 		}

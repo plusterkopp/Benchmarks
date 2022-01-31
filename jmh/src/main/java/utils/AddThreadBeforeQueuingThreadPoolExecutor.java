@@ -106,7 +106,7 @@ public class AddThreadBeforeQueuingThreadPoolExecutor extends ThreadPoolExecutor
 	 * @return
 	 */
 	public int getCreationThreshold() {
-		return this.creationThreshold;
+		return creationThreshold;
 	}
 
 	/**************************************************************************
@@ -158,7 +158,7 @@ public class AddThreadBeforeQueuingThreadPoolExecutor extends ThreadPoolExecutor
 			try {
 				awaitTermination( time, unit);
 				terminated = isTerminated();
-				if ( ! terminated && ! main.java.utils.Utils.isStringNullOrEmpty( message)) {
+				if ( ! terminated && ! Utils.isStringNullOrEmpty( message)) {
 					BenchLogger.sysinfo( message + " " + getQueue().size() + " jobs left");
 				}
 			} catch( InterruptedException ie) {

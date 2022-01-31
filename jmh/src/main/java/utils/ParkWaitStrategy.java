@@ -1,4 +1,4 @@
-package main.java.utils;
+package utils;
 
 import java.lang.Thread.*;
 import java.util.concurrent.*;
@@ -12,7 +12,7 @@ public class ParkWaitStrategy implements WaitStrategy {
 
     public ParkWaitStrategy(int consumer) {
         this.consumer = consumer;
-        this.consumerWorker = new AtomicReferenceArray<Thread>(consumer);
+        consumerWorker = new AtomicReferenceArray<>(consumer);
     }
 
     @Override

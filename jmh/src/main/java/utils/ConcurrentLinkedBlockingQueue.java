@@ -1,7 +1,7 @@
 /**
  *
  */
-package main.java.utils;
+package utils;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -67,7 +67,6 @@ public class ConcurrentLinkedBlockingQueue<E> extends ConcurrentLinkedQueue<E> i
 	 *
 	 */
 	public ConcurrentLinkedBlockingQueue() {
-		super();
 	}
 
 	/**

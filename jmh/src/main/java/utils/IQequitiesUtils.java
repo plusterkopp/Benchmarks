@@ -1,4 +1,4 @@
-package main.java.utils;
+package utils;
 
 import java.util.*;
 
@@ -16,6 +16,6 @@ public class IQequitiesUtils {
 	}
 
 	public static <T> Set<T> Set( T...elements) {
-		return new HashSet<T>( List( elements));
+		return new HashSet<>( List( elements));
 	}
 }
