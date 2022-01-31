@@ -6,6 +6,7 @@ import org.openjdk.jmh.runner.options.*;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.function.*;
 
 @Warmup(iterations = 5, time = 4, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 10, timeUnit = TimeUnit.SECONDS)
@@ -26,6 +27,7 @@ public class MulDivBench {
 	ThreadLocal<long[]> tlToL;
 
 	double divisorD = 1;
+	double rndD = 1;
 	long divisorL = 3;
 
 	@Setup(Level.Trial)
@@ -41,6 +43,7 @@ public class MulDivBench {
 			return arr;
 		});
 		divisorD = 1.3 + Math.random();
+		rndD = 1.3 + Math.random();
 
 
 		tlFromL = ThreadLocal.withInitial(() -> {
@@ -63,7 +66,7 @@ public class MulDivBench {
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void d_byRandom() {
+	public void dA_byRandom() {
 		double[] from = tlFromD.get();
 		double[] to = tlToD.get();
 		for ( int i = from.length - 1; i >= 0; -- i) {
@@ -73,7 +76,7 @@ public class MulDivBench {
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void l_byRandom() {
+	public void lA_byRandom() {
 		long[] from = tlFromL.get();
 		long[] to = tlToL.get();
 		for ( int i = from.length - 1; i >= 0; -- i) {
@@ -83,7 +86,7 @@ public class MulDivBench {
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void l_byConst() {
+	public void lA_byConst() {
 		long[] from = tlFromL.get();
 		long[] to = tlToL.get();
 		final long d = 3;
@@ -95,7 +98,7 @@ public class MulDivBench {
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void d_byRandomLocal() {
+	public void dA_byRandomLocal() {
 		final double d = divisorD;
 		double[] from = tlFromD.get();
 		double[] to = tlToD.get();
@@ -106,7 +109,7 @@ public class MulDivBench {
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void d_byConst() {
+	public void dA_byConst() {
 		final double d = 1.6;
 		double[] from = tlFromD.get();
 		double[] to = tlToD.get();
@@ -117,7 +120,7 @@ public class MulDivBench {
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void d_byOne() {
+	public void dA_byOne() {
 		double[] from = tlFromD.get();
 		double[] to = tlToD.get();
 		for ( int i = from.length - 1; i >= 0; -- i) {
@@ -127,7 +130,7 @@ public class MulDivBench {
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void d_byThree() {
+	public void dA_byThree() {
 		final double d = 3;
 		double[] from = tlFromD.get();
 		double[] to = tlToD.get();
@@ -138,7 +141,7 @@ public class MulDivBench {
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void d_timesTwo() {
+	public void dA_timesTwo() {
 		double[] from = tlFromD.get();
 		final double factor = 2;
 		double[] to = tlToD.get();
@@ -149,7 +152,7 @@ public class MulDivBench {
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void d_timesOther() {
+	public void dA_timesOther() {
 		double[] from = tlFromD.get();
 		double[] to = tlToD.get();
 		final double factor = 1.6;
@@ -160,7 +163,7 @@ public class MulDivBench {
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void d_plusOther() {
+	public void dA_plusOther() {
 		double[] from = tlFromD.get();
 		double[] to = tlToD.get();
 		final double summand = 1.6;
@@ -169,6 +172,53 @@ public class MulDivBench {
 		}
 	}
 
+	private double d_bifunc( ToDoubleBiFunction<Double, Double> func, double arg) {
+//		double[] from = tlFromD.get();
+//		double[] to = tlToD.get();
+//		for ( int i = from.length - 1; i >= 0; -- i) {
+//			to[ i] = func.applyAsDouble( from[ i], arg);
+//		}
+		return func.applyAsDouble( rndD, arg);
+	}
+
+	private double d_op( DoubleBinaryOperator op, double arg) {
+//		double[] from = tlFromD.get();
+//		double[] to = tlToD.get();
+//		for ( int i = from.length - 1; i >= 0; -- i) {
+//			to[ i] = op.applyAsDouble( from[ i], arg);
+//		}
+		return op.applyAsDouble( rndD, arg);
+	}
+
+	@Benchmark
+	public double d_by1eBF() {
+		return d_bifunc( ( a, b) -> a / b, 1e9);
+	}
+
+	@Benchmark
+	public double d_time1_eBF() {
+		return d_bifunc( ( a, b) -> a * b, 1e-9);
+	}
+
+	@Benchmark
+	public double d_by1eOP() {
+		return d_op( ( a, b) -> a / b, 1e9);
+	}
+
+	@Benchmark
+	public double d_time1_eOP() {
+		return d_op( ( a, b) -> a * b, 1e-9);
+	}
+
+	@Benchmark
+	public double d_by1e9() {
+//		double[] from = tlFromD.get();
+//		double[] to = tlToD.get();
+//		for ( int i = from.length - 1; i >= 0; -- i) {
+//			to[ i] = from[ i] / 1e9;
+//		}
+		return rndD / 1e9;
+	}
 
 	public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
