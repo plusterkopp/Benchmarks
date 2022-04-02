@@ -3,10 +3,25 @@ package benches;
 
 import de.icubic.mm.bench.base.*;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
 public class FibonacciFork extends RecursiveTask<Long> {
+
+	public static ThreadLocal<NumberFormat> NFInt_TL = ThreadLocal.withInitial( () -> {
+		NumberFormat df = DecimalFormat.getIntegerInstance(Locale.US);
+		df.setGroupingUsed( true);
+		return df;
+	});
+	public static ThreadLocal<NumberFormat> NFFlt_TL = ThreadLocal.withInitial( () -> {
+		NumberFormat df = DecimalFormat.getNumberInstance( Locale.US);
+		df.setGroupingUsed( true);
+		df.setMinimumFractionDigits( 2);
+		return df;
+	});
 
 	/**
 	 *
@@ -109,6 +124,7 @@ public class FibonacciFork extends RecursiveTask<Long> {
 	}
 
 	private static void runWithRecursionLimit( int r, int arg, long singleThreadNanos, Result result) {
+		NumberFormat nfi = NFInt_TL.get();
 		rekLimit = r;
 		long	start = System.currentTimeMillis();
 		long	fiboResult = fibonacci( arg);
@@ -119,8 +135,8 @@ public class FibonacciFork extends RecursiveTask<Long> {
 		stealCount = currentSteals;
 		long	forksCount = forks.getAndSet( 0);
 		final long durMS = end-start;
-		BenchLogger.sysinfo( "Fib(" + arg + ")=" + fiboResult + " in " + durMS + "ms, recursion limit: " + r +
-				" at " + ( singleThreadNanos / 1e6) + "ms, steals: " + newSteals + " forks " + forksCount);
+		BenchLogger.sysinfo( "Fib(" + arg + ")=" + fiboResult + " in " + nfi.format(durMS) + "ms, recursion limit: " + r +
+				" at " + nfi.format( singleThreadNanos) + " ns, steals: " + newSteals + " forks " + forksCount);
 		result.durMS = durMS;
 		result.rekLimit = r;
 	}

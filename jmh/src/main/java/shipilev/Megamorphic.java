@@ -52,7 +52,7 @@ public class Megamorphic {
 
 	I[] as;
 
-	@Param({"1", "2", "3", "8"})
+	@Param({"1", "2", "3", "4", "8"})
 	private int implementations;
 
 	@Setup

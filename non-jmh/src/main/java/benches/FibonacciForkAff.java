@@ -247,7 +247,7 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 		BenchLogger.sysinfo( "Fib(" + n + ")=" + nf.format( fiboResult)
 				+ " in " + nf.format(durNSPerLoop) + " ns,"
 				+ " recursion limit: " + r
-				+ " at " + ( singleJobNSAvg / 1e6) + "ms,"
+				+ " at " + nf.format( singleJobNSAvg) + " ns,"
 				+ " in jobs: " + String.format( "%.2f", timeInJobsPerc) + " %, "
 				+ " speedup: " + String.format( "%.2f", speedup)
 				+ " steals: " + stealsPerLoop

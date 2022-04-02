@@ -72,6 +72,12 @@
 			<groupId>net.sf.trove4j</groupId>
 			<artifactId>trove4j</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->
+		<dependency>
+			<groupId>org.jetbrains</groupId>
+			<artifactId>annotations</artifactId>
+			<version>20.1.0</version>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>

@@ -178,9 +178,6 @@ public class BranchingCodeString {
 	public static void main(String[] args) throws RunnerException {
 		Options opt = new OptionsBuilder()
 				.include( BranchingCodeString.class.getSimpleName())
-				.warmupIterations(8)
-				.measurementIterations( 5)
-				.measurementTime(TimeValue.seconds( 5))
 				.forks(1)
 				.build();
 		Collection<RunResult> results = new Runner(opt).run();

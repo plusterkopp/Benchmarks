@@ -15,7 +15,7 @@ import java.util.concurrent.*;
 @Warmup(iterations = 5, time = 2, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 5, timeUnit = TimeUnit.SECONDS)
 @State(Scope.Benchmark)
-public class BranchingCode {
+public class BranchingCodeBool {
 
 	static final int countFlags = 1 << 8;
 	private boolean[][]   flagsA;
@@ -127,10 +127,7 @@ public class BranchingCode {
 
 	public static void main(String[] args) throws RunnerException {
 		Options opt = new OptionsBuilder()
-				.include( BranchingCode.class.getSimpleName())
-				.warmupIterations(8)
-				.measurementIterations( 5)
-				.measurementTime(TimeValue.seconds( 10))
+				.include( BranchingCodeBool.class.getSimpleName())
 				.forks(1)
 				.build();
 		Collection<RunResult> results = new Runner(opt).run();
