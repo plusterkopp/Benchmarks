@@ -40,27 +40,36 @@ public class DateCompare {
 		cal1.setTime( date1);
 		cal2.setTime( date2);
 
-		if ( compareDateCal() != compareDateCalO()) {
-			System.err.println( "mismatch: compareDateCal - compareDateCalO");
+		if ( compareDateCalSingleCall() != compareDateAsCal()) {
+			System.err.println( "mismatch: compareDateCalSingleCall - compareDateAsCal");
 		}
-		if ( compareDateCal() != compareDateCalO2()) {
-			System.err.println( "mismatch: compareDateCal - compareDateCalO2");
+		if ( compareDateCalSingleCall() != compareDateAsNewCal()) {
+			System.err.println( "mismatch: compareDateCalSingleCall - compareDateAsNewCal");
 		}
-		if ( compareDateCal() != compareDateLD()) {
-			System.err.println( "mismatch: compareDateCal - compareDateLD");
+		if ( compareDateCalSingleCall() != compareDateCalSingleCallDayOfYear()) {
+			System.err.println( "mismatch: compareDateCalSingleCall - compareDateCalSingleCallDayOfYear");
 		}
-		if ( compareDateCal() != compareDateObs()) {
-			System.err.println( "mismatch: compareDateCal - compareDateObs");
+		if ( compareDateCalSingleCall() != compareDateDeprecatedYMD()) {
+			System.err.println( "mismatch: compareDateCalSingleCall - compareDateDeprecatedYMD");
 		}
-		if ( compareDateCal() != compareDateObsO()) {
-			System.err.println( "mismatch: compareDateCal - compareDateObsO");
+		if ( compareDateCalSingleCall() != compareDateDeprecatedYMDSingleCall()) {
+			System.err.println( "mismatch: compareDateCalSingleCall - compareDateDeprecatedYMDSingleCall");
+		}
+		if ( compareDateCalSingleCall() != compareDateDeprecatedYMDSingleCall()) {
+			System.err.println( "mismatch: compareDateCalSingleCall - compareDateDeprecatedYMDSingleCall");
+		}
+		if ( compareDateCalSingleCall() != compareDateLocalDateIsBefore()) {
+			System.err.println( "mismatch: compareDateCalSingleCall - compareDateLocalDateIsBefore");
+		}
+		if ( compareDateCalSingleCall() != compareDateLocalDateFromDateIsBefore()) {
+			System.err.println( "mismatch: compareDateCalSingleCall - compareDateLocalDateFromDateIsBefore");
 		}
 	}
 
 	// return true, if day of date1 before day of date2
 
 	@Benchmark
-	public boolean compareDateObs() {
+	public boolean compareDateDeprecatedYMD() {
 		if ( date1.getYear() < date2.getYear()) {
 			return true;
 		}
@@ -80,7 +89,7 @@ public class DateCompare {
 	}
 
 	@Benchmark
-	public boolean compareDateObsO() {
+	public boolean compareDateDeprecatedYMDSingleCall() {
 		int year1 = date1.getYear();
 		int year2 = date2.getYear();
 		if ( year1 < year2) {
@@ -104,7 +113,7 @@ public class DateCompare {
 	}
 
 	@Benchmark
-	public boolean compareDateCal() {
+	public boolean compareDateAsCal() {
 		if ( cal1.get( Calendar.YEAR) < cal2.get( Calendar.YEAR)) {
 			return true;
 		}
@@ -124,7 +133,7 @@ public class DateCompare {
 	}
 
 	@Benchmark
-	public boolean compareDateCalL() {
+	public boolean compareDateAsNewCal() {
 		Calendar cal1 = Calendar.getInstance();
 		cal1.setTime( date1);
 		Calendar cal2 = Calendar.getInstance();
@@ -149,7 +158,7 @@ public class DateCompare {
 	}
 
 	@Benchmark
-	public boolean compareDateCalO() {
+	public boolean compareDateCalSingleCall() {
 		int year1 = cal1.get(Calendar.YEAR);
 		int year2 = cal2.get(Calendar.YEAR);
 		if ( year1 < year2) {
@@ -173,7 +182,7 @@ public class DateCompare {
 	}
 
 	@Benchmark
-	public boolean compareDateCalO2() {
+	public boolean compareDateCalSingleCallDayOfYear() {
 		int year1 = cal1.get(Calendar.YEAR);
 		int year2 = cal2.get(Calendar.YEAR);
 		if ( year1 < year2) {
@@ -189,12 +198,17 @@ public class DateCompare {
 	}
 
 	@Benchmark
-	public boolean compareDateLDL() {
+	public boolean compareDateIsBefore() {
+		return date1.before( date2);
+	}
+
+	@Benchmark
+	public boolean compareDateLocalDateIsBefore() {
 		return ld1.isBefore( ld2);
 	}
 
 	@Benchmark
-	public boolean compareDateLD() {
+	public boolean compareDateLocalDateFromDateIsBefore() {
 		Instant inst1;
 		inst1 = Instant.ofEpochMilli( date1.getTime());
 		LocalDate ld1;

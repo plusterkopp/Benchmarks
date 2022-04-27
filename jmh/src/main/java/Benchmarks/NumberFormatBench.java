@@ -1,6 +1,7 @@
 package Benchmarks;
 
 import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.*;
 import org.openjdk.jmh.runner.options.*;
 import utils.*;
@@ -45,7 +46,7 @@ public class NumberFormatBench {
 
 	private static void setupStatics() {
 		valueL = new ArrayList<String>();
-		nf = DecimalFormat.getNumberInstance( Locale.US);
+		nf = NumberFormat.getNumberInstance(Locale.US);
 		nf.setGroupingUsed( false);
 		nf.setMaximumFractionDigits( 4);
 		for ( double d : values) {
@@ -56,11 +57,11 @@ public class NumberFormatBench {
 			final double v = Math.pow(10, 6 * rnd.nextDouble() - 3);
 			valueL.add( nf.format(v));
 		}
-		valueA = valueL.toArray( new String[ valueL.size()]);
+		valueA = valueL.toArray(new String[0]);
 
 		dummyDA = new double[ valueA.length];
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
-			dummyDA[ i] = Double.valueOf( valueA[ i]);
+			dummyDA[ i] = Double.parseDouble( valueA[ i]);
 		}
 
 		dummyBDA = new BigDecimal[ valueA.length];
@@ -78,15 +79,15 @@ public class NumberFormatBench {
 
 //	@Benchmark
 //	@OperationsPerInvocation( Size)
-	public void formatBDExistingNoScale() {
-		for ( int i = valueA.length - 1;  i >= 0;  i--) {
-			resultA[ i] = dummyBDA[ i].toPlainString();
-		}
-	}
+//	public void formatBDExistingNoScale() {
+//		for ( int i = valueA.length - 1;  i >= 0;  i--) {
+//			resultA[ i] = dummyBDA[ i].toPlainString();
+//		}
+//	}
 
 	@Benchmark
 	@OperationsPerInvocation( Size)
-	public void formatBDExistingSingle() {
+	public void formatBDExistingSingleScale() {
 		final int digits = nf.getMaximumFractionDigits();
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
 			resultA[ i] = dummyBDA[ i].setScale(digits).toPlainString();
@@ -95,109 +96,146 @@ public class NumberFormatBench {
 
 	@Benchmark
 	@OperationsPerInvocation( Size)
-	public void formatBDExistingDouble() {
+	public void formatBDExistingDoubleScale() {
 		final int digits = nf.getMaximumFractionDigits();
-		final StringBuilder sb = new StringBuilder(CAPACITY);
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
-			sb.setLength( 0);
-			sb.append( dummyBDA[ i].setScale( 13).setScale(digits).toPlainString());
+			resultA[ i] = dummyBDA[ i].setScale( 13).setScale(digits).toPlainString();
 		}
 	}
 
 	@Benchmark
  	@OperationsPerInvocation( Size)
-	public void formatBDNewDouble() {
+	public void formatBDNewDoubleScale() {
 		final int digits = nf.getMaximumFractionDigits();
-		final StringBuilder sb = new StringBuilder(CAPACITY);
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
-			sb.setLength( 0);
 			BigDecimal bd = BigDecimal.valueOf( dummyDA[ i]);
-			sb.append( bd.setScale( 13).setScale(digits).toPlainString());
+			resultA[ i] = bd.setScale( 13).setScale(digits).toPlainString();
 		}
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( Size)
 	public void formatNF() {
-		final StringBuilder sb = new StringBuilder(CAPACITY);
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
-			sb.setLength( 0);
-			sb.append( nf.format( dummyDA[ i]));
+			resultA[ i] = nf.format( dummyDA[ i]);
 		}
 	}
 
 //	@Benchmark
 //	@OperationsPerInvocation( Size)
-	public void formatJ() {
-		final StringBuilder sb = new StringBuilder(CAPACITY);
-		for ( int i = valueA.length - 1;  i >= 0;  i--) {
-			sb.setLength( 0);
-			sb.append( dummyDA[ i]);
-		}
-	}
+//	public void formatJ() {
+//		final StringBuilder sb = new StringBuilder(CAPACITY);
+//		for ( int i = valueA.length - 1;  i >= 0;  i--) {
+//			sb.setLength( 0);
+//			sb.append( dummyDA[ i]);
+//		}
+//	}
 
 //	@Benchmark
 //	@OperationsPerInvocation( Size)
-	public void formatQPDSNStripped() {
+//	public void formatQPDSNStripped() {
+//		final int digits = nf.getMaximumFractionDigits();
+//		final StringBuilder sb = new StringBuilder(CAPACITY);
+//		for ( int i = valueA.length - 1;  i >= 0;  i--) {
+//			sb.setLength( 0);
+//			QuotePrecision.DSInstance.checkAndformat0( dummyDA[ i], sb,true, digits);
+//		}
+//	}
+
+	@Benchmark
+	@OperationsPerInvocation( Size)
+	public void formatQPDSNoStrip( Blackhole bh) {
 		final int digits = nf.getMaximumFractionDigits();
-		final StringBuilder sb = new StringBuilder(CAPACITY);
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
-			sb.setLength( 0);
-			QuotePrecision.DSInstance.checkAndformat0( dummyDA[ i], sb,true, digits);
+			StringBuilder sb = new StringBuilder(CAPACITY);
+			QuotePrecision.DSInstance.checkAndformat0( dummyDA[ i], sb,false, digits);
+			bh.consume( sb.length());
 		}
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( Size)
-	public void formatQPDSN() {
+	public void formatQPDSString( Blackhole bh) {
 		final int digits = nf.getMaximumFractionDigits();
-		final StringBuilder sb = new StringBuilder(CAPACITY);
+		for ( int i = valueA.length - 1;  i >= 0;  i--) {
+			resultA[ i] = QuotePrecision.DSInstance.checkAndformat0( dummyDA[ i], false, digits);
+		}
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( Size)
+	public void formatQPDSNoStripZeroC( Blackhole bh) {
+		final int digits = nf.getMaximumFractionDigits();
+		StringBuilder sb = new StringBuilder(CAPACITY);
+		for ( int i = valueA.length - 1;  i >= 0;  i--) {
+			sb.setLength( 0);
+			QuotePrecision.DSInstance.checkAndformat0( dummyDA[ i], sb,false, digits);
+			bh.consume( sb.length());
+		}
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( Size)
+	public void formatQPDSNoStripZeroNonC( Blackhole bh) {
+		final int digits = nf.getMaximumFractionDigits();
+		StringBuilder sb = new StringBuilder(CAPACITY);
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
 			sb.setLength( 0);
 			QuotePrecision.DSInstance.checkAndformat0( dummyDA[ i], sb,false, digits);
 		}
 	}
 
-//	@Benchmark
-//	@OperationsPerInvocation( Size)
-	public void formatQPBDNStripped() {
-		final int digits = nf.getMaximumFractionDigits();
-		final StringBuilder sb = new StringBuilder(CAPACITY);
-		for ( int i = valueA.length - 1;  i >= 0;  i--) {
-			sb.setLength( 0);
-			QuotePrecision.BDInstance.checkAndformat0( dummyDA[ i], sb,true, digits);
-		}
-	}
-
 	@Benchmark
 	@OperationsPerInvocation( Size)
-	public void formatQPBDN() {
+	public void formatQPDSNoStripZeroA( Blackhole bh) {
 		final int digits = nf.getMaximumFractionDigits();
-		final StringBuilder sb = new StringBuilder(CAPACITY);
+		StringBuilder sb = new StringBuilder(CAPACITY);
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
 			sb.setLength( 0);
-			QuotePrecision.BDInstance.checkAndformat0( dummyDA[ i], sb,false, digits);
-		}
-	}
-
-//	@Benchmark
-//	@OperationsPerInvocation( Size)
-	public void formatDoubleToString() {
-		StringBuilder	sb = new StringBuilder();
-		for ( int i = valueA.length - 1;  i >= 0;  i--) {
-			sb.setLength( 0);
-			DoubleToString.append( sb, dummyDA[ i]);
+			QuotePrecision.DSInstance.checkAndformat0( dummyDA[ i], sb,false, digits);
 			resultA[ i] = sb.toString();
 		}
 	}
 
+//	@Benchmark
+//	@OperationsPerInvocation( Size)
+//	public void formatQPBDNStripped( Blackhole bh) {
+//		final int digits = nf.getMaximumFractionDigits();
+//		for ( int i = valueA.length - 1;  i >= 0;  i--) {
+//			StringBuilder sb = new StringBuilder(CAPACITY);
+//			QuotePrecision.BDInstance.checkAndformat0( dummyDA[ i], sb,true, digits);
+//			bh.consume( sb.length());
+//		}
+//	}
+
 	@Benchmark
 	@OperationsPerInvocation( Size)
-	public void formatDoubleToStringN() {
+	public void formatQPBDNoStrip( Blackhole bh) {
 		final int digits = nf.getMaximumFractionDigits();
-		StringBuilder	sb = new StringBuilder( CAPACITY);
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
-			sb.setLength( 0);
+			StringBuilder sb = new StringBuilder(CAPACITY);
+			QuotePrecision.BDInstance.checkAndformat0( dummyDA[ i], sb,false, digits);
+			bh.consume( sb.length());
+		}
+	}
+
+//	@Benchmark
+//	@OperationsPerInvocation( Size)
+//	public void formatDoubleToString() {
+//		StringBuilder	sb = new StringBuilder();
+//		for ( int i = valueA.length - 1;  i >= 0;  i--) {
+//			sb.setLength( 0);
+//			DoubleToString.append( sb, dummyDA[ i]);
+//			resultA[ i] = sb.toString();
+//		}
+//	}
+
+	@Benchmark
+	@OperationsPerInvocation( Size)
+	public void formatDoubleToStringN( Blackhole bh) {
+		final int digits = nf.getMaximumFractionDigits();
+		for ( int i = valueA.length - 1;  i >= 0;  i--) {
+			StringBuilder sb = new StringBuilder(CAPACITY);
 			DoubleToString.appendFormatted( sb, dummyDA[ i],
 					digits,'.', ',', 3, '-',  '\uFFFF');
 			resultA[ i] = sb.toString();

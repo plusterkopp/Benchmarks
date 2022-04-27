@@ -21,12 +21,11 @@ public class Sieve {
 	@Setup(Level.Trial)
 	public void setup() {
 		int count = sieve();
-		System.out.println( "" + count + " primes");
+		System.out.println( "" + count + " primes to " + size);
 	}
 
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime)
-	@OutputTimeUnit(TimeUnit.MICROSECONDS)
 	@OperationsPerInvocation(runs)
 	public int sieve() {
 		int s = 0;
@@ -36,7 +35,13 @@ public class Sieve {
 		return s;
 	}
 
-    public int sieve0() {
+	@Benchmark
+	@BenchmarkMode(Mode.AverageTime)
+	public int sieve1() {
+		return sieve0();
+	}
+
+    private int sieve0() {
 	    int count = 0 ;
 	    for ( int i = 0;  i < flags.length;  i++)
 		    flags[i] = true;
@@ -56,16 +61,15 @@ public class Sieve {
 
 
     public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
-                .include( Sieve.class.getSimpleName())
-		        .mode( Mode.AverageTime)
-		        .timeUnit(TimeUnit.MICROSECONDS)
-		        .warmupIterations(5)
-				.warmupTime( TimeValue.seconds( 2))
-		        .measurementIterations(5)
-				.measurementTime( TimeValue.seconds( 5))
-		        .forks(1)
-                .build();
-        new Runner(opt).run();
+	    Options opt = new OptionsBuilder()
+			    .include( Sieve.class.getSimpleName())
+			    .mode( Mode.AverageTime)
+			    .warmupIterations(5)
+			    .warmupTime( TimeValue.seconds( 2))
+			    .measurementIterations(5)
+			    .measurementTime( TimeValue.seconds( 5))
+			    .forks(1)
+			    .build();
+	    new Runner(opt).run();
     }
 }
