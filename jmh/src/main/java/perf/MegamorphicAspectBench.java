@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit;
  * Für jeder der 5 Arten gibt es einen Benchmark, der ruft dann die Werte aller MiniAspects ab.
  * Wir stellen bis zu 5 Ausprägungen, Fälle, Implementationen A1-5 bereit, aber steuern über einen JMH-Parameter, wieviele davon in einem Lauf
  * tatsächlich vorkommen. Es gibt also einen Lauf, der nur A1 enthält, einen mit A1 und A2, etc.
+ * Alle Benchmarks summieren die abgerufenen Werte auf und geben die Summe zurück, so daß nichts wegoptimiert wird.
  */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
