@@ -12,12 +12,33 @@ import java.lang.reflect.Constructor;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Vergleicht verschiedene Arten der Code-Verzweigung:
+ * <ul>
+ * <li>Polymorphie, </li>
+ * <li>Enum, </li>
+ * <li>switch/case über ein Enum, </li>
+ * <li>if/else über symbolische Namen, </li>
+ * <li>Suche in Enum-Values</li>
+ * </ul>
+ * Wir nennen die verschiedenen Fälle A1-A5.
+ * Wir bauen dazu eine große Menge vorgefertigter Objekte, die so zusammengesetzt sind, daß jedes für
+ * jede der Arten den gleichen Wert liefert. Also ein Objekt ({@link MiniAspect}) stellt die o.g. Aufruf-Arten bereit, und die
+ * sind dann für dieses Objekt immer z.B. A1.
+ * Für jeder der 5 Arten gibt es einen Benchmark, der ruft dann die Werte aller MiniAspects ab.
+ * Wir stellen bis zu 5 Ausprägungen, Fälle, Implementationen A1-5 bereit, aber steuern über einen JMH-Parameter, wieviele davon in einem Lauf
+ * tatsächlich vorkommen. Es gibt also einen Lauf, der nur A1 enthält, einen mit A1 und A2, etc.
+ * Alle Benchmarks summieren die abgerufenen Werte auf und geben die Summe zurück, so daß nichts wegoptimiert wird.
+ */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Warmup(iterations = 5, time = 2, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 5, timeUnit = TimeUnit.SECONDS)
 @State(Scope.Benchmark)
 public class MegamorphicAspectBench {
+	/**
+	 * Enum, dessen Elemente die eine Methode unterschiedlich implementieren
+	 */
 	private static enum EMiniAspectType {
 		A1 {
 			@Override
@@ -48,6 +69,9 @@ public class MegamorphicAspectBench {
 		abstract public int getInt(AspectSource src);
 	}
 
+	/**
+	 * bündelt die Datenquelle {@link AspectSource} und die Aufrufwege (über Name, Enum, etc)
+	 */
 	private static abstract class MiniAspect {
 		final AspectSource source;
 		final EMiniAspectType type;
@@ -59,12 +83,19 @@ public class MegamorphicAspectBench {
 			name = aName;
 		}
 
+		/**
+		 * wird in {@link MiniAspectA1} etc implementiert
+		 * @return eine der getA* von {@link AspectSource}
+		 */
 		abstract public int getInt();
 
 		public String toString() {
 			return "" + source + " - " + type + "/" + name;
 		}
 
+		/**
+		 * ruft per switch/case anhand von {@link #type} die entsprechende Methode in {@link AspectSource} auf
+		 */
 		public int getIntByType() {
 			switch (type) {
 				case A1:
@@ -81,10 +112,16 @@ public class MegamorphicAspectBench {
 			throw new IllegalStateException( "switch label missing in " + this);
 		}
 
+		/**
+		 * ruft die {@link EMiniAspectType#getInt(AspectSource)} von {@link #type} auf
+		 */
 		public int getIntByTypeMethod() {
 			return type.getInt(source);
 		}
 
+		/**
+		 * probiert mit if/else die Namen durch, um den richtigen getA* Aufruf von {@link AspectSource} zu finden
+		 */
 		public int getIntByName() {
 			if (name.equals(EMiniAspectType.A1.name())) {
 				return source.getA1();
@@ -104,6 +141,10 @@ public class MegamorphicAspectBench {
 			throw new IllegalStateException( "unknown name in " + this);
 		}
 
+		/**
+		 * probiert mit for-Loop die Namen der {@link EMiniAspectType} durch, um den richtigen {@link EMiniAspectType}
+		 * für den Aufruf von {@link EMiniAspectType#getInt(AspectSource)} zu finden
+		 */
 		public int getIntByTypeName() {
 			for ( EMiniAspectType t : EMiniAspectType.values()) {
 				if ( name.equals( t.name())) {
@@ -215,6 +256,13 @@ public class MegamorphicAspectBench {
 	private MiniAspect[] miniAspects;
 
 
+	/**
+	 * baut massig {@link MiniAspect}-Instanzen, deren Felder {@link MiniAspect#name}, {@link MiniAspect#type} und
+	 * {@link MiniAspect#source} verschieden, aber in sich konsistent belegt sind. Das heißt, wenn ein MiniAspect der
+	 * Unterklasse {@link MiniAspectA1} erzeugt wird, hat der auch als type A1, als name A1, etc.
+	 * Schauen dann auch noch, ob alles richtig zusammenpaßt, also ob die verschiedenen Arten der A*-Aufrufe eines MiniAspects auch immer die gleichen
+	 * Werte liefern. Am Ende haben wir in {@link #miniAspects} ein Array mit zufällig belegten Abrufmethoden.
+	 */
 	@Setup
 	public void setup() {
 		Random rnd = new Random(0);
@@ -232,7 +280,8 @@ public class MegamorphicAspectBench {
 			try {
 				Class clazz = Class.forName(clazzName);
 				EMiniAspectType aType = EMiniAspectType.valueOf(enumName);
-				src = new AspectSource(c * 5 + 1, c * 5 + 2, c * 5 + 3, c * 5 + 4, c * 5 + 5);
+				int c5 = c * 5;
+				src = new AspectSource( c5 + 1, c5 + 2, c5 + 3, c5 + 4, c5 + 5);
 				Constructor declaredConstructor = clazz.getDeclaredConstructor(AspectSource.class, EMiniAspectType.class, String.class);
 				MiniAspect ma = (MiniAspect) declaredConstructor.newInstance(src, aType, enumName);
 				miniAspects[c] = ma;
@@ -255,6 +304,11 @@ public class MegamorphicAspectBench {
 		}
 	}
 
+	/**
+	 * ruft per Polymorphie die entsprechende Methode der konkreten MiniAspect-Unterklasse auf
+	 * @return dummy Summe
+	 * @see MiniAspect#getInt()
+	 */
 	@Benchmark
 	@OperationsPerInvocation(300)
 	public int inherited() {
@@ -265,6 +319,10 @@ public class MegamorphicAspectBench {
 		return sum;
 	}
 
+	/**
+	 * @return dummy Summe
+	 * @see MiniAspect#getIntByType()
+	 */
 	@Benchmark
 	@OperationsPerInvocation(300)
 	public int byType() {
@@ -275,6 +333,10 @@ public class MegamorphicAspectBench {
 		return sum;
 	}
 
+	/**
+	 * @return dummy Summe
+	 * @see MiniAspect#getIntByTypeMethod()
+	 */
 	@Benchmark
 	@OperationsPerInvocation(300)
 	public int byTypeMethod() {
@@ -285,6 +347,10 @@ public class MegamorphicAspectBench {
 		return sum;
 	}
 
+	/**
+	 * @return dummy Summe
+	 * @see MiniAspect#getIntByName()
+	 */
 	@Benchmark
 	@OperationsPerInvocation(300)
 	public int byName() {
@@ -295,6 +361,10 @@ public class MegamorphicAspectBench {
 		return sum;
 	}
 
+	/**
+	 * @return dummy Summe
+	 * @see MiniAspect#getIntByTypeName()
+	 */
 	@Benchmark
 	@OperationsPerInvocation(300)
 	public int byTypeName() {
