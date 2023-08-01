@@ -1,17 +1,28 @@
 package Benchmarks;
 
+import gnu.trove.list.TIntList;
+import gnu.trove.list.TLongList;
+import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.list.array.TLongArrayList;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
-import org.openjdk.jmh.runner.*;
-import org.openjdk.jmh.runner.options.*;
-import utils.*;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.RunnerException;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
+import org.openjdk.jmh.runner.options.TimeValue;
+import utils.DoubleToString;
+import utils.QuotePrecision;
 
-import java.math.*;
-import java.text.*;
-import java.util.*;
-import java.util.concurrent.*;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
-@Warmup(iterations = 5, time = 4, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations = 5, time = 2, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 10, timeUnit = TimeUnit.SECONDS)
 @Fork(value = 1)
 @BenchmarkMode(Mode.AverageTime)
@@ -41,8 +52,12 @@ public class NumberFormatBench {
 			0.001234567, 0.00123456, 0.0012345, 0.001234, 0.00123, 0.0015, 0.001,
 	};
 
+
 	final static int Size = 1000;
 	static NumberFormat nf;
+
+	private static TLongList longList = new TLongArrayList( Size);
+	private static TIntList intList = new TIntArrayList( Size);
 
 	private static void setupStatics() {
 		valueL = new ArrayList<String>();
@@ -67,6 +82,13 @@ public class NumberFormatBench {
 		dummyBDA = new BigDecimal[ valueA.length];
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
 			dummyBDA[ i] = new BigDecimal( valueA[ i]);
+		}
+
+		// Longs
+		while ( longList.size() < Size) {
+			final int v = (int) Math.pow(10, 8 * rnd.nextDouble());
+			intList.add( v);
+			longList.add( v);
 		}
 
 		resultA = new String[ valueA.length];
@@ -239,6 +261,54 @@ public class NumberFormatBench {
 			DoubleToString.appendFormatted( sb, dummyDA[ i],
 					digits,'.', ',', 3, '-',  '\uFFFF');
 			resultA[ i] = sb.toString();
+		}
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( Size)
+	public void formatLongsDS() {
+		for ( int i = longList.size() - 1;  i >= 0;  i--) {
+			long l = longList.get( i);
+			StringBuilder sb = new StringBuilder( CAPACITY);
+			QuotePrecision.DSInstance.checkAndformat0( l, sb,false, 0);
+			resultA[ i] = sb.toString();
+		}
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( Size)
+	public void formatLongsHex() {
+		for ( int i = longList.size() - 1;  i >= 0;  i--) {
+			long l = longList.get( i);
+			String s = Long.toHexString( l);
+			resultA[ i] = s;
+		}
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( Size)
+	public void formatLongsNF() {
+		for ( int i = longList.size() - 1;  i >= 0;  i--) {
+			long l = longList.get( i);
+			resultA[ i] = nf.format( l);
+		}
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( Size)
+	public void formatLongsDec() {
+		for ( int i = longList.size() - 1;  i >= 0;  i--) {
+			long l = longList.get( i);
+			resultA[ i] = "" + l;
+		}
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( Size)
+	public void formatLongIntsDec() {
+		for ( int i = intList.size() - 1;  i >= 0;  i--) {
+			int l = intList.get( i);
+			resultA[ i] = "" + l;
 		}
 	}
 
