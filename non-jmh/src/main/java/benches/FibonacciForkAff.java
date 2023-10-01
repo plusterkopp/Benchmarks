@@ -98,7 +98,7 @@ public class FibonacciForkAff extends RecursiveTask<Long> {
 						super.onStart();
 						int	group = groupCounter.getAndAccumulate( 1, cycleCounter);	// threadsicherer zyklische Zähler
 						// binde an Gruppe
-						AffinityManager.INSTANCE.bindToGroup(group);
+						AffinityManager.getInstance().bindToGroup(group);
 						// Logging
 //						List<LayoutEntity> boundTo = AffinityManager.INSTANCE.getBoundTo( Thread.currentThread());
 //						BenchLogger.sysinfo( Thread.currentThread()  + " #" + threadCounter.incrementAndGet() + " bound to: " + boundTo.get( 0));

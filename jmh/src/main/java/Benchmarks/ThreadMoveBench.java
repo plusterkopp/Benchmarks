@@ -21,7 +21,7 @@ public class ThreadMoveBench {
 	int	currentCPUid = 0;
 
 	static {
-		AffinityManager am = AffinityManager.INSTANCE;
+		AffinityManager am = AffinityManager.getInstance();
 		StringBuilder sb = new StringBuilder();
 		am.visitEntities( le -> sb.append( le.toString() + ", "));
 		if (sb.length() > 2) {

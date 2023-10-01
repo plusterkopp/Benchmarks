@@ -191,7 +191,7 @@ public abstract class AWorkQueue implements IWorkQueue {
 	}
 
 	public LayoutEntity setAffinityFor( Object key) { // binde alle Threads eines key an den gleichen Sockel
-		final AffinityManager am = AffinityManager.INSTANCE;
+		final AffinityManager am = AffinityManager.getInstance();
 		if ( AffinityLock.cpuLayout().sockets() < 2) {	// gibt nur einen Sockel, binde den Thread an einen Kern
 			return am.getSocket( 0);
 		}
@@ -392,8 +392,8 @@ public abstract class AWorkQueue implements IWorkQueue {
 		if ( ! useAffinity) {
 			return null;
 		}
-		int socketIndex = threadIndex % AffinityManager.INSTANCE.getNumSockets();
-		return AffinityManager.INSTANCE.getSocket( socketIndex);
+		int socketIndex = threadIndex % AffinityManager.getInstance().getNumSockets();
+		return AffinityManager.getInstance().getSocket( socketIndex);
 	}
 
 

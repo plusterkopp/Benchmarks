@@ -97,7 +97,7 @@ public class AffinityThread extends Thread {
 		if ( groupIndex < 0) {
 			return target;
 		}
-		AffinityManager am = AffinityManager.INSTANCE;
+		AffinityManager am = AffinityManager.getInstance();
 		int numSockets = am.getNumSockets();
 		final int socketIndex = groupIndex % numSockets;
 		Socket socket = am.getSocket( socketIndex);
@@ -207,7 +207,7 @@ public class AffinityThread extends Thread {
 	}
 
 	public String getLocation() {
-		List<LayoutEntity> boundTo = AffinityManager.INSTANCE.getBoundTo( this);
+		List<LayoutEntity> boundTo = AffinityManager.getInstance().getBoundTo( this);
 		String	locString = getLocation( cpuId);
 		if ( boundTo.isEmpty()) {
 			return locString;
@@ -238,7 +238,7 @@ public class AffinityThread extends Thread {
 	public static Socket getOtherSocket( Socket socket) {
 		Socket[] socketA = new Socket[ 1];
 		socketA[ 0] = null;
-		AffinityManager.INSTANCE.visitEntities( ( entity) -> {
+		AffinityManager.getInstance().visitEntities( ( entity) -> {
 			if ( ( entity instanceof Socket) && socket != entity) {
 				socketA[ 0] = ( Socket) entity;
 			}
@@ -261,7 +261,7 @@ public class AffinityThread extends Thread {
 
 	public static int getNumThreadsOnNode( NumaNode node) {
 		int	sum = 0;
-		final AffinityManager am = AffinityManager.INSTANCE;
+		final AffinityManager am = AffinityManager.getInstance();
 		for ( int i = 0;  i < am.getNumSockets();  i++) {
 			Socket s = am.getSocket( i);
 			if ( s.getNode() == node) {
@@ -281,7 +281,7 @@ public class AffinityThread extends Thread {
 				collected.put( entity, sorted);
 			}
 		};
-		AffinityManager.INSTANCE.visitEntities( collector);
+		AffinityManager.getInstance().visitEntities( collector);
 		return collected;
 	}
 

@@ -1,18 +1,20 @@
 package de.icubic.mm.server.tests.performance.workerqueue;
 
 import com.lmax.disruptor.*;
-import com.lmax.disruptor.dsl.*;
-import de.icubic.mm.bench.base.*;
-import de.icubic.mm.communication.util.*;
-import de.icubic.mm.server.utils.*;
-import net.openhft.affinity.*;
-import net.openhft.affinity.AffinityManager.*;
-import net.openhft.affinity.impl.LayoutEntities.*;
+import com.lmax.disruptor.dsl.Disruptor;
+import com.lmax.disruptor.dsl.ProducerType;
+import de.icubic.mm.bench.base.BenchLogger;
+import de.icubic.mm.communication.util.AddThreadBeforeQueuingThreadPoolExecutor;
+import de.icubic.mm.server.utils.AffinityThread;
+import net.openhft.affinity.AffinityManager;
+import net.openhft.affinity.impl.LayoutEntities.LayoutEntity;
+import net.openhft.affinity.impl.LayoutEntities.Socket;
 
-import java.text.*;
-import java.util.*;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DisruptorQueue implements IWorkQueue {
 
@@ -302,7 +304,7 @@ public class DisruptorQueue implements IWorkQueue {
 
 	@Override
 	public int getNumAssignerThreads() {
-		int	cores = AffinityManager.INSTANCE.getNumSockets() * AffinityThread.getThreadsPerSocket();
+		int	cores = AffinityManager.getInstance().getNumSockets() * AffinityThread.getThreadsPerSocket();
 		if ( cores > 1) {
 			int	nt = getNumQueues();
 			nt = Math.min( nt,  cores / 2);
