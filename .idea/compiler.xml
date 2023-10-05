@@ -12,11 +12,5 @@
         <module name="jcstress" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="Benchmarks" target="1.8" />
-      <module name="jcstress" target="11" />
-      <module name="jmh" target="11" />
-      <module name="non-jmh" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>

@@ -33,7 +33,7 @@ public class TimeGranularityTest {
 	static long maxRecord = 1_000_000_000;
 	static LongAdder globalMeasurementCounter = new LongAdder();
 
-	static AtomicBoolean timeoutReached = new AtomicBoolean( false);
+	static Map<ExecutorService, AtomicBoolean> poolToTimeoutFlag = new HashMap<>();
 
 	public static void main(String[] args) {
 		parseArgs( args);
@@ -44,22 +44,23 @@ public class TimeGranularityTest {
 	}
 
 	private static void run( LongSupplier timeSupplier) {
-		// reset stop conditions
-		timeoutReached.set( false);
-		globalMeasurementCounter.reset();
 
 		int threadCount = Runtime.getRuntime().availableProcessors();
 		ExecutorService pool = Executors.newFixedThreadPool( threadCount);
+		// reset stop conditions
+		globalMeasurementCounter.reset();
+		poolToTimeoutFlag.put( pool, new AtomicBoolean( false));
 
 		List<Future<long[]>> resultFutures = submitFutures(pool, threadCount, timeSupplier);
 
-		long[] values = collectValues( resultFutures, true);
-		values = null;
+		long[] values;
+//		values = collectValues( resultFutures, true);
+//		values = null;
+//		System.gc();
+//		values = collectValues( resultFutures, false);
+//		values = null;
 		System.gc();
-		values = collectValues( resultFutures, false);
-		values = null;
-		System.gc();
-		values = collectValues( resultFutures, true);
+		values = collectValues( pool, resultFutures, false);
 
 		terminatePool( pool, "measument");
 
@@ -112,7 +113,11 @@ public class TimeGranularityTest {
 			}
 		}
 		// add some percentiles by value
-		percentilesToValues.put(histogram.getPercentileAtOrBelowValue( 1), 1L);
+		long[] valuesForPercentiles = { 1, 0};
+		for ( long value: valuesForPercentiles) {
+			double perc = histogram.getPercentileAtOrBelowValue( value);
+			percentilesToValues.put( perc, value);
+		}
 		// print values
 		percentilesToValues.forEach( ( p, v) -> {
 			String percPart;
@@ -149,28 +154,30 @@ public class TimeGranularityTest {
 //		);
 	}
 
-	private static long[] collectValues(List<Future<long[]>> resultFutures, boolean useFastSort) {
+	private static long[] collectValues(
+			ExecutorService pool, List<Future<long[]>> resultFutures, boolean useFastSort)
+	{
 		boolean needsTimeout = resultFutures.stream()
 				.map(f -> ! f.isDone())
 				.reduce(false, (a, b) -> a || b);
-		ScheduledExecutorService timeoutService = null;
-		if ( needsTimeout) {
-			long startNS = System.nanoTime();
-			timeoutService = Executors.newSingleThreadScheduledExecutor();
-			long nanos = (long) (1e9 * seconds);
-			timeoutService.schedule(() -> {
+		long startNS = System.nanoTime();
+		ScheduledExecutorService timeoutService = Executors.newSingleThreadScheduledExecutor();
+		long nanos = (long) (1e9 * seconds);
+		timeoutService.schedule(() -> {
+			if ( ! pool.isTerminated()) {
+				AtomicBoolean timeoutReached = poolToTimeoutFlag.get(pool);
 				timeoutReached.set(true);
 				NumberFormat nfI = nfITL.get();
 				System.out.println("timeout for " + resultFutures.size()
 						+ " jobs signalled in "
 						+ nfI.format(System.nanoTime() - startNS) + " ns"
 				);
-			}, nanos, TimeUnit.NANOSECONDS);
+			}
+		}, nanos, TimeUnit.NANOSECONDS);
 
 //		System.out.println( "timeout scheduled in "
 //				+ nfI.format( System.nanoTime() - startNS) + " ns"
 //		);
-		}
 
 		NumberFormat nfI = nfITL.get();
 		long startSortNS;
@@ -217,25 +224,32 @@ public class TimeGranularityTest {
 				+ nfI.format( System.nanoTime() - startNS) + " ns"
 		);
 
+		System.out.println( "allocating " + nfI.format( 8L * sizeA[ 0]) + " bytes");
 		startNS = System.nanoTime();
-		TLongList valueList = new TLongArrayList( sizeA[ 0]);
-		resultFutures.forEach( f -> {
+		long[]  resultFull = new long[ sizeA[ 0]];
+		int index = 0;
+		for ( Future<long[]> f: resultFutures) {
 			long[] result = new long[0];
 			try {
 				result = f.get();
 			} catch (InterruptedException | ExecutionException e) {
 				throw new RuntimeException(e);
 			}
-			valueList.add( result);
-		});
+			System.arraycopy(result, 0, resultFull, index, result.length);
+			index += result.length;
+//			System.out.print( "\rgot " + index + "... ");
+ 		}
 		System.out.println( "values fetched in "
 				+ nfI.format( System.nanoTime() - startNS) + " ns"
 		);
+		resultFutures.clear();  // for GC
 
 		long startSortNS = System.nanoTime();
-		long[] values = valueList.toArray();
-		Arrays.parallelSort( values);
-		return values;
+		Arrays.sort( resultFull);
+		System.out.println( "values sorted in "
+				+ nfI.format( System.nanoTime() - startSortNS) + " ns"
+		);
+		return resultFull;
 	}
 
 	private static long[] collectSortedResultsMerge(List<Future<long[]>> resultFutures) {
@@ -282,10 +296,12 @@ public class TimeGranularityTest {
 			ExecutorService pool, int threadCount, LongSupplier timeSupplier)
 	{
 		long startNS = System.nanoTime();
-		long maxPerThreadCount = 2 * maxRecord / threadCount;
+
+		AtomicBoolean timeoutReached = poolToTimeoutFlag.get(pool);
+		int maxPerThreadCount = (int) (maxRecord / threadCount);
 		List<Future<long[]>> futures = new ArrayList<>();
 		Callable<long[]> job = () -> {
-			TLongList values = new TLongArrayList( 10000);
+			TLongList values = new TLongArrayList( maxPerThreadCount);
 			while ( ( ! timeoutReached.get())
 					&& ( continueMeasurements( values.size(), maxPerThreadCount, globalMeasurementCounter)))
 			{
@@ -293,14 +309,14 @@ public class TimeGranularityTest {
 				globalMeasurementCounter.increment();
 				values.add( time);
 			}
-//			NumberFormat nfI = nfITL.get();
-//			System.out.println( Thread.currentThread().getName() + " "
-//					+ nfI.format( values.size())
-//					+ "/" + nfI.format( globalMeasurementCounter.longValue())
-//					+ " measurements in "
-//					+ nfI.format( System.nanoTime() - startNS) + " ns"
-//			);
-			return values.toArray();
+			NumberFormat nfI = nfITL.get();
+			System.out.println( Thread.currentThread().getName() + " "
+					+ nfI.format( values.size())
+					+ "/" + nfI.format( globalMeasurementCounter.longValue())
+					+ " measurements in "
+					+ nfI.format( System.nanoTime() - startNS) + " ns"
+			);
+			return values.toArray( ); // new long[ values.size()]
 		};
 		for ( int i = 0;  i < threadCount;  i++) {
 			Future<long[]> f = pool.submit(job);
@@ -319,7 +335,8 @@ public class TimeGranularityTest {
 		if ( measureCountByCaller < maxPerThreadCount) {
 			return true;
 		}
-		return globalMeasurementCounter.longValue() < maxRecord;
+		return false;
+//		return globalMeasurementCounter.longValue() < maxRecord;
 	}
 
 	private static void parseArgs(String[] args) {
@@ -337,5 +354,11 @@ public class TimeGranularityTest {
 				seconds = secondsI;
 			}
 		}
+		// determine maxRecord to fit in available heap
+		long heapSpace = (long) (Runtime.getRuntime().maxMemory() * 0.9);
+		maxRecord = heapSpace / ( 8*2);
+		NumberFormat nfI = nfITL.get();
+		System.out.println( "using " + nfI.format( heapSpace)
+				+ " bytes for " + nfI.format( maxRecord) + " measurements");
 	}
 }

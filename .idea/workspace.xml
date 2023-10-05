@@ -4,8 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9b705a73-0f9a-4d57-a457-b6d4aa11b88c" name="Default" comment="Added: non-jmh Mandel2">
+    <list default="true" id="9b705a73-0f9a-4d57-a457-b6d4aa11b88c" name="Default" comment="Added: TimerEarlyTest">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Benchmarks.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jcstress/jcstress.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jmh/jmh.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/non-jmh/non-jmh.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/non-jmh/src/main/java/misc/TimeGranularityTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/non-jmh/src/main/java/misc/TimeGranularityTest.java" afterDir="false" />
     </list>
     <list id="a8d3b53a-a629-4991-be85-92d7d440e680" name="jmh.iml nach Löschaktion" comment="jmh.iml nach Löschaktion&#10;&#10;(cherry picked from commit c5559746f2366d21c1352ab2558fcfd5daaa73cf)">
       <changelist_data name="plusterkopp" email="ralf@pkmd.de" date="1538750482000" />
@@ -65,6 +73,7 @@
     <option name="generalSettings">
       <MavenGeneralSettings>
         <option name="failureBehavior" value="AT_END" />
+        <option name="localRepository" value="P:\Prog\Maven\.m2\repository" />
         <option name="threads" value="4" />
       </MavenGeneralSettings>
     </option>
@@ -100,25 +109,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
-    <property name="Downloaded.Files.Path" value="$PROJECT_DIR$/jmh/lib" />
-    <property name="Downloaded.Files.Path.Enabled" value="false" />
-    <property name="Repository.Attach.Annotations" value="false" />
-    <property name="Repository.Attach.JavaDocs" value="false" />
-    <property name="Repository.Attach.Sources" value="false" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1538740501153" />
-    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
-    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit4" value="" />
-    <property name="last_directory_selection" value="$PROJECT_DIR$/non-jmh/src/main/java/perf" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/whetstc.java" />
-    <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.15" />
-    <property name="project.structure.side.proportion" value="0.2942366" />
-    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.Java" />
-    <property name="vcs.patch.to.clipboard" value="true" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "last_opened_file_path": "T:/rhelbing/Soft",
+    "project.structure.last.edited": "SDKs",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "reference.projectsettings.compiler.javacompiler"
+  }
+}]]></component>
   <component name="ReaderModeSettings">
     <option name="enabled" value="false" />
   </component>
@@ -152,7 +151,7 @@
       <recent name="utils" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.StringBuilderEqualsBench">
+  <component name="RunManager" selected="Application.TimeGranularityTest Sh">
     <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
       <module name="" />
       <option name="DEPLOY" value="true" />
@@ -214,29 +213,15 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="BranchingCodeString" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="T:/rhelbing/Soft/openjdk-15-2020-06-08" />
+    <configuration name="CompressBench" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="T:/rhelbing/Soft/openjdk-18+12-2021-09-09" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <option name="MAIN_CLASS_NAME" value="perf.BranchingCodeString" />
-      <module name="jmh" />
+      <option name="MAIN_CLASS_NAME" value="misc.CompressBench" />
+      <module name="non-jmh" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../../temp/logs/Tickets/2021-1103-10000068" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="perf.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="DateCompare" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="$PROJECT_DIR$/../../../../Apps/Java/openjdk-12" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <option name="MAIN_CLASS_NAME" value="Benchmarks.DateCompare" />
-      <module name="jmh" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="Benchmarks.*" />
+          <option name="PATTERN" value="misc.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -253,25 +238,11 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="NumberFormatBench" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="13 9" />
+    <configuration name="MulDivBench" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="18" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <option name="MAIN_CLASS_NAME" value="Benchmarks.NumberFormatBench" />
+      <option name="MAIN_CLASS_NAME" value="Benchmarks.MulDivBench" />
       <module name="jmh" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="Benchmarks.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="StreamAndLoop" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Benchmarks.StreamAndLoop" />
-      <module name="jmh" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="Benchmarks.*" />
@@ -291,6 +262,83 @@
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="Benchmarks.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TimeGranularityTest Generational" type="Application" factoryName="Application" temporary="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="graalvm-jdk-21" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="misc.TimeGranularityTest" />
+      <module name="non-jmh" />
+      <option name="VM_PARAMETERS" value="-XX:+HeapDumpOnOutOfMemoryError -XX:+UseZGC -XX:+ZGenerational " />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="misc.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TimeGranularityTest Sh" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="temurin-20" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="misc.TimeGranularityTest" />
+      <module name="non-jmh" />
+      <option name="VM_PARAMETERS" value="-XX:+HeapDumpOnOutOfMemoryError -XX:+UseShenandoahGC " />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="misc.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TimeGranularityTest" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="openjdk-21" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="misc.TimeGranularityTest" />
+      <module name="non-jmh" />
+      <option name="VM_PARAMETERS" value="-XX:+HeapDumpOnOutOfMemoryError " />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="misc.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TimerCancelBench" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="T:/rhelbing/Soft/openjdk-17-2021-05-20" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="Benchmarks.TimerCancelBench" />
+      <module name="jmh" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Benchmarks.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TimerEarlyTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="misc.TimerEarlyTest" />
+      <module name="non-jmh" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="misc.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -321,20 +369,23 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="Application.TimerCancelBench" />
       <item itemvalue="Application.ListProperties" />
-      <item itemvalue="Application.BranchingCodeString" />
-      <item itemvalue="Application.DateCompare" />
-      <item itemvalue="Application.NumberFormatBench" />
-      <item itemvalue="Application.StreamAndLoop" />
+      <item itemvalue="Application.TimeGranularityTest Sh" />
+      <item itemvalue="Application.TimeGranularityTest" />
+      <item itemvalue="Application.TimeGranularityTest Generational" />
+      <item itemvalue="Application.TimerEarlyTest" />
       <item itemvalue="Application.StringBuilderEqualsBench" />
+      <item itemvalue="Application.CompressBench" />
+      <item itemvalue="Application.MulDivBench" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.TimeGranularityTest Generational" />
+        <item itemvalue="Application.TimerEarlyTest" />
+        <item itemvalue="Application.MulDivBench" />
+        <item itemvalue="Application.CompressBench" />
         <item itemvalue="Application.StringBuilderEqualsBench" />
-        <item itemvalue="Application.StreamAndLoop" />
-        <item itemvalue="Application.NumberFormatBench" />
-        <item itemvalue="Application.BranchingCodeString" />
-        <item itemvalue="Application.DateCompare" />
       </list>
     </recent_temporary>
   </component>
@@ -354,62 +405,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1457436916867</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Merge branch 'master' of https://github.com/plusterkopp/Benchmarks&#10;&#10;# Conflicts:&#10;#&#9;.idea/libraries/com_lmax_disruptor_3_3_2.xml&#10;#&#9;.idea/libraries/net_java_dev_jna_jna_4_2_1.xml&#10;#&#9;.idea/libraries/net_java_dev_jna_jna_platform_4_2_1.xml&#10;#&#9;.idea/libraries/net_openhft_koloboke_impl_jdk8_0_6_8.xml&#10;#&#9;.idea/libraries/net_sf_jopt_simple_jopt_simple_4_6.xml&#10;#&#9;.idea/libraries/net_sf_trove4j_trove4j_3_0_3.xml&#10;#&#9;.idea/libraries/org_apache_commons_commons_collections4_4_0.xml&#10;#&#9;.idea/libraries/org_apache_commons_commons_math3_3_5.xml&#10;#&#9;.idea/libraries/org_openjdk_jmh_jmh_core_1_11_1.xml&#10;#&#9;.idea/libraries/org_openjdk_jmh_jmh_generator_annprocess_1_11_1.xml&#10;#&#9;Benchmarks.iml&#10;">
-      <created>1457482860923</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1457482860923</updated>
-    </task>
-    <task id="LOCAL-00006" summary="+ ConsumerProducerPreAlloc">
-      <created>1494198241089</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1494198241089</updated>
-    </task>
-    <task id="LOCAL-00007" summary="+ DoubleParseCache">
-      <created>1494283986381</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1494283986381</updated>
-    </task>
-    <task id="LOCAL-00008" summary="mehr Maps für ExcelDateCache">
-      <created>1496271699622</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1496271699622</updated>
-    </task>
-    <task id="LOCAL-00009" summary="NumberFormatBench mit QP">
-      <created>1535479290934</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1535479290934</updated>
-    </task>
-    <task id="LOCAL-00010" summary="Fixed: AffinityBench: vorzeitiges Ende Consumer">
-      <created>1538785491072</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1538785491072</updated>
-    </task>
-    <task id="LOCAL-00011" summary="Added: @Fork-Optionen in DoubleParseCache&#10;Fixed: JDK-11-fest">
-      <created>1541987894045</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1541987894045</updated>
-    </task>
-    <task id="LOCAL-00012" summary="Added: Java-Specialist Mega-Thread-Test">
-      <created>1542588468379</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1542588468379</updated>
     </task>
     <task id="LOCAL-00013" summary="Fixed: AffinityBench: Imports">
       <created>1542750350179</created>
@@ -698,7 +693,63 @@
       <option name="project" value="LOCAL" />
       <updated>1617206274208</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="Added: TimerCancelBench">
+      <created>1629241467569</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1629241467570</updated>
+    </task>
+    <task id="LOCAL-00055" summary="Changed: TimerCancelBench">
+      <created>1629321569215</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1629321569216</updated>
+    </task>
+    <task id="LOCAL-00056" summary="Added: CompressBench&#10;Removed: JCStress Samples">
+      <created>1640275531145</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1640275531145</updated>
+    </task>
+    <task id="LOCAL-00057" summary="Changed: imports optimized">
+      <created>1640280669632</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1640280669632</updated>
+    </task>
+    <task id="LOCAL-00058" summary="Changed: CompressBench amends old runs if csv found">
+      <created>1640799361428</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1640799361428</updated>
+    </task>
+    <task id="LOCAL-00059" summary="Changed: CompressBench extend dict size">
+      <created>1642028496016</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1642028496016</updated>
+    </task>
+    <task id="LOCAL-00060" summary="Changed: MulDivBench erweitert">
+      <created>1643660987707</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1643660987707</updated>
+    </task>
+    <task id="LOCAL-00061" summary="Added: TimerEarlyTest">
+      <created>1696181612094</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1696181612094</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TodoView">
@@ -721,15 +772,6 @@
     </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
     <option name="RECENT_FILTERS">
       <map>
         <entry key="Branch">
@@ -744,7 +786,15 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="Vcs.Log.UiProperties">
     <option name="RECENTLY_FILTERED_USER_GROUPS">
@@ -757,14 +807,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Added: Graphing Canvas" />
-    <MESSAGE value="Added: SillyAddBench, ToArrayBench, whetstone java" />
-    <MESSAGE value="Fixed: AffinityBench: Imports" />
-    <MESSAGE value="Added: JitterTest" />
-    <MESSAGE value="Changed: JitterTest" />
-    <MESSAGE value="Changed: jhm Benchmarks settings as nanos" />
-    <MESSAGE value="Added: Linpack" />
-    <MESSAGE value="Changed: ConsumerProducerDemo: ExecutorService raus, Nanotime Latency berücksichtigen&#10;Changed: LinPack" />
     <MESSAGE value="Added: ConsumerProducerDemoSleep&#10;Changed: ConsumerProducerDemo -&gt; + -BW" />
     <MESSAGE value="Added: ByteCodeBench" />
     <MESSAGE value="Added: FibonacciForkAff: Counter für nicht-FJ Teil zur Overhead-Messung" />
@@ -782,7 +824,15 @@
     <MESSAGE value="Added: DateCompare" />
     <MESSAGE value="Added: BranchingCodeString" />
     <MESSAGE value="Added: StringBuilderEqualsBench" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added: StringBuilderEqualsBench" />
+    <MESSAGE value="Added: TimerCancelBench" />
+    <MESSAGE value="Changed: TimerCancelBench" />
+    <MESSAGE value="Added: CompressBench&#10;Removed: JCStress Samples" />
+    <MESSAGE value="Changed: imports optimized" />
+    <MESSAGE value="Changed: CompressBench amends old runs if csv found" />
+    <MESSAGE value="Changed: CompressBench extend dict size" />
+    <MESSAGE value="Changed: MulDivBench erweitert" />
+    <MESSAGE value="Added: TimerEarlyTest" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added: TimerEarlyTest" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -796,6 +846,11 @@
           <url>file://$PROJECT_DIR$/non-jmh/src/main/java/perf/Linpack.java</url>
           <line>115</line>
           <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint type="java-line">
+          <url>file://$PROJECT_DIR$/non-jmh/src/main/java/misc/TimerEarlyTest.java</url>
+          <line>202</line>
+          <option name="timeStamp" value="9" />
         </line-breakpoint>
         <breakpoint enabled="true" type="java-exception">
           <properties class="java.lang.ArithmeticException" package="java.lang" />
