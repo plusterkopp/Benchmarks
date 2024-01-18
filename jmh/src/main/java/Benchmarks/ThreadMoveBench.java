@@ -1,6 +1,5 @@
 package Benchmarks;
 
-import jdk.jfr.*;
 import net.openhft.affinity.*;
 import net.openhft.affinity.impl.LayoutEntities.*;
 import org.openjdk.jmh.annotations.*;
@@ -71,7 +70,7 @@ public class ThreadMoveBench {
 	}
 
 	@Benchmark
-	@Description( "go to next lcpu in a different core")
+//	@Description( "go to next lcpu in a different core")
 	public void cycleCores() {
 		int	nCPUs = layout.cpus();
 		int	nextCPUid = incOrReset( currentCPUid, nCPUs);
@@ -84,7 +83,7 @@ public class ThreadMoveBench {
 	}
 
 	@Benchmark
-	@Description( "change between different lcpus on same core")
+//	@Description( "change between different lcpus on same core")
 	public void cycleInCore() {
 		if ( currentCPUid != cpuIdSameCore0) {
 			currentCPUid = cpuIdSameCore0;
@@ -95,13 +94,13 @@ public class ThreadMoveBench {
 	}
 
 	@Benchmark
-	@Description( "get current cpuID executing this thread")
+//	@Description( "get current cpuID executing this thread")
 	public int getCurrentCPUid() {
 		return Affinity.getCpu();
 	}
 
 	@Benchmark
-	@Description( "change affinity to same value (measure only overhead, no actual migration)")
+//	@Description( "change affinity to same value (measure only overhead, no actual migration)")
 	public void recycleInCore() {
 		Affinity.setAffinity( currentCPUid);
 	}
@@ -115,8 +114,8 @@ public class ThreadMoveBench {
 	}
 
 	@Benchmark
-	@Description( "look for next lcpu in a different core, but do not change affinity")
-	@Measurement( iterations = 1, timeUnit = TimeUnit.SECONDS, time = 10)
+//	@Description( "look for next lcpu in a different core, but do not change affinity")
+//	@Measurement( iterations = 1, timeUnit = TimeUnit.SECONDS, time = 10)
 	public void noCycleCores() {
 //		CpuLayout layout = idla.getDefaultLayout();
 		int	nCPUs = layout.cpus();
@@ -130,10 +129,10 @@ public class ThreadMoveBench {
 	}
 
 	@Benchmark
-	@Description( "change to next lcpu (may be in same core)")
-	@Measurement( iterations = 1000, timeUnit = TimeUnit.MILLISECONDS, time = 50)
+//	@Description( "change to next lcpu (may be in same core)")
+//	@Measurement( iterations = 1000, timeUnit = TimeUnit.MILLISECONDS, time = 50)
 	public void cycleCPUs() {
-		CpuLayout layout = idla.getDefaultLayout();
+//		CpuLayout layout = idla.getDefaultLayout();
 		int	nCPUs = layout.cpus();
 		int	nextCPUid = incOrReset( currentCPUid, nCPUs);
 		Affinity.setAffinity( nextCPUid);
