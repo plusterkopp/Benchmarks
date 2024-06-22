@@ -1,11 +1,16 @@
 package de.pkmd;
 
 import net.openhft.affinity.*;
-import net.openhft.affinity.impl.*;
+import net.openhft.affinity.impl.WindowsCpuLayout;
+import net.openhft.affinity.impl.WindowsJNAAffinity;
 
-import java.text.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.TimeUnit;
 
 public class AffinityBench {
 
@@ -329,10 +334,17 @@ public class AffinityBench {
 
     private static void runSingleCore(IDefaultLayoutAffinity idla, BlockingQueue<Item> queue, boolean readWrite) {
         CpuLayout cpuLayout = idla.getDefaultLayout();
-        int prodCPUid = cpuLayout.cpus() - 1;
-        int consCPUid = getCPUSameCoreSameSocket( cpuLayout, prodCPUid);
+
+        int consCPUid = -1;
+        int prodCPUid;
+        for ( prodCPUid = cpuLayout.cpus() - 1; prodCPUid >= 0;  prodCPUid--) {
+            consCPUid = getCPUSameCoreSameSocket( cpuLayout, prodCPUid);
+            if ( consCPUid >= 0) {
+                break;
+            }
+        }
         if (consCPUid == -1) {
-            System.err.println( "did not find cpu same socket same core for " + prodCPUid);
+            System.err.println("did not find cpu same socket same core for any core");
             return;
         }
         final String cpuInfo = cpuInfo(idla, prodCPUid) + "-" + cpuInfo(idla, consCPUid);
@@ -369,13 +381,31 @@ public class AffinityBench {
     }
 
     private static void runSingleLCPU(IDefaultLayoutAffinity idla, BlockingQueue<Item> queue, boolean readWrite) {
-        CpuLayout cpuLayout = idla.getDefaultLayout();
-        int cpuID = cpuLayout.cpus() - 1;
+        int cpuID = findFastCPU( idla);
         final String cpuInfo = cpuInfo(idla, cpuID);
         Thread producer = createProducer( cpuID, RunTimeMillis, queue, readWrite);
         Thread consumer = createConsumer( cpuID, RunTimeMillis, queue, readWrite);
         startJoin( producer, consumer, qShortName( queue)
                                                + " runSingleLCPU " + ( readWrite ? "r/w" : "dry") + ": " + cpuInfo);
+    }
+
+    private static int findFastCPU(IDefaultLayoutAffinity idla) {
+        CpuLayout cpuLayout = idla.getDefaultLayout();
+        // find CPU with most #cores
+        int bestCPUid = -1;
+        for ( int cpuid = 0;  cpuid < cpuLayout.cpus(); cpuid++) {
+            int coreID = cpuLayout.coreId(cpuid);
+            int nLCPUs = cpuLayout.threadsPerCore( coreID);
+            if ( bestCPUid == -1) {
+                bestCPUid = cpuid;
+            } else {
+                int coreIDBest = cpuLayout.coreId(bestCPUid);
+                if ( nLCPUs > cpuLayout.threadsPerCore( coreIDBest)) {
+                    bestCPUid = cpuid;
+                }
+            }
+        }
+        return bestCPUid;
     }
 
     private static void startJoin(Thread producer, Thread consumer, String name) {
@@ -514,10 +544,13 @@ public class AffinityBench {
     }
 
     private static int getCPUSameCoreSameSocket( CpuLayout cpuLayout, int prodCPUid) {
+        int prodSocketId = cpuLayout.socketId(prodCPUid);
+        int prodCoreId = cpuLayout.coreId(prodCPUid);
+
         for ( int i = 0;  i < cpuLayout.cpus();  i++) {
-            if (i != prodCPUid) {
-                if ( cpuLayout.socketId( prodCPUid) == cpuLayout.socketId( i)) {
-                    if ( cpuLayout.coreId( prodCPUid) == cpuLayout.coreId( i)) {
+            if ( i != prodCPUid) {
+                if ( prodSocketId == cpuLayout.socketId( i)) {
+                    if ( prodCoreId == cpuLayout.coreId( i)) {
                         return i;
                     }
                 }

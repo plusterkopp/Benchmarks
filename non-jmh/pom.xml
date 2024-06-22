@@ -26,7 +26,7 @@
 		<dependency>
 			<groupId>de.pkmd</groupId>
 			<artifactId>affinity</artifactId>
-			<version>3.4.0.2</version>
+			<version>3.4.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

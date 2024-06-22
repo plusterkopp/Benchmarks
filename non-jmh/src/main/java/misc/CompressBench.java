@@ -30,6 +30,8 @@ public class CompressBench {
 //	private static final String ZIP7 = "ZIP7";
 	private static final String levelPrefix = "-mx=";
 	private static final String threadPrefix = "-mmt=";
+	private static final String fastBytesPrefix = "-mfb=";
+	private static final String passesPrefix = "-mmc=";
 	private static final String typePrefix = "-t";
 	private static final String mainArgsPreArchive = "a";
 	/** solid Blockgröße 1TB */
@@ -66,6 +68,12 @@ public class CompressBench {
 				argList.add( levelPrefix + spec.level);
 				argList.add( typePrefix + "7z");
 				argList.add( threadPrefix + spec.threads);
+				if ( spec.passes != -1) {
+					argList.add( passesPrefix + spec.passes);
+				}
+				if ( spec.fastBytes != -1) {
+					argList.add( fastBytesPrefix + spec.fastBytes);
+				}
 				// dict als -md
 				String	methodSpec = "-m0=" + LZMA2;
 				if ( spec.dictExp != -1) {	// Dict nicht nur default
@@ -100,7 +108,9 @@ public class CompressBench {
 				if ( spec.dictExp != -1) {	// Dict nicht nur default
 					methodSpec += ":mem=" + spec.dictExp;
 				}
-//				methodSpec += ":fb=" + 64;
+				if ( spec.order != -1) {
+					methodSpec += ":o=" + spec.order;
+				}
 				argList.add( methodSpec);
 				argList.addAll( sources);
 				return argList;
@@ -197,6 +207,9 @@ public class CompressBench {
 		final int	threads;
 		final int	dictExp;
 		final int	level;
+		public int order = -1;  // PPMd
+		int fastBytes = -1;     // dann weglassen
+		int passes = -1;    // dann weglassen
 
 		private RunSpec(@NotNull EMethod method, int threads, int dictExp, int level) {
 			this.method = method;
@@ -204,14 +217,39 @@ public class CompressBench {
 			this.dictExp = dictExp;
 			this.level = level;
 		}
+		private RunSpec(@NotNull EMethod method, int threads, int dictExp, int level, int fastBytes, int passes) {
+			this.method = method;
+			this.threads = threads;
+			this.dictExp = dictExp;
+			this.level = level;
+			this.fastBytes = fastBytes;
+			this.passes = passes;
+		}
 
-		public static RunSpec getInstance( String methodName, String levelS, String threadsS, String dictS) {
+		public static RunSpec getInstance(
+			String methodName, String levelS, String threadsS, String dictS, String fbS, String passesS, String orderS)
+		{
 			try {
-				EMethod method = EMethod.valueOf( methodName);
+				EMethod method = null;
+				try {
+					method = EMethod.valueOf( methodName);
+				} catch (IllegalArgumentException e) {
+					System.out.println( "skipping unknown method " + methodName);
+					return null;
+				}
 				int l = Integer.parseInt( levelS);
 				int t = Integer.parseInt( threadsS);
 				int d = Integer.parseInt( dictS);
 				RunSpec spec = new RunSpec(method, t, d, l);
+				if (fbS != null) {
+					spec.fastBytes = Integer.parseInt( fbS);
+				}
+				if ( passesS != null) {
+					spec.passes = Integer.parseInt( passesS);
+				}
+				if ( orderS != null) {
+					spec.order = Integer.parseInt( orderS);
+				}
 				return spec;
 			} catch ( Exception e) {
 				e.printStackTrace();
@@ -233,6 +271,15 @@ public class CompressBench {
 			if ( dictExp != other.dictExp) {
 				return Integer.compare( dictExp, other.dictExp);
 			}
+			if ( fastBytes != other.fastBytes) {
+				return Integer.compare( fastBytes, other.fastBytes);
+			}
+			if ( passes != other.passes) {
+				return Integer.compare( passes, other.passes);
+			}
+			if ( order != other.order) {
+				return Integer.compare( order, other.order);
+			}
 			return 0;
 		}
 
@@ -250,6 +297,9 @@ public class CompressBench {
 			if (threads != spec.threads) return false;
 			if (dictExp != spec.dictExp) return false;
 			if (level != spec.level) return false;
+			if (fastBytes != spec.fastBytes) return false;
+			if (passes != spec.passes) return false;
+			if (order != spec.order) return false;
 			return method == spec.method;
 		}
 
@@ -259,18 +309,33 @@ public class CompressBench {
 			result = 31 * result + threads;
 			result = 31 * result + dictExp;
 			result = 31 * result + level;
+			result = 31 * result + fastBytes;
+			result = 31 * result + passes;
+			result = 31 * result + order;
 			return result;
 		}
 
 		@Override
 		public String toString() {
-			return "RunSpec{" +
+			String result = "RunSpec{" +
 					" " + method +
 					", lvl=" + level +
-					", thr=" + threads +
-					", dict=" + dictExp +
-					'}';
+					", thr=" + threads;
+			if ( dictExp != -1) {
+				result += ", dict=" + dictExp;
+			}
+			if ( fastBytes != -1) {
+				result += ", fb=" + fastBytes;
+			}
+			if ( passes != -1) {
+				result += ", passes=" + passes;
+			}
+			if ( order != -1) {
+				result += ", order=" + order;
+			}
+			return result + "}";
 		}
+
 	}
 
 	private static class Result {
@@ -296,7 +361,7 @@ public class CompressBench {
 		}
 	}
 
-	private static List<RunSpec> generateSpecs() {
+	private static List<RunSpec> generateSpecs( EnumSet<EMethod> methods) {
 		final int threadsExpMin = 0;
 		final int threadsExpMax = 7;
 		final int dictExpMin = 24;
@@ -309,50 +374,84 @@ public class CompressBench {
 			threadsList.add( t);
 		}
 
-		int levelsA[] = { 0, 1, 3, 5, 7, 9};
+		int levelsA[] = { 0, 1, 5, 9};
 
 		List<RunSpec> specs = new ArrayList<>();
 		RunSpec spec;
-		// 7z LZMA2: erstmal ohne dict
-		for ( int level: levelsA) {
-			for (int threads : threadsList) {
-				spec = new RunSpec(EMethod.LZMA2, threads, -1, level);
+		if ( methods.contains( EMethod.LZMA2)) {
+			// 7z LZMA2: erstmal ohne dict
+			for (int level : levelsA) {
+				for (int threads : threadsList) {
+					spec = new RunSpec(EMethod.LZMA2, threads, -1, level);
+					specs.add(spec);
+				}
+			}
+			// 7z LZMA2: dicts nur auf Level 9
+			for (int dictExp = dictExpMin; dictExp <= dictExpMax; dictExp += 2) {
+				for (int threads : threadsList) {
+					long dictSizeM = ( 2 << ( dictExp - 20)) * 10 * threads;    // -20 weil in MB
+					// nicht zu kleinen Popelkram, das rufen wir eh nie auf, und auch nicht zu groß, daß es kracht
+					spec = new RunSpec(EMethod.LZMA2, threads, dictExp, 9);
+					if ( dictSizeM > 1000 && dictSizeM < 64_0000) {
+						specs.add(spec);
+					} else {
+						System.out.println( "skipping " + spec);
+					}
+				}
+			}
+
+			int fastbytesA[] = { 64, 128, 256, 273};
+			for ( int fb: fastbytesA) {
+				spec = new RunSpec (EMethod.LZMA2, 4, 30, 9, fb, -1);
+				specs.add(spec);
+			}
+			int fb = 273;
+			double passesFactorA[] = { 0.125, 0.25, 0.5, 1, 4, 16, 64};
+			for ( double pf: passesFactorA) {
+				int passes = (int) (( 16 + fb / 2) * pf);
+				spec = new RunSpec (EMethod.LZMA2, 4, 30, 9, fb, passes);
 				specs.add(spec);
 			}
 		}
-		// 7z LZMA2: dicts nur auf Level 9
-		for ( int dictExp = dictExpMin;  dictExp <= dictExpMax; dictExp++) {
-			for (int threads : threadsList) {
-				spec = new RunSpec(EMethod.LZMA2, threads, dictExp , 9);
+
+		if ( methods.contains( EMethod.PPMd)) {
+			// 7z PPMd: nur level und dict (single thread)
+			for (int level : levelsA) {
+				spec = new RunSpec(EMethod.PPMd, 1, -1, level);
 				specs.add(spec);
 			}
-		}
-		// 7z PPMd: nur level und dict (single thread)
-		for ( int level: levelsA) {
-			for ( int dictExp = dictExpMin;  dictExp <= dictExpMax; dictExp++) {
-				spec = new RunSpec(EMethod.PPMd, 1, dictExp, level);
-				specs.add(spec);
+			int orderA[] = { 4, 6, 8, 12, 16};
+			for (int dictExp = dictExpMin; dictExp <= dictExpMax; dictExp += 2) {
+				for (int order: orderA) {
+					spec = new RunSpec(EMethod.PPMd, 1, dictExp, 9);
+					spec.order = order;
+					specs.add(spec);
+				}
 			}
 		}
-		// 7z ZIP: erstmal ohne dict
-		for ( int level: levelsA) {
-			for (int threads : threadsList) {
-				spec = new RunSpec(EMethod.ZIP7, threads, -1, level);
-				specs.add(spec);
+		if ( methods.contains( EMethod.ZIP7)) {
+			// 7z ZIP: erstmal ohne dict
+			for (int level : levelsA) {
+				for (int threads : threadsList) {
+					spec = new RunSpec(EMethod.ZIP7, threads, -1, level);
+					specs.add(spec);
+				}
 			}
 		}
-		// RAR auto
-		for ( int level = 0;  level <= 5;  level++) {
-			for (int threads : threadsList) {
-				spec = new RunSpec(EMethod.RAR, threads, -1, level);
-				specs.add(spec);
+		if ( methods.contains( EMethod.RAR)) {
+			// RAR auto
+			for ( int level = 0;  level <= 5;  level++) {
+				for (int threads : threadsList) {
+					spec = new RunSpec(EMethod.RAR, threads, -1, level);
+					specs.add(spec);
+				}
 			}
-		}
-		// RAR dict
-		for ( int dictExp = dictExpMin;  dictExp <= dictExpMax; dictExp++) {
-			for (int threads : threadsList) {
-				spec = new RunSpec(EMethod.RAR, threads, dictExp, 5);
-				specs.add(spec);
+			// RAR dict
+			for (int dictExp = dictExpMin; dictExp <= dictExpMax; dictExp++) {
+				for (int threads : threadsList) {
+					spec = new RunSpec(EMethod.RAR, threads, dictExp, 5);
+					specs.add(spec);
+				}
 			}
 		}
 		// als SortedSet (damit gleiche rausfliegen), dann wieder als Liste
@@ -369,10 +468,17 @@ public class CompressBench {
 				.map( f -> f.length())
 				.reduce( 0L, ( s, l) -> s + l);
 
-		List<RunSpec> specs = generateSpecs();
+		EnumSet<EMethod> methods = EnumSet.of( EMethod.LZMA2, EMethod.PPMd);
+		List<RunSpec> specs = generateSpecs( methods);
 		File oldCSV = findOldCSV( files.get( 0).getParentFile());
 		if ( oldCSV != null) {
 			removeOldSpecs( oldCSV, specs);
+		}
+
+		System.out.println( "Specs:");
+		for ( int i = 0;  i < specs.size();  i++) {
+			RunSpec spec = specs.get(i);
+			System.out.println( String.format("%2d", i) + ": " + spec);
 		}
 
 		String outName = buildOutName();
@@ -405,7 +511,8 @@ public class CompressBench {
 			while ( ( line = reader.readLine()) != null) {
 				String[] contentA = line.split("\t");
 				if ( contentA != null && contentA.length >= 4) {
-					RunSpec spec = RunSpec.getInstance(contentA[0], contentA[1], contentA[2], contentA[3]);
+					RunSpec spec = RunSpec.getInstance(
+							contentA[0], contentA[1], contentA[2], contentA[3], contentA[4], contentA[ 5], contentA[ 6]);
 					if ( spec == null) {
 						System.out.println( "not a run spec: " + line);
 					} else {
@@ -454,6 +561,9 @@ public class CompressBench {
 		out.print( r.runSpec.level + CSV_SEP);
 		out.print( r.runSpec.threads + CSV_SEP);
 		out.print( r.runSpec.dictExp + CSV_SEP);
+		out.print( r.runSpec.fastBytes + CSV_SEP);
+		out.print( r.runSpec.passes + CSV_SEP);
+		out.print( r.runSpec.order + CSV_SEP);
 		out.print( nfI.format( r.size) + CSV_SEP);
 		out.print( nf.format( r.ratio) + CSV_SEP);
 		out.print( nfI.format( r.durMS) + CSV_SEP);
@@ -463,7 +573,7 @@ public class CompressBench {
 
 	private static void writeHeaders( String filename) {
 		writeTo( filename, out -> {
-			String headersA[] = { "Method", "Level", "Threads", "Dict", "Size", "Ratio", "Time"};
+			String headersA[] = { "Method", "Level", "Threads", "Dict", "FBytes", "MC", "Order", "Size", "Ratio", "Time"};
 			for ( String h : headersA) {
 				out.print( h + CSV_SEP);
 			}
