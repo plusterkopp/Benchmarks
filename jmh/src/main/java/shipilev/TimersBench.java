@@ -31,6 +31,10 @@ public class TimersBench {
 	public long latency_currentTime() {
 		return System.currentTimeMillis();
 	}
+	@Benchmark
+	public long latency_both() {
+		return System.nanoTime() + System.currentTimeMillis();
+	}
 
 	@Benchmark
 	public long granularity_nanotime() {
