@@ -72,7 +72,7 @@ questions.
         <dependency>
 			<groupId>de.pkmd</groupId>
 			<artifactId>affinity</artifactId>
-			<version>3.4.0.2</version>
+			<version>3.4.0.4</version>
 			<!--
 			mvn install:install-file -Dfile=lib/affinity-3.0.jar -DgroupId=pkmd -DartifactId=affinity -Dversion=3.0 -Dpackaging=jar -DgeneratePom=true
 			-->
