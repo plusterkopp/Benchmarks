@@ -240,7 +240,7 @@ public class TimeGranularityTest {
 		System.out.println( resultFutures.size() + " threads, " +
 				"avg " +  nfD.format( 1.0 * totalThreadNS / sizeA[ 0]) + " ns/measurement " +
 				"in " + nfD.format( 1e-9 * totalThreadNS) + " s total runtime");
-		System.out.println( "allocating " + nfI.format( Long.BYTES * sizeA[ 0]) + " bytes");
+		System.out.println( "allocating " + nfI.format( Long.BYTES * ( long) sizeA[ 0]) + " bytes");
 		startNS = System.nanoTime();
 		long[]  resultFull = new long[ sizeA[ 0]];
 		int index = 0;
@@ -375,6 +375,7 @@ public class TimeGranularityTest {
 		// determine maxRecord to fit in available heap
 		long heapSpace = (long) (Runtime.getRuntime().maxMemory() * 0.9);
 		maxRecord = heapSpace / ( 8*2);
+		maxRecord = Math.min( Integer.MAX_VALUE, maxRecord);
 		NumberFormat nfI = nfITL.get();
 		System.out.println( "using " + nfI.format( heapSpace)
 				+ " bytes for " + nfI.format( maxRecord) + " measurements");

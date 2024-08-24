@@ -18,7 +18,7 @@ public class ClockWatch {
 		StartMS = System.currentTimeMillis();
 	}
 
-	public static void main(String[] args) {
+	public static void main( String[] args) {
 		NumberFormat nf = NumberFormat.getNumberInstance( Locale.US);
 		nf.setMaximumFractionDigits( 3);
 		nf.setGroupingUsed( true);

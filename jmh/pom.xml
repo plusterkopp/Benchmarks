@@ -132,6 +132,7 @@ questions.
 							<goal>shade</goal>
 						</goals>
 						<configuration>
+							<shadedArtifactAttached>true</shadedArtifactAttached>
 							<finalName>${uberjar.name}</finalName>
 							<transformers>
 								<transformer
