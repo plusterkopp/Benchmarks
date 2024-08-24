@@ -6,8 +6,17 @@ import java.util.concurrent.*;
 
 public class ClockWatch {
 
-	static final long StartNS = System.nanoTime();
-	static final long StartMS = System.currentTimeMillis();
+	static final long StartNS;
+	static final long StartMS;
+	static {
+		long lastCTM = System.currentTimeMillis();
+		long ctmRounds = 0;
+		while ( lastCTM == System.currentTimeMillis()) {
+			ctmRounds++;
+		}
+		StartNS = System.nanoTime();
+		StartMS = System.currentTimeMillis();
+	}
 
 	public static void main(String[] args) {
 		NumberFormat nf = NumberFormat.getNumberInstance( Locale.US);

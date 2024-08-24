@@ -8,6 +8,7 @@ import joptsimple.OptionSpec;
 import org.HdrHistogram.Histogram;
 
 import java.text.NumberFormat;
+import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -32,6 +33,7 @@ public class TimeGranularityTest {
 	static double seconds = 10;
 	static long maxRecord = 1_000_000_000;
 	static LongAdder globalMeasurementCounter = new LongAdder();
+	static final List<Long> threadNSList = new ArrayList<>();
 
 	static Map<ExecutorService, AtomicBoolean> poolToTimeoutFlag = new HashMap<>();
 
@@ -41,6 +43,16 @@ public class TimeGranularityTest {
 		run( System::currentTimeMillis);
 		System.out.println( "\n" + "nanoTime");
 		run( System::nanoTime);
+		System.out.println( "\n" + "Instant.now");
+		Instant start = Instant.now();
+		long startS = start.getEpochSecond();
+		long startNS = start.getNano();
+		run( () -> {
+			Instant now = Instant.now();
+			long nowS = now.getEpochSecond();
+			long nowNS = now.getNano();
+			return 1_000_000 * ( nowS - startS) + ( nowNS - startNS);
+		});
 	}
 
 	private static void run( LongSupplier timeSupplier) {
@@ -83,7 +95,7 @@ public class TimeGranularityTest {
 		NumberFormat nfI = nfITL.get();
 		NumberFormat nfD = nfDTL.get();
 		System.out.println( "histogram "
-				+ ( recordSame ? "record" : "ignore")
+				+ ( recordSame ? "including" : "ignoring")
 				+ " same value filled " + nfI.format( histogram.getTotalCount())
 				+ " values in "
 				+ nfI.format( System.nanoTime() - startNS) + " ns"
@@ -209,6 +221,7 @@ public class TimeGranularityTest {
 
 	private static long[] collectSortedResultsJDK(List<Future<long[]>> resultFutures) {
 		NumberFormat nfI = nfITL.get();
+		NumberFormat nfD = nfDTL.get();
 		long startNS = System.nanoTime();
 		int[] sizeA = { 0};
 		resultFutures.forEach( f -> {
@@ -223,8 +236,11 @@ public class TimeGranularityTest {
 		System.out.println( "getting " + nfI.format( sizeA[ 0]) + " values after "
 				+ nfI.format( System.nanoTime() - startNS) + " ns"
 		);
-
-		System.out.println( "allocating " + nfI.format( 8L * sizeA[ 0]) + " bytes");
+		long totalThreadNS = threadNSList.stream().reduce( 0L, ( a, b) -> a+b);
+		System.out.println( resultFutures.size() + " threads, " +
+				"avg " +  nfD.format( 1.0 * totalThreadNS / sizeA[ 0]) + " ns/measurement " +
+				"in " + nfD.format( 1e-9 * totalThreadNS) + " s total runtime");
+		System.out.println( "allocating " + nfI.format( Long.BYTES * sizeA[ 0]) + " bytes");
 		startNS = System.nanoTime();
 		long[]  resultFull = new long[ sizeA[ 0]];
 		int index = 0;
@@ -237,7 +253,6 @@ public class TimeGranularityTest {
 			}
 			System.arraycopy(result, 0, resultFull, index, result.length);
 			index += result.length;
-//			System.out.print( "\rgot " + index + "... ");
  		}
 		System.out.println( "values fetched in "
 				+ nfI.format( System.nanoTime() - startNS) + " ns"
@@ -300,6 +315,7 @@ public class TimeGranularityTest {
 		AtomicBoolean timeoutReached = poolToTimeoutFlag.get(pool);
 		int maxPerThreadCount = (int) (maxRecord / threadCount);
 		List<Future<long[]>> futures = new ArrayList<>();
+		threadNSList.clear();
 		Callable<long[]> job = () -> {
 			TLongList values = new TLongArrayList( maxPerThreadCount);
 			while ( ( ! timeoutReached.get())
@@ -310,12 +326,14 @@ public class TimeGranularityTest {
 				values.add( time);
 			}
 			NumberFormat nfI = nfITL.get();
+			long threadNS = System.nanoTime() - startNS;
 			System.out.println( Thread.currentThread().getName() + " "
 					+ nfI.format( values.size())
 					+ "/" + nfI.format( globalMeasurementCounter.longValue())
 					+ " measurements in "
-					+ nfI.format( System.nanoTime() - startNS) + " ns"
+					+ nfI.format(threadNS) + " ns"
 			);
+			threadNSList.add( threadNS);
 			return values.toArray( ); // new long[ values.size()]
 		};
 		for ( int i = 0;  i < threadCount;  i++) {
