@@ -132,10 +132,11 @@ public class ExcelDateCache {
 	}
 
 	private void convertCachedDDNoStat( Map<Date, Double> cache) {
+		dummyD = 0;
 		Date[] dateValues = tlD.get();
 		for ( int i = dateValues.length - 1; i >= 0; -- i) {
 			Date date = dateValues[ i];
-			dummyD = cache.computeIfAbsent( date, dt -> MMKF4JavaStub.toAccurateExcelDate( dt));
+			dummyD += cache.computeIfAbsent( date, dt -> MMKF4JavaStub.toAccurateExcelDate( dt));
 		}
 	}
 
