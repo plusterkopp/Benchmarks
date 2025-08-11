@@ -18,18 +18,29 @@ import java.util.concurrent.TimeUnit;
 @Fork(value = 1)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-//@State(Scope.Benchmark)
+@State(Scope.Benchmark)
 public class DoubleSearch {
 
-	static final int size = 5;
-	static double array[] = new double[ size];
-	static double searchValues[] = new double[ size];
+	@Param({
+			"1"
+			, "3"
+			, "10"
+			, "30"
+			, "100"
+	})
+	int size;
+	double array[];
+	final int searchValueCount = 10;
+	double searchValues[];
 
-	static boolean setupFinished = false;
-	public static void setup() {
-		if ( setupFinished) {
-			return;
-		}
+	boolean setupFinished = false;
+	@Setup(Level.Trial)
+	public void setup() {
+//		if ( setupFinished) {
+//			return;
+//		}
+		array = new double[ size];
+		searchValues = new double[ searchValueCount];
 		Random rnd = new Random();
 		Set<Double> aSet = new HashSet<>( array.length);
 		aSet.add( Double.NEGATIVE_INFINITY);
@@ -49,12 +60,12 @@ public class DoubleSearch {
 		setupFinished = true;
 	}
 
-	private static void test() {
+	private void test() {
 		int index0A[] = new int[ searchValues.length];
 		int index1A[] = new int[ searchValues.length];
 		for ( int i = 0;  i < searchValues.length;  i++) {
-			index0A[ i] = search0( searchValues[ i]);
-			index1A[ i] = search1( searchValues[ i]);
+			index0A[ i] = search0( array, searchValues[ i]);
+			index1A[ i] = search1( array, searchValues[ i]);
 		}
 		if ( ! Arrays.equals( index0A, index1A)) {
 			System.err.println( "mismatch, 0: " + Arrays.toString( index0A) + ", 1: " + Arrays.toString( index1A));
@@ -62,7 +73,7 @@ public class DoubleSearch {
 		}
 	}
 
-	static int search0(double x) {
+	static int search0(double array[], double x) {
 		int result = -1;
 		for ( int i = 0;  i < array.length;  i++) {
 			double a = array[ i];
@@ -75,7 +86,7 @@ public class DoubleSearch {
 		return result;
 	}
 
-	static int search1(double x) {
+	static int search1( double array[], double x) {
 		int ind = Arrays.binarySearch(array, x);
 		if ( ind >= 0) {
 			return ind;
@@ -88,35 +99,34 @@ public class DoubleSearch {
 
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime)
-	@OperationsPerInvocation(size)
-	public int searchB0() {
+	@OperationsPerInvocation( searchValueCount)
+	public int searchLinear() {
 		int r = 0;
 		for ( int i = 0;  i < searchValues.length;  i++) {
-			r = search0( searchValues[ i]);
+			r += search0( array, searchValues[ i]);
 		}
 		return r;
 	}
 
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime)
-	@OperationsPerInvocation(size)
-	public int searchB1() {
+	@OperationsPerInvocation( searchValueCount)
+	public int searchBinary() {
 		int r = 0;
 		for ( int i = 0;  i < searchValues.length;  i++) {
-			r = search1( searchValues[ i]);
+			r += search1( array, searchValues[ i]);
 		}
 		return r;
 	}
 
 	public static void main(String[] args) throws RunnerException {
-		setup();
 	    Options opt = new OptionsBuilder()
 			    .include( DoubleSearch.class.getSimpleName())
 			    .mode( Mode.AverageTime)
 			    .warmupIterations(5)
 			    .warmupTime( TimeValue.seconds( 1))
-			    .measurementIterations(3)
-			    .measurementTime( TimeValue.seconds( 5))
+			    .measurementIterations(5)
+			    .measurementTime( TimeValue.seconds( 10))
 			    .forks(1)
 			    .build();
 	    new Runner(opt).run();

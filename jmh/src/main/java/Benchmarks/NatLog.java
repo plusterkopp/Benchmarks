@@ -101,9 +101,9 @@ public class NatLog {
 		checkDiffs();
         Options opt = new OptionsBuilder()
                 .include( NatLog.class.getSimpleName())
-		        .warmupIterations(4)
-				.warmupTime(TimeValue.seconds(5))
-		        .measurementTime(TimeValue.seconds( 10))
+		        .warmupIterations(5)
+				.warmupTime(TimeValue.seconds(1))
+		        .measurementTime(TimeValue.seconds( 5))
 				.measurementIterations( 1)
 				.timeUnit( TimeUnit.NANOSECONDS)
 		        .forks(1)
