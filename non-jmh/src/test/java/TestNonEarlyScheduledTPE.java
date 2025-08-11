@@ -234,13 +234,13 @@ public class TestNonEarlyScheduledTPE {
 		long beforeSchedule = System.nanoTime();
 		ScheduledFuture<?> future = es.scheduleAtFixedRate( job, first, times, tu);
 		startNSA[ 0] = System.nanoTime();
-		System.out.println( title + " scheduled after " + nfI.format( System.nanoTime() - beforeSchedule) + " ns");
+		System.out.println( title + " scheduled after " + nfI.format( startNSA[ 0] - beforeSchedule) + " ns");
 		try {
 			countdown.await();
 			es.shutdown();
-			System.out.println( title + " shutdown after " + nfI.format( System.nanoTime() - beforeSchedule) + " ns");
+			System.out.println( title + " shutdown after " + nfI.format( System.nanoTime() - startNSA[ 0]) + " ns");
 			es.awaitTermination( 1, TimeUnit.MINUTES);
-			System.out.println( title + " finished after " + nfI.format( System.nanoTime() - beforeSchedule) + " ns");
+			System.out.println( title + " finished after " + nfI.format( System.nanoTime() - startNSA[ 0]) + " ns");
 
 			displayCombined( title, threadHistoList);
 			displayCombined( title + " runAt", threadHistoRunAtDiffList);
