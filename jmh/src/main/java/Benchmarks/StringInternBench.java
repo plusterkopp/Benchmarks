@@ -8,7 +8,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.*;
 
-@Warmup(iterations = 5, time = 4, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 10, timeUnit = TimeUnit.SECONDS)
 @Fork(value = 1)
 @BenchmarkMode(Mode.AverageTime)
@@ -41,31 +41,30 @@ public class StringInternBench {
 		}
 	}
 
-	@Benchmark
-	@OperationsPerInvocation( stringCount)
-	public void internString() {
+	private String internString0() {
+		String intern = null;
 		for (int i = 0; i < stringList.size(); i++) {
 			String s = stringList.get( i);
-			String intern = s.intern();
-//			if ( s != intern) {
-//				stringList.set(i, intern);
-//			}
+			intern = s.intern();
 		}
+		return intern;
+	}
+
+
+	@Benchmark
+	@OperationsPerInvocation( stringCount)
+	public String internString01T() {
+		return internString0();
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( stringCount)
 	@Threads( 4)
-	public void internString4T() {
+	public String internString04T() {
+		// wird gebraucht, um setup zu garantieren
 		lock.readLock().lock();
 		try {
-			for (int i = 0; i < stringList.size(); i++) {
-				String s = stringList.get( i);
-				String intern = s.intern();
-//			if ( s != intern) {
-//				stringList.set(i, intern);
-//			}
-			}
+			return internString0();
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -73,29 +72,76 @@ public class StringInternBench {
 
 	@Benchmark
 	@OperationsPerInvocation( stringCount)
-	public void internCHM() {
-		for (int i = 0; i < stringList.size(); i++) {
-			String s = stringList.get( i);
-			String present = chm.putIfAbsent(s, s);
-//			if (present != null) {
-//				stringList.set( i, present);
-//			}
+	@Threads( 16)
+	public String internString16T() {
+		// wird gebraucht, um setup zu garantieren
+		lock.readLock().lock();
+		try {
+			return internString0();
+		} finally {
+			lock.readLock().unlock();
 		}
 	}
 
 	@Benchmark
 	@OperationsPerInvocation( stringCount)
-	@Threads( 4)
-	public void internCHM4T() {
+	@Threads( 64)
+	public String internString64T() {
+		// wird gebraucht, um setup zu garantieren
 		lock.readLock().lock();
 		try {
-			for (int i = 0; i < stringList.size(); i++) {
-				String s = stringList.get( i);
-				String present = chm.putIfAbsent(s, s);
-//			if (present != null) {
-//				stringList.set( i, present);
-//			}
-			}
+			return internString0();
+		} finally {
+			lock.readLock().unlock();
+		}
+	}
+
+	private String internCHM0() {
+		String present = null;
+		for (int i = 0; i < stringList.size(); i++) {
+			String s = stringList.get( i);
+			present = chm.computeIfAbsent( s, existing -> existing);
+		}
+		return present;
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( stringCount)
+	public String internCHM01T() {
+		return internCHM0();
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( stringCount)
+	@Threads( 4)
+	public String internCHM04T() {
+		lock.readLock().lock();
+		try {
+			return internCHM0();
+		} finally {
+			lock.readLock().unlock();
+		}
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( stringCount)
+	@Threads( 16)
+	public String internCHM16T() {
+		lock.readLock().lock();
+		try {
+			return internCHM0();
+		} finally {
+			lock.readLock().unlock();
+		}
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( stringCount)
+	@Threads( 64)
+	public String internCHM64T() {
+		lock.readLock().lock();
+		try {
+			return internCHM0();
 		} finally {
 			lock.readLock().unlock();
 		}
