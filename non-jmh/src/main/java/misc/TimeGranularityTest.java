@@ -100,7 +100,12 @@ public class TimeGranularityTest {
 				+ " values in "
 				+ nfI.format( System.nanoTime() - startNS) + " ns"
 		);
-		System.out.println( "mean: " + nfD.format( histogram.getMean()));
+		System.out.println(
+			"mean: " + nfD.format( histogram.getMean())
+			+ " median: " + nfD.format( histogram.getValueAtPercentile( 50))
+			+ " min nonzero: " + nfD.format( histogram.getMinNonZeroValue())
+			+ " max: " + nfD.format( histogram.getMaxValue())
+		);
 
 		startNS = System.nanoTime();
 //		AllValuesIterator it = new AllValuesIterator( histogram);
@@ -374,7 +379,7 @@ public class TimeGranularityTest {
 		}
 		// determine maxRecord to fit in available heap
 		long heapSpace = (long) (Runtime.getRuntime().maxMemory() * 0.9);
-		maxRecord = heapSpace / ( 8*2);
+		maxRecord = heapSpace / ( 8*4);	// eigentlich /16, aber damit kriegen wir OOME
 		maxRecord = Math.min( Integer.MAX_VALUE, maxRecord);
 		NumberFormat nfI = nfITL.get();
 		System.out.println( "using " + nfI.format( heapSpace)

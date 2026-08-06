@@ -109,6 +109,15 @@ public class NumberFormatBench {
 
 	@Benchmark
 	@OperationsPerInvocation( Size)
+	public void formatBDExistingNoScale() {
+		final int digits = nf.getMaximumFractionDigits();
+		for ( int i = valueA.length - 1;  i >= 0;  i--) {
+			resultA[ i] = dummyBDA[ i].toPlainString();
+		}
+	}
+
+	@Benchmark
+	@OperationsPerInvocation( Size)
 	public void formatBDExistingSingleScale() {
 		final int digits = nf.getMaximumFractionDigits();
 		for ( int i = valueA.length - 1;  i >= 0;  i--) {
@@ -317,7 +326,7 @@ public class NumberFormatBench {
                 .include( NumberFormatBench.class.getSimpleName())
 		        .warmupIterations(1)
 		        .warmupTime( TimeValue.seconds( 3))
-				.measurementIterations( 5)
+				.measurementIterations( 2)
 		        .measurementTime(TimeValue.seconds( 5))
 //		        .addProfiler(GCProfiler.class)
 //		        .addProfiler(CompilerProfiler.class)

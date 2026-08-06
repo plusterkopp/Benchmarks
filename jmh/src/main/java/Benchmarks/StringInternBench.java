@@ -152,10 +152,10 @@ public class StringInternBench {
                 .include( StringInternBench.class.getSimpleName())
 		        .mode( Mode.AverageTime)
 		        .timeUnit(TimeUnit.NANOSECONDS)
-		        .warmupIterations(5)
+		        .warmupIterations(3)
 				.warmupTime( TimeValue.seconds( 1))
 		        .measurementIterations(5)
-				.measurementTime( TimeValue.seconds( 5))
+				.measurementTime( TimeValue.seconds( 1))
 		        .forks(1)
                 .build();
         new Runner(opt).run();

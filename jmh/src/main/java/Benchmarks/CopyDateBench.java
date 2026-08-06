@@ -4,6 +4,7 @@ import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.*;
 import org.openjdk.jmh.runner.options.*;
 
+import java.time.*;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -17,7 +18,11 @@ import java.util.concurrent.*;
 public class CopyDateBench {
 
 	private Date time;
+	private long timeTS;
 	private Date date;
+	private long dateTS;
+
+	public static final ZoneId zoneID = ZoneId.systemDefault();
 
 	private static class GenericDate {
 
@@ -163,12 +168,45 @@ public class CopyDateBench {
 	@Setup(Level.Trial)
 	public void setup() {
 		time = new Date();
+		timeTS = time.getTime();
 		date = new Date( time.getTime() + 1000);
+		dateTS = date.getTime();
+	}
+
+	private long copyTimeToDateJava8Compact( long dayTS, long timeTS, ZoneId zoneId) {
+		ZonedDateTime day  = Instant.ofEpochMilli(dayTS).atZone(zoneId);
+		ZonedDateTime time = Instant.ofEpochMilli(timeTS).atZone(zoneId);
+
+		return day.withHour(time.getHour())
+			.withMinute(time.getMinute())
+			.withSecond(time.getSecond())
+			.withNano(time.getNano())
+			.toInstant()
+			.toEpochMilli();
+	}
+
+	private long copyTimeToDateJava8Local( long dayTS, long timeTS, ZoneId zoneId) {
+		LocalDate day = Instant.ofEpochMilli(dayTS)
+			.atZone(zoneId)
+			.toLocalDate();
+
+		LocalTime time = Instant.ofEpochMilli(timeTS)
+			.atZone(zoneId)
+			.toLocalTime();
+
+		return ZonedDateTime.of(day, time, zoneId)
+			.toInstant()
+			.toEpochMilli();
 	}
 
 	@Benchmark
 	@Fork(jvmArgsPrepend = {"-XX:+UnlockExperimentalVMOptions", "-XX:+EnableJVMCI", "-XX:+UseJVMCICompiler"})
 	public Date copyTimeToDateGraal() {
+		return GenericDate.copyTimeToDate( time, date);
+	}
+
+	@Benchmark
+	public Date copyTimeToDate() {
 		return GenericDate.copyTimeToDate( time, date);
 	}
 
@@ -179,19 +217,14 @@ public class CopyDateBench {
 	}
 
 	@Benchmark
+	public Date copyTimeToDateCal() {
+		return GenericDate.copyTimeToDateCalendar( time, date);
+	}
+
+	@Benchmark
 	@Fork(jvmArgsPrepend = {"-XX:+UnlockExperimentalVMOptions", "-XX:+EnableJVMCI", "-XX:+UseJVMCICompiler"})
 	public Date todayWithTimeGraal() {
 		return GenericDate.todayWithTimeofDayFrom( time);
-	}
-
-	@Benchmark
-	public Date copyTimeToDate() {
-		return GenericDate.copyTimeToDate( time, date);
-	}
-
-	@Benchmark
-	public Date copyTimeToDateCal() {
-		return GenericDate.copyTimeToDateCalendar( time, date);
 	}
 
 	@Benchmark
@@ -199,10 +232,53 @@ public class CopyDateBench {
 		return GenericDate.todayWithTimeofDayFrom( time);
 	}
 
+	@Benchmark
+	@Fork(jvmArgsPrepend = {"-XX:+UnlockExperimentalVMOptions", "-XX:+EnableJVMCI", "-XX:+UseJVMCICompiler"})
+	public Date copyTimeToDateJava8LocalGraal() {
+		return new Date( copyTimeToDateJava8Local( date.getTime(), time.getTime(), zoneID));
+	}
+
+	@Benchmark
+	public Date copyTimeToDateJava8Local() {
+		return new Date( copyTimeToDateJava8Local( date.getTime(), time.getTime(), zoneID));
+	}
+
+	@Benchmark
+	public long copyTimeToDateJava8LocalTS() {
+		return copyTimeToDateJava8Local( dateTS, timeTS, zoneID);
+	}
+
+	@Benchmark
+	public Date copyTimeToDateJava8DefaultZone() {
+		ZoneId defaultZone = ZoneId.systemDefault();
+		return new Date( copyTimeToDateJava8Local( date.getTime(), time.getTime(), defaultZone));
+	}
+
+	@Benchmark
+	public Date copyTimeToDateJava8BerlinZone() {
+		ZoneId berlin = ZoneId.of( "Europe/Berlin");
+		return new Date( copyTimeToDateJava8Local( date.getTime(), time.getTime(), berlin));
+	}
+
+	@Benchmark
+	@Fork(jvmArgsPrepend = {"-XX:+UnlockExperimentalVMOptions", "-XX:+EnableJVMCI", "-XX:+UseJVMCICompiler"})
+	public Date copyTimeToDateJava8CompactGraal() {
+		return new Date( copyTimeToDateJava8Compact( date.getTime(), time.getTime(), zoneID));
+	}
+
+	@Benchmark
+	public Date copyTimeToDateJava8Compact() {
+		return new Date( copyTimeToDateJava8Compact( date.getTime(), time.getTime(), zoneID));
+	}
+
 	public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include( CopyDateBench.class.getSimpleName())
-                .build();
+			.include( CopyDateBench.class.getSimpleName())
+			.warmupIterations(3)
+			.warmupTime( TimeValue.seconds( 1))
+			.measurementIterations(5)
+			.measurementTime( TimeValue.seconds( 1))
+			.build();
         new Runner(opt).run();
     }
 }

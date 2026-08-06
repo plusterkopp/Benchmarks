@@ -13,8 +13,8 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-@Warmup(iterations = 5, time = 4, timeUnit = TimeUnit.SECONDS)
-@Measurement(iterations = 5, time = 10, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 2, time = 5, timeUnit = TimeUnit.SECONDS)
 @Fork(value = 1)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -148,10 +148,27 @@ public class GenericLockBench {
 
 	public static abstract class AbstractState {
 
-		long addCounter = 0;
-		long removeCounter = 0;
-		long addAskCounter = 0;
-		long removeAskCounter = 0;
+		static final VarHandle AddCounterVH;
+		static final VarHandle RemoveCounterVH;
+		static final VarHandle AddAskCounterVH;
+		static final VarHandle RemoveAskCounterVH;
+
+		static {
+			try {
+				MethodHandles.Lookup l = MethodHandles.lookup().in( AbstractState.class);
+				AddCounterVH = l.findVarHandle( AbstractState.class, "addCounter", long.class);
+				RemoveCounterVH = l.findVarHandle( AbstractState.class, "removeCounter", long.class);
+				AddAskCounterVH = l.findVarHandle( AbstractState.class, "addAskCounter", long.class);
+				RemoveAskCounterVH = l.findVarHandle( AbstractState.class, "removeAskCounter", long.class);
+			} catch ( ReflectiveOperationException e) {
+				throw new Error( e);
+			}
+		}
+
+		private long addCounter = 0;
+		private long removeCounter = 0;
+		private long addAskCounter = 0;
+		private long removeAskCounter = 0;
 
 		protected abstract void remove(ILockType lock);
 
@@ -171,22 +188,22 @@ public class GenericLockBench {
 		public void add(ILockType lock) {
 			if (lock.isAskLock()) {
 				if ( askLocks.add(lock)) {
-					addAskCounter++;
+					AddAskCounterVH.getAndAdd( this, 1);
 				}
 			} else {
 				if ( locks.add(lock)) {
-					addCounter++;
+					AddCounterVH.getAndAdd( this, 1);
 				}
 			}
 		}
 		public void remove(ILockType lock) {
 			if (lock.isAskLock()) {
 				if ( askLocks.remove(lock)) {
-					removeAskCounter++;
+					RemoveAskCounterVH.getAndAdd( this, 1);
 				}
 			} else {
 				if ( locks.remove(lock)) {
-					removeCounter++;
+					RemoveCounterVH.getAndAdd( this, 1);
 				}
 			}
 		}
@@ -204,8 +221,8 @@ public class GenericLockBench {
 		@Override
 		public String printLocks() {
 			return locks + "/" + askLocks +
-				" +" + addCounter + "/" + addAskCounter +
-				" -" + removeCounter + "/" + removeAskCounter
+				" +" + AddCounterVH.getAcquire( this) + "/" + AddAskCounterVH.getAcquire( this) +
+				" -" + RemoveCounterVH.getAcquire( this) + "/" + RemoveAskCounterVH.getAcquire( this)
 				;
 		}
 
@@ -213,41 +230,49 @@ public class GenericLockBench {
 
 
 	public abstract static class StateV2 extends AbstractState {
-		protected final Set<ILockType> locks = Collections.synchronizedSet( new HashSet<>());
+		protected final Set<ILockType> locks = new HashSet<>();
 
 		public void add(ILockType lock) {
-			if ( locks.add(lock)) {
-				if (lock.isAskLock()) {
-					addAskCounter++;
-				} else {
-					addCounter++;
+			synchronized ( locks) {
+				if ( locks.add(lock)) {
+					if (lock.isAskLock()) {
+						AddAskCounterVH.getAndAdd( this, 1);
+					} else {
+						AddCounterVH.getAndAdd( this, 1);
+					}
 				}
 			}
 		}
 
 		public void remove(ILockType lock) {
-			if ( locks.remove(lock)) {
-				if (lock.isAskLock()) {
-					removeAskCounter++;
-				} else {
-					removeCounter++;
+			synchronized (locks) {
+				if (locks.remove(lock)) {
+					if (lock.isAskLock()) {
+						RemoveAskCounterVH.getAndAdd( this, 1);
+					} else {
+						RemoveCounterVH.getAndAdd( this, 1);
+					}
 				}
 			}
 		}
 
 		@Override
 		public int count() {
-			return locks.size();
+			synchronized ( locks) {
+				return locks.size();
+			}
 		}
 
 		@Override
 		public String printLocks() {
-			List<ILockType> bothLocks = locks.stream().filter(l -> !l.isAskLock()).collect(Collectors.toList());
-			List<ILockType> askLocks = locks.stream().filter(l -> l.isAskLock()).collect(Collectors.toList());
-			return bothLocks + "/" + askLocks +
-				" +" + addCounter + "/" + addAskCounter +
-				" -" + removeCounter + "/" + removeAskCounter
-				;
+			synchronized (locks) {
+				List<ILockType> bothLocks = locks.stream().filter(l -> !l.isAskLock()).collect(Collectors.toList());
+				List<ILockType> askLocks = locks.stream().filter(l -> l.isAskLock()).collect(Collectors.toList());
+				return bothLocks + "/" + askLocks +
+					" +" + AddCounterVH.getAcquire( this) + "/" + AddAskCounterVH.getAcquire( this) +
+					" -" + RemoveCounterVH.getAcquire( this) + "/" + RemoveAskCounterVH.getAcquire( this)
+					;
+			}
 		}
 	}
 
@@ -255,8 +280,10 @@ public class GenericLockBench {
 
 		// Stream-based (lazy filter)
 		public boolean isLocked(boolean forAsk) {
-			return locks.stream()
-				.anyMatch(forAsk ? ILockType::isAskLock : l -> !l.isAskLock());
+			synchronized (locks) {
+				return locks.stream()
+					.anyMatch(forAsk ? ILockType::isAskLock : l -> !l.isAskLock());
+			}
 		}
 	}
 
@@ -264,12 +291,14 @@ public class GenericLockBench {
 
 		// Stream-based (lazy filter)
 		public boolean isLocked(boolean forAsk) {
-			for (ILockType lock : locks) {
-				if ( forAsk == lock.isAskLock()) {
-					return true;
+			synchronized (locks) {
+				for (ILockType lock : locks) {
+					if (forAsk == lock.isAskLock()) {
+						return true;
+					}
 				}
+				return false;
 			}
-			return false;
 		}
 	}
 
@@ -292,12 +321,16 @@ public class GenericLockBench {
 		private boolean askLocked = false;
 
 		public void add(ILockType lock) {
-			super.add( lock);
-			updateFlags();
+			synchronized ( locks) {
+				super.add(lock);
+				updateFlags();
+			}
 		}
 		public void remove(ILockType lock) {
-			super.remove(lock);
-			updateFlags();
+			synchronized ( locks) {
+				super.remove(lock);
+				updateFlags();
+			}
 		}
 
 		private void findLocked( boolean lockedA[]) {
@@ -417,6 +450,12 @@ public class GenericLockBench {
 		mutate( stateV1);
 		return stateV1.isLocked(false);
 	}
+	@Benchmark
+	@Threads( 4)
+	public boolean test_V1_nonAsk_T4() {
+		mutate( stateV1);
+		return stateV1.isLocked(false);
+	}
 
 	@Benchmark
 	public boolean test_V2_stream_ask() {
@@ -426,6 +465,12 @@ public class GenericLockBench {
 
 	@Benchmark
 	public boolean test_V2_stream_nonAsk() {
+		mutate( stateV2Stream);
+		return stateV2Stream.isLocked(false);
+	}
+	@Benchmark
+	@Threads( 4)
+	public boolean test_V2_stream_nonAsk_T4() {
 		mutate( stateV2Stream);
 		return stateV2Stream.isLocked(false);
 	}
@@ -441,9 +486,21 @@ public class GenericLockBench {
 		mutate( stateV2Loop);
 		return stateV2Loop.isLocked(false);
 	}
+	@Benchmark
+	@Threads( 4)
+	public boolean test_V2_loop_nonAsk_T4() {
+		mutate( stateV2Loop);
+		return stateV2Loop.isLocked(false);
+	}
 
 	@Benchmark
 	public boolean test_V3_nonAsk() {
+		mutate( stateV3);
+		return stateV3.isLocked(false);
+	}
+	@Benchmark
+	@Threads( 4)
+	public boolean test_V3_nonAsk_T4() {
 		mutate( stateV3);
 		return stateV3.isLocked(false);
 	}
