@@ -8,6 +8,7 @@ import joptsimple.OptionSpec;
 import org.HdrHistogram.Histogram;
 
 import java.text.NumberFormat;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.*;
@@ -49,9 +50,7 @@ public class TimeGranularityTest {
 		long startNS = start.getNano();
 		run( () -> {
 			Instant now = Instant.now();
-			long nowS = now.getEpochSecond();
-			long nowNS = now.getNano();
-			return 1_000_000 * ( nowS - startS) + ( nowNS - startNS);
+			return Duration.between( start, now).toNanos();
 		});
 	}
 
