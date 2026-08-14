@@ -1,7 +1,5 @@
 package misc;
 
-import gnu.trove.list.TLongList;
-import gnu.trove.list.array.TLongArrayList;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
@@ -40,10 +38,13 @@ public class TimeGranularityTest {
 
 	public static void main(String[] args) {
 		parseArgs( args);
+
 		System.out.println( "currentTimeMillis");
-		run( System::currentTimeMillis);
+		run( System::currentTimeMillis, false);
+
 		System.out.println( "\n" + "nanoTime");
-		run( System::nanoTime);
+		run( System::nanoTime, false);
+
 		System.out.println( "\n" + "Instant.now");
 		Instant start = Instant.now();
 		long startS = start.getEpochSecond();
@@ -51,10 +52,10 @@ public class TimeGranularityTest {
 		run( () -> {
 			Instant now = Instant.now();
 			return Duration.between( start, now).toNanos();
-		});
+		}, true);
 	}
 
-	private static void run( LongSupplier timeSupplier) {
+	private static void run( LongSupplier timeSupplier, boolean useMergeSort) {
 
 		int threadCount = Runtime.getRuntime().availableProcessors();
 		ExecutorService pool = Executors.newFixedThreadPool( threadCount);
@@ -65,13 +66,8 @@ public class TimeGranularityTest {
 		List<Future<long[]>> resultFutures = submitFutures(pool, threadCount, timeSupplier);
 
 		long[] values;
-//		values = collectValues( resultFutures, true);
-//		values = null;
-//		System.gc();
-//		values = collectValues( resultFutures, false);
-//		values = null;
 		System.gc();
-		values = collectValues( pool, resultFutures, false);
+		values = collectValues( pool, resultFutures, useMergeSort);
 
 		terminatePool( pool, "measument");
 
@@ -171,7 +167,7 @@ public class TimeGranularityTest {
 	}
 
 	private static long[] collectValues(
-			ExecutorService pool, List<Future<long[]>> resultFutures, boolean useFastSort)
+			ExecutorService pool, List<Future<long[]>> resultFutures, boolean useMergeSort)
 	{
 		boolean needsTimeout = resultFutures.stream()
 				.map(f -> ! f.isDone())
@@ -200,14 +196,11 @@ public class TimeGranularityTest {
 		startSortNS = System.nanoTime();
 		long[] sortedValues;
 
-		if ( useFastSort) {
-			sortedValues = collectSortedResultsMerge( resultFutures);
-		} else {
-			sortedValues = collectSortedResultsJDK( resultFutures);
-		}
+		sortedValues = collectSortedResults( resultFutures, useMergeSort);
+
 		System.out.println( "values " + nfI.format( sortedValues.length)
 				+ " sorted "
-				+ ( useFastSort ? "fast" : "jdk")
+				+ ( useMergeSort ? "merge" : "jdk")
 				+ " in " + nfI.format( System.nanoTime() - startSortNS) + " ns"
 		);
 
@@ -223,7 +216,7 @@ public class TimeGranularityTest {
 		return sortedValues;
 	}
 
-	private static long[] collectSortedResultsJDK(List<Future<long[]>> resultFutures) {
+	private static long[] collectSortedResults(List<Future<long[]>> resultFutures, boolean useMerge) {
 		NumberFormat nfI = nfITL.get();
 		NumberFormat nfD = nfDTL.get();
 		long startNS = System.nanoTime();
@@ -245,8 +238,19 @@ public class TimeGranularityTest {
 				"avg " +  nfD.format( 1.0 * totalThreadNS / sizeA[ 0]) + " ns/measurement " +
 				"in " + nfD.format( 1e-9 * totalThreadNS) + " s total runtime");
 		System.out.println( "allocating " + nfI.format( Long.BYTES * ( long) sizeA[ 0]) + " bytes");
-		startNS = System.nanoTime();
-		long[]  resultFull = new long[ sizeA[ 0]];
+		long[] resultsFull;
+		if ( useMerge) {
+			resultsFull = sortResultsMerge( resultFutures, sizeA[ 0]);
+		} else {
+			resultsFull = sortResultsJDK( resultFutures, sizeA[ 0]);
+		}
+		return resultsFull;
+	}
+
+	private static long[] sortResultsJDK(List<Future<long[]>> resultFutures, int sizeFull) {
+		NumberFormat nfI = nfITL.get();
+		long startFetchNS = System.nanoTime();
+		long[]  resultFull = new long[ sizeFull];
 		int index = 0;
 		for ( Future<long[]> f: resultFutures) {
 			long[] result = new long[0];
@@ -257,21 +261,25 @@ public class TimeGranularityTest {
 			}
 			System.arraycopy(result, 0, resultFull, index, result.length);
 			index += result.length;
- 		}
-		System.out.println( "values fetched in "
-				+ nfI.format( System.nanoTime() - startNS) + " ns"
-		);
+		}
 		resultFutures.clear();  // for GC
+		long fetchNS = System.nanoTime() - startFetchNS;
+		System.out.println( "values fetched in " + nfI.format(fetchNS) + " ns"
+		);
 
 		long startSortNS = System.nanoTime();
-		Arrays.sort( resultFull);
-		System.out.println( "values sorted in "
-				+ nfI.format( System.nanoTime() - startSortNS) + " ns"
+//		Arrays.sort( resultFull);
+		Arrays.parallelSort( resultFull);
+		long sortNS = System.nanoTime() - startSortNS;
+		System.out.println( "values sorted in " + nfI.format( sortNS) + " ns"
+			+ " fetch+sort took " + nfI.format( fetchNS + sortNS)
 		);
 		return resultFull;
 	}
 
-	private static long[] collectSortedResultsMerge(List<Future<long[]>> resultFutures) {
+	private static long[] sortResultsMerge(List<Future<long[]>> resultFutures, int sizeFull) {
+		NumberFormat nfI = nfITL.get();
+		long startFetchNS = System.nanoTime();
 		List<long[]> longAList = new ArrayList<>();
 		resultFutures.forEach( f -> {
 			long[] result = new long[0];
@@ -282,37 +290,100 @@ public class TimeGranularityTest {
 			}
 			longAList.add( result);
 		});
-		int totalSize = longAList.stream().mapToInt( longA -> longA.length).sum();
-		// merge sort
-		long[] resultList = new long[ totalSize];
-		int index = 0;
-		int[] indices = new int[ longAList.size()];
-		while ( index < totalSize) {
-			// finde den kleinsten
-			int minIndex = -1;
-			long minValue = 0;
-			for ( int i = 0;  i < longAList.size();  i++) {
-				long[] longs = longAList.get( i);
-				int indexInLongs = indices[ i];
-				if ( indexInLongs < longs.length) {
-					long value = longs[indexInLongs];
-					if ( minIndex == -1 || value < minValue) {
-						minIndex = i;
-						minValue = value;
-					}
+		resultFutures.clear();  // for GC
+		long fetchNS = System.nanoTime() - startFetchNS;
+		System.out.println( "values fetched in " + nfI.format( fetchNS) + " ns"
+		);
+
+		long startSortNS = System.nanoTime();
+
+		int sourceCount = longAList.size();
+		int sourceLength = longAList.get(0).length;
+
+		// Copies references only, not the long[] contents.
+		long[][] sources = longAList.toArray(new long[sourceCount][]);
+
+		long[] result = new long[sourceCount * sourceLength];
+		int[] positions = new int[sourceCount];
+		int[] heap = new int[sourceCount];
+
+		// Initially, every source is in the heap.
+		for (int source = 0; source < sourceCount; source++) {
+			heap[source] = source;
+		}
+
+		// Bottom-up heap construction.
+		for (int i = (sourceCount >>> 1) - 1; i >= 0; i--) {
+			siftDown(heap, sourceCount, i, sources, positions);
+		}
+
+		int heapSize = sourceCount;
+
+		for (int out = 0; out < result.length; out++) {
+			int source = heap[0];
+			result[out] = sources[source][positions[source]++];
+
+			if (positions[source] == sourceLength) {
+				// Remove the exhausted source.
+				heap[0] = heap[--heapSize];
+			}
+
+			if (heapSize > 0) {
+				siftDown(heap, heapSize, 0, sources, positions);
+			}
+		}
+
+		long sortNS = System.nanoTime() - startSortNS;
+		System.out.println( "values sorted in " + nfI.format( sortNS) + " ns"
+			+ " fetch+sort took " + nfI.format( fetchNS + sortNS)
+		);
+		return result;
+	}
+
+	private static void siftDown(
+		int[] heap,
+		int size,
+		int index,
+		long[][] sources,
+		int[] positions) {
+
+		int source = heap[index];
+		long value = sources[source][positions[source]];
+		int half = size >>> 1;
+
+		while (index < half) {
+			int child = (index << 1) + 1;
+			int right = child + 1;
+
+			int childSource = heap[child];
+			long childValue =
+				sources[childSource][positions[childSource]];
+
+			if (right < size) {
+				int rightSource = heap[right];
+				long rightValue =
+					sources[rightSource][positions[rightSource]];
+
+				if (rightValue < childValue) {
+					child = right;
+					childSource = rightSource;
+					childValue = rightValue;
 				}
 			}
-			resultList[ index] = minValue;
-			// erhöhe Index der Liste, aus der wir genommen haben
-			indices[ minIndex]++;
-			// erhöhe Index in Result Liste
-			index++;
+
+			if (value <= childValue) {
+				break;
+			}
+
+			heap[index] = childSource;
+			index = child;
 		}
-		return resultList;
+
+		heap[index] = source;
 	}
 
 	private static List<Future<long[]>> submitFutures(
-			ExecutorService pool, int threadCount, LongSupplier timeSupplier)
+		ExecutorService pool, int threadCount, LongSupplier timeSupplier)
 	{
 		long startNS = System.nanoTime();
 
@@ -321,24 +392,25 @@ public class TimeGranularityTest {
 		List<Future<long[]>> futures = new ArrayList<>();
 		threadNSList.clear();
 		Callable<long[]> job = () -> {
-			TLongList values = new TLongArrayList( maxPerThreadCount);
+			long[] values = new long[ maxPerThreadCount];
+			int index = 0;
 			while ( ( ! timeoutReached.get())
-					&& ( continueMeasurements( values.size(), maxPerThreadCount, globalMeasurementCounter)))
+				&& ( continueMeasurements( index, maxPerThreadCount, globalMeasurementCounter)))
 			{
 				long time = timeSupplier.getAsLong();
 				globalMeasurementCounter.increment();
-				values.add( time);
+				values[ index++] = time;
 			}
 			NumberFormat nfI = nfITL.get();
 			long threadNS = System.nanoTime() - startNS;
-			System.out.println( Thread.currentThread().getName() + " "
-					+ nfI.format( values.size())
-					+ "/" + nfI.format( globalMeasurementCounter.longValue())
-					+ " measurements in "
-					+ nfI.format(threadNS) + " ns"
-			);
+//			System.out.println( Thread.currentThread().getName() + " "
+//				+ nfI.format( values.size())
+//				+ "/" + nfI.format( globalMeasurementCounter.longValue())
+//				+ " measurements in "
+//				+ nfI.format(threadNS) + " ns"
+//			);
 			threadNSList.add( threadNS);
-			return values.toArray( ); // new long[ values.size()]
+			return values; // new long[ values.size()]
 		};
 		for ( int i = 0;  i < threadCount;  i++) {
 			Future<long[]> f = pool.submit(job);
@@ -352,7 +424,7 @@ public class TimeGranularityTest {
 	}
 
 	private static boolean continueMeasurements(
-			long measureCountByCaller, long maxPerThreadCount, LongAdder globalMeasurementCounter)
+		long measureCountByCaller, long maxPerThreadCount, LongAdder globalMeasurementCounter)
 	{
 		if ( measureCountByCaller < maxPerThreadCount) {
 			return true;
