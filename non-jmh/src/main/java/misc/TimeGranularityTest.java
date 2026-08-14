@@ -52,7 +52,7 @@ public class TimeGranularityTest {
 		run( () -> {
 			Instant now = Instant.now();
 			return Duration.between( start, now).toNanos();
-		}, true);
+		}, false);
 	}
 
 	private static void run( LongSupplier timeSupplier, boolean useMergeSort) {
@@ -78,15 +78,8 @@ public class TimeGranularityTest {
 	private static void logHistogram(long[] values, boolean recordSame) {
 		long startNS = System.nanoTime();
 		Histogram histogram = new Histogram( 5);
-		long last = values[ 0];
-		for ( int i = 1;  i < values.length;  i++) {
-			long current = values[ i];
-			long diff = current - last;
-			if ( recordSame || diff > 0) {
-				histogram.recordValue(diff);
-			}
-			last = current;
-		}
+//		fillHistogramSimpleDiff( values, histogram, recordSame);
+		fillHistogramSteps( values, histogram, recordSame);
 		NumberFormat nfI = nfITL.get();
 		NumberFormat nfD = nfDTL.get();
 		System.out.println( "histogram "
@@ -146,6 +139,62 @@ public class TimeGranularityTest {
 		System.out.println( "histogram logged in "
 				+ nfI.format( System.nanoTime() - startNS) + " ns"
 		);
+	}
+
+	private static void fillHistogramSimpleDiff(long[] values, Histogram histogram, boolean recordSame) {
+		long last = values[ 0];
+		for ( int i = 1;  i < values.length;  i++) {
+			long current = values[ i];
+			long diff = current - last;
+			if ( recordSame || diff > 0) {
+				histogram.recordValue(diff);
+			}
+			last = current;
+		}
+	}
+
+	private static void fillHistogramSteps(long[] values, Histogram histogram, boolean recordSame) {
+		// angenommen, wir haben die Werte 1 1 1 1 4 4 6 6 6 6 6
+		// dann haben wirfür recordSame  3 + 1 + 4 mal 0 aufzuzeichnen
+		// dazu 2 × (4-1), 5 × (6-4)
+		long last = values[ 0];
+		long currentStep = 0;
+		boolean firstStep = true;
+		long lastStep;
+		int runLength = 0;
+		int totalRuns0 = 0;
+		for ( int i = 1;  i < values.length;  i++) {
+			long current = values[ i];
+			if ( last == current) {
+				if ( recordSame) {
+					totalRuns0++;	// später recorden
+				}
+				runLength++;	// aktuellen Lauf inkrementieren
+				continue;
+			}
+			// wir haben einen neuen Wert und schließen den alten Lauf ab
+			// ist das unser erster Schritt? Also haben wir einen alten Lauf?
+			if ( firstStep) {
+				firstStep = false;	// sonst nichts tun, nichts eintragen, weiter unten Lauf initialisieren
+			} else {
+				// die bisherige Schrittgröße mit Anzahl der Vorkommen im Histo eintragen
+				histogram.recordValueWithCount( currentStep, runLength);
+			}
+			runLength = 1;
+			currentStep = current - last;
+
+			// wichtig
+			last = current;
+		}
+		// letzten Lauf eintragen
+		histogram.recordValueWithCount( currentStep, runLength);
+		// das zählt in unserem Fall doppelt, weil im Beispiel 3/4 1en, 1/2 4en und 4/5 6en als gleiche Werte zählen,
+		// und die Schritte auf 4 und 6 nochmalals Schritte auf den Vorgängerwert gezählt wurden.
+		// So gesehen ist recordSame bei dieser Zählmethode hier nicht so sinnvoll.
+		if ( recordSame) {
+			// 0-Schritte eintragen
+			histogram.recordValueWithCount( 0, totalRuns0);
+		}
 	}
 
 	private static void terminatePool(ExecutorService pool, String name) {
