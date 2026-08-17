@@ -36,8 +36,13 @@ public class TimeGranularityTest {
 
 	static Map<ExecutorService, AtomicBoolean> poolToTimeoutFlag = new HashMap<>();
 
+	static private final List<long[]>	lastResultList = new ArrayList<>();
+	static private long[] sortedResultJDK;
+
 	public static void main(String[] args) {
 		parseArgs( args);
+
+		Instant startInst = Instant.now();
 
 		System.out.println( "currentTimeMillis");
 		run( System::currentTimeMillis, false);
@@ -47,12 +52,39 @@ public class TimeGranularityTest {
 
 		System.out.println( "\n" + "Instant.now");
 		Instant start = Instant.now();
-		long startS = start.getEpochSecond();
-		long startNS = start.getNano();
 		run( () -> {
 			Instant now = Instant.now();
 			return Duration.between( start, now).toNanos();
 		}, false);
+
+		compareSortAlgos();
+
+		Duration dur = Duration.between( startInst, Instant.now());
+		System.out.println( "finished in " + dur);
+	}
+
+	private static void compareSortAlgos() {
+		long[] resultsSol = sortResultsMergeSol();
+		compareResults( sortedResultJDK, "JDK", resultsSol, "Sol");
+
+		resultsSol = null;	// GC
+		long[] resultsLaguna = sortResultsMergeLaguna();
+		compareResults( sortedResultJDK, "JDK", resultsLaguna, "laguna");
+	}
+
+	private static void compareResults(long[] resultsA, String nameA, long[] resultsB, String nameB) {
+		if ( resultsA.length != resultsB.length) {
+			System.err.println( "result lengths differ " + nameA + ": " + resultsA.length + " != " + resultsB.length + " " + nameB);
+			return;
+		}
+		for  ( int i = 0; i < resultsA.length; i++ ) {
+			long valueA = resultsA[ i];
+			long valueB = resultsB[ i];
+			if ( valueA != valueB ) {
+				System.err.println( "mismatch at " + i + ": " + valueA + " != " + valueB + " " + nameA + " - " + nameB + " = " + ( valueA - valueB));
+				return;
+			}
+		}
 	}
 
 	private static void run( LongSupplier timeSupplier, boolean useMergeSort) {
@@ -288,12 +320,8 @@ public class TimeGranularityTest {
 				"avg " +  nfD.format( 1.0 * totalThreadNS / sizeA[ 0]) + " ns/measurement " +
 				"in " + nfD.format( 1e-9 * totalThreadNS) + " s total runtime");
 		System.out.println( "allocating " + nfI.format( Long.BYTES * ( long) sizeA[ 0]) + " bytes");
-		long[] resultsFull;
-		if ( useMerge) {
-			resultsFull = sortResultsMerge( resultFutures, sizeA[ 0]);
-		} else {
-			resultsFull = sortResultsJDK( resultFutures, sizeA[ 0]);
-		}
+
+		long[] resultsFull = sortResultsJDK( resultFutures, sizeA[ 0]);
 		return resultsFull;
 	}
 
@@ -301,11 +329,13 @@ public class TimeGranularityTest {
 		NumberFormat nfI = nfITL.get();
 		long startFetchNS = System.nanoTime();
 		long[]  resultFull = new long[ sizeFull];
+		lastResultList.clear();
 		int index = 0;
 		for ( Future<long[]> f: resultFutures) {
 			long[] result = new long[0];
 			try {
 				result = f.get();
+				lastResultList.add( result);
 			} catch (InterruptedException | ExecutionException e) {
 				throw new RuntimeException(e);
 			}
@@ -324,34 +354,20 @@ public class TimeGranularityTest {
 		System.out.println( "values sorted in " + nfI.format( sortNS) + " ns"
 			+ " fetch+sort took " + nfI.format( fetchNS + sortNS)
 		);
+		sortedResultJDK = resultFull;
 		return resultFull;
 	}
 
-	private static long[] sortResultsMerge(List<Future<long[]>> resultFutures, int sizeFull) {
+	private static long[] sortResultsMergeSol() {
 		NumberFormat nfI = nfITL.get();
-		long startFetchNS = System.nanoTime();
-		List<long[]> longAList = new ArrayList<>();
-		resultFutures.forEach( f -> {
-			long[] result = new long[0];
-			try {
-				result = f.get();
-			} catch (InterruptedException | ExecutionException e) {
-				throw new RuntimeException(e);
-			}
-			longAList.add( result);
-		});
-		resultFutures.clear();  // for GC
-		long fetchNS = System.nanoTime() - startFetchNS;
-		System.out.println( "values fetched in " + nfI.format( fetchNS) + " ns"
-		);
 
 		long startSortNS = System.nanoTime();
 
-		int sourceCount = longAList.size();
-		int sourceLength = longAList.get(0).length;
+		int sourceCount = lastResultList.size();
+		int sourceLength = lastResultList.get(0).length;
 
 		// Copies references only, not the long[] contents.
-		long[][] sources = longAList.toArray(new long[sourceCount][]);
+		long[][] sources = lastResultList.toArray(new long[sourceCount][]);
 
 		long[] result = new long[sourceCount * sourceLength];
 		int[] positions = new int[sourceCount];
@@ -384,18 +400,11 @@ public class TimeGranularityTest {
 		}
 
 		long sortNS = System.nanoTime() - startSortNS;
-		System.out.println( "values sorted in " + nfI.format( sortNS) + " ns"
-			+ " fetch+sort took " + nfI.format( fetchNS + sortNS)
-		);
+		System.out.println( "values sorted Sol in " + nfI.format( sortNS) + " ns");
 		return result;
 	}
 
-	private static void siftDown(
-		int[] heap,
-		int size,
-		int index,
-		long[][] sources,
-		int[] positions) {
+	private static void siftDown( int[] heap, int size, int index, long[][] sources, int[] positions) {
 
 		int source = heap[index];
 		long value = sources[source][positions[source]];
@@ -509,4 +518,40 @@ public class TimeGranularityTest {
 		System.out.println( "using " + nfI.format( heapSpace)
 				+ " bytes for " + nfI.format( maxRecord) + " measurements");
 	}
+
+	private static long[] sortResultsMergeLaguna() {
+		NumberFormat nfI = nfITL.get();
+		long startSortNS = System.nanoTime();
+
+		int sourceCount = lastResultList.size();
+		int sourceLength = lastResultList.get(0).length;
+
+		// Copies references only, not the long[] contents.
+		long[][] sources = lastResultList.toArray(new long[sourceCount][]);
+
+		long[] result = new long[ sourceCount * sourceLength];
+		int[] positions = new int[sourceCount];
+		PriorityQueue<Integer> minHeap = new PriorityQueue<>(sourceCount);
+
+		// Initialize heap with all sources, positioned at 0.
+		for (int source = 0; source < sourceCount; source++) {
+			positions[source] = 0;
+			minHeap.offer(source);
+		}
+
+		int out = 0;
+		while (out < result.length && !minHeap.isEmpty()) {
+			int source = minHeap.poll();
+			result[out++] = sources[source][positions[source]++];
+
+			if (positions[source] < sourceLength) {
+				minHeap.offer(source);
+			}
+		}
+
+		long sortNS = System.nanoTime() - startSortNS;
+		System.out.println( "values sorted Laguna in " + nfI.format( sortNS) + " ns");
+		return result;
+	}
+
 }
