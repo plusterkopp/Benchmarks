@@ -39,7 +39,10 @@ public class TimeGranularityTest {
 	static private final List<long[]>	lastResultList = new ArrayList<>();
 	static private long[] sortedResultJDK;
 
+	static private double[] percentiles = { 100, 99.99999, 99.9999, 99.999, 99.99, 99.9, 99, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0};
+
 	public static void main(String[] args) {
+		buildPercentiles();
 		parseArgs( args);
 
 		Instant startInst = Instant.now();
@@ -61,6 +64,25 @@ public class TimeGranularityTest {
 
 		Duration dur = Duration.between( startInst, Instant.now());
 		System.out.println( "finished in " + dur);
+	}
+
+	private static void buildPercentiles() {
+		List<Double> pList = new ArrayList<>( 1000);
+		double v = 1;
+		for ( int pow = 0;  pow < 6;  pow++) {
+			pList.add( 100 - v);
+			v *= 0.1;
+		}
+		for ( int pct = 0;  pct <= 100;  pct++) {
+			pList.add( Double.valueOf(pct));
+		}
+		pList.sort( Double::compare);
+		// reverse des Kleinen Mannes
+		int lastIndex = pList.size() - 1;
+		percentiles = new double[ pList.size()];
+		for ( int i = 0;  i < pList.size();  i++) {
+			percentiles[ i] = pList.get( lastIndex - i);
+		}
 	}
 
 	private static void compareSortAlgos() {
@@ -138,18 +160,20 @@ public class TimeGranularityTest {
 //		}
 		SortedMap<Double, Long> percentilesToValues = new TreeMap<>();
 		// collect some interesting percentiles by percentile-level
-		double[] percentiles = { 100, 99.9999, 99.999, 99.99, 99.9, 99, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0};
 		long lastValue = -1;
 		for ( double p: percentiles) {
 			long value = histogram.getValueAtPercentile( p);
 			if ( value != lastValue) {
-//				System.out.print( nfD.format( p) + ": " + nfI.format( value) + "    ");
 				double pp = histogram.getPercentileAtOrBelowValue( value);
+//				System.out.print( nfD.format( p) + ": " + nfI.format( value)
+//					+ " (<" + nfD.format( pp)+ ")"
+//					+ "    ");
 //				percentilesToValues.put( p, value);
 				percentilesToValues.put( pp, value);
 				lastValue = value;
 			}
 		}
+//		System.out.println();
 		// add some percentiles by value
 		long[] valuesForPercentiles = { 1, 0};
 		for ( long value: valuesForPercentiles) {
