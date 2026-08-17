@@ -63,7 +63,8 @@ public class TimeGranularityTest {
 		globalMeasurementCounter.reset();
 		poolToTimeoutFlag.put( pool, new AtomicBoolean( false));
 
-		List<Future<long[]>> resultFutures = submitFutures(pool, threadCount, timeSupplier);
+		CountDownLatch startLatch = new CountDownLatch( threadCount);
+		List<Future<long[]>> resultFutures = submitFutures(pool, threadCount, timeSupplier, startLatch);
 
 		long[] values;
 		System.gc();
@@ -432,15 +433,16 @@ public class TimeGranularityTest {
 	}
 
 	private static List<Future<long[]>> submitFutures(
-		ExecutorService pool, int threadCount, LongSupplier timeSupplier)
+		ExecutorService pool, int threadCount, LongSupplier timeSupplier, CountDownLatch startLatch)
 	{
-		long startNS = System.nanoTime();
-
 		AtomicBoolean timeoutReached = poolToTimeoutFlag.get(pool);
 		int maxPerThreadCount = (int) (maxRecord / threadCount);
 		List<Future<long[]>> futures = new ArrayList<>();
 		threadNSList.clear();
+
 		Callable<long[]> job = () -> {
+			startLatch.await();
+			long startNS = System.nanoTime();
 			long[] values = new long[ maxPerThreadCount];
 			int index = 0;
 			while ( ( ! timeoutReached.get())
@@ -461,9 +463,11 @@ public class TimeGranularityTest {
 			threadNSList.add( threadNS);
 			return values; // new long[ values.size()]
 		};
+
 		for ( int i = 0;  i < threadCount;  i++) {
 			Future<long[]> f = pool.submit(job);
 			futures.add( f);
+			startLatch.countDown();
 		}
 		pool.shutdown();
 //		System.out.println( "pool shutdown after "
