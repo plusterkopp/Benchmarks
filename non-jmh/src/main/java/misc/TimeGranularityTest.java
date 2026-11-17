@@ -555,21 +555,26 @@ public class TimeGranularityTest {
 
 		long[] result = new long[ sourceCount * sourceLength];
 		int[] positions = new int[sourceCount];
-		PriorityQueue<Integer> minHeap = new PriorityQueue<>(sourceCount);
 
-		// Initialize heap with all sources, positioned at 0.
-		for (int source = 0; source < sourceCount; source++) {
-			positions[source] = 0;
-			minHeap.offer(source);
-		}
+		for (int i = 0; i < result.length; i++) {
+			int minSource = -1;
+			long minValue = Long.MAX_VALUE;
 
-		int out = 0;
-		while (out < result.length && !minHeap.isEmpty()) {
-			int source = minHeap.poll();
-			result[out++] = sources[source][positions[source]++];
+			for (int source = 0; source < sourceCount; source++) {
+				if (positions[source] < sourceLength) {
+					long value = sources[source][positions[source]];
+					if (value < minValue) {
+						minValue = value;
+						minSource = source;
+					}
+				}
+			}
 
-			if (positions[source] < sourceLength) {
-				minHeap.offer(source);
+			if (minSource >= 0) {
+				result[i] = minValue;
+				positions[minSource]++;
+			} else {
+				break; // all sources exhausted
 			}
 		}
 

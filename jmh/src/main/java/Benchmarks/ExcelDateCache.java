@@ -224,14 +224,15 @@ public class ExcelDateCache {
 
 	public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include( ExcelDateCache.class.getSimpleName())
-		        .mode( Mode.AverageTime)
-		        .measurementTime( TimeValue.seconds( 5))
-		        .timeUnit(TimeUnit.NANOSECONDS)
-		        .warmupIterations(5)
-		        .measurementIterations(3)
-		        .forks(1)
-                .build();
+			.include( ExcelDateCache.class.getSimpleName())
+			.mode( Mode.AverageTime)
+			.measurementTime( TimeValue.seconds( 5))
+			.measurementIterations( 3)
+			.timeUnit( TimeUnit.NANOSECONDS)
+			.warmupIterations( 3)
+			.warmupTime( TimeValue.seconds( 1))
+			.forks( 1)
+			.build();
         new Runner(opt).run();
     }
 }

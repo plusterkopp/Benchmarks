@@ -4,6 +4,7 @@ import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.*;
 import org.openjdk.jmh.runner.options.*;
 
+import java.util.Arrays;
 import java.util.concurrent.*;
 
 @Warmup(iterations = 5, time = 4, timeUnit = TimeUnit.SECONDS)
@@ -33,35 +34,33 @@ public class ILPBench {
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void noILP() {
-		for ( int j = ArraySize - 1;  j >= 0; j--) {
+	public double noILP() {
+		double sum = 0;
+//		for ( int j = ArraySize - 1;  j >= 0; j--) {
+		for ( int j = 0;  j < ArraySize; j++) {
 			sum += x[ j] * y[ j];
 		}
+		return sum;
 	}
 
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void h2ILP() {
-		sum = 0;
-		final double[] sums = new double[ 2];
-		for ( int s = 0;  s < 2;  s++) {
-			sums[ s] = 0;
-		}
+	public double h2ILP() {
+		double sum0 = 0;
+		double sum1 = 0;
 		for ( int j = ArraySize - 1;  j >= 0; j -= 2) {
-			sums[ 0] += x[ j] * y[ j];
-			sums[ 1] += x[ j-1] * y[ j-1];
+			sum0 += x[ j] * y[ j];
+			sum1 += x[ j-1] * y[ j-1];
 		}
-		for ( int s = 0;  s < 2;  s++) {
-			sum += sums[ s];
-		}
+		return sum0 + sum1;
 	}
 
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void h4ILP() {
-		sum = 0;
+	public double h4ILP() {
+		double sum = 0;
 		final double[] sums = new double[ 4];
 		for ( int s = 0;  s < 4;  s++) {
 			sums[ s] = 0;
@@ -75,19 +74,19 @@ public class ILPBench {
 		for ( int s = 0;  s < 4;  s++) {
 			sum += sums[ s];
 		}
+		return sum;
 	}
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void nx4ILP() {
-		nxILP( 4);
+	public double nx4ILP() {
+		return nxILP( 4);
 	}
 
-	private void nxILP( final int ilpFactor) {
+	private double nxILP( final int ilpFactor) {
+		double sum = 0;
 		final double[] sums = new double[ ilpFactor];
-		for ( int s = 0;  s < ilpFactor;  s++) {
-			sums[ s] = 0;
-		}
+		Arrays.fill( sums, 0);
 		for ( int j = ArraySize - 1;  j >= 0; j -= ilpFactor) {
 			for ( int s = 0;  s < ilpFactor;  s++) {
 				sums[ s] += x[ j-s] * y[ j-s];
@@ -96,17 +95,17 @@ public class ILPBench {
 		for ( int s = 0;  s < ilpFactor;  s++) {
 			sum += sums[ s];
 		}
+		return sum;
 	}
 
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void n16ILP() {
+	public double n16ILP() {
+		double sum = 0;
 		final int	n = 16;
 		final double[] sums = new double[ n];
-		for ( int s = 0;  s < n;  s++) {
-			sums[ s] = 0;
-		}
+		Arrays.fill( sums, 0);
 		for ( int j = ArraySize - 1;  j >= 0; j -= n) {
 			for ( int s = 0;  s < n;  s++) {
 				sums[ s] += x[ j-s] * y[ j-s];
@@ -115,17 +114,17 @@ public class ILPBench {
 		for ( int s = 0;  s < n;  s++) {
 			sum += sums[ s];
 		}
+		return sum;
 	}
 
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void n8ILP() {
+	public double n8ILP() {
+		double sum = 0;
 		final int	n = 8;
 		final double[] sums = new double[ n];
-		for ( int s = 0;  s < n;  s++) {
-			sums[ s] = 0;
-		}
+		Arrays.fill( sums, 0);
 		for ( int j = ArraySize - 1;  j >= 0; j -= n) {
 			for ( int s = 0;  s < n;  s++) {
 				sums[ s] += x[ j-s] * y[ j-s];
@@ -134,17 +133,17 @@ public class ILPBench {
 		for ( int s = 0;  s < n;  s++) {
 			sum += sums[ s];
 		}
+		return sum;
 	}
 
 
 	@Benchmark
 	@OperationsPerInvocation(ArraySize)
-	public void n4ILP() {
+	public double n4ILP() {
+		double sum = 0;
 		final int	n = 4;
 		final double[] sums = new double[ n];
-		for ( int s = 0;  s < n;  s++) {
-			sums[ s] = 0;
-		}
+		Arrays.fill( sums, 0);
 		for ( int j = ArraySize - 1;  j >= 0; j -= n) {
 			for ( int s = 0;  s < n;  s++) {
 				sums[ s] += x[ j-s] * y[ j-s];
@@ -153,15 +152,17 @@ public class ILPBench {
 		for ( int s = 0;  s < n;  s++) {
 			sum += sums[ s];
 		}
+		return sum;
 	}
 
 
 	public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include( ILPBench.class.getSimpleName())
-		        .warmupIterations(5)
-		        .measurementIterations(12)
-				.measurementTime(TimeValue.seconds(5))
+		        .warmupIterations(3)
+				.warmupTime(TimeValue.seconds(1))
+		        .measurementIterations(5)
+				.measurementTime(TimeValue.seconds(1))
 				.forks(1)
                 .build();
         new Runner(opt).run();
