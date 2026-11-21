@@ -27,13 +27,19 @@ import java.util.zip.CRC32;
  * </ol>
  * Aufruf: {@code CompressBench2 [--methods=LZMA2,PPMD,BZIP2,XZ,ZSTD] [--phases=baseline,sweep,search]
  * [--budget=Minuten] [--repeat=N] [--tmp=DIR] [--objective=wall|cpu] [--threads=1,4,16] [--no-test] [--no-prune]
- * [--dry-run] [--no-compare] [Dateien/Verzeichnisse...]}, nur Vergleich: {@code CompressBench2 --compare}
+ * [--dry-run] [--no-compare] [--rerun=disturbed,front,XZ,...] [--tol=Zeit%[,Größe%]] [Dateien/Verzeichnisse...]},
+ * nur Vergleich: {@code CompressBench2 --compare}
  * <br>
  * Ohne Dateien: alle *.log im aktuellen Verzeichnis. 7z bekommt die Einzeldateien (solid), xz und zstd ein
  * einmalig erzeugtes, unkomprimiertes tar derselben Dateien. Ergebnisse werden pro Lauf an
  * compressBench2-&lt;Host&gt;-&lt;Datum&gt;.csv angehängt, im Kopf (#-Zeilen) stehen Maschine, Werkzeugversionen und
  * Korpus. Frühere CSVs derselben Maschine und desselben Korpus werden wiederverwendet; CSVs anderer Maschinen im
  * selben Verzeichnis werden zu einem Vergleich zusammengestellt (compressBench2-compare-&lt;Datum&gt;.txt/.tsv).
+ * <br>
+ * Temporäre Dateien (tar, Archive) liegen standardmäßig in compressBench2-tmp im aktuellen Verzeichnis, nicht in
+ * einem RAM-Dateisystem (/tmp ist oft tmpfs: das tar konkurriert dort mit den Kompressoren um RAM und wird ausgelagert).
+ * Je Lauf werden Störgrößen mitgeschrieben (Major Faults, unfreiwillige Kontextwechsel, CPU-Zeit anderer Prozesse,
+ * Swap-In); gestörte Läufe werden markiert und lassen sich mit --rerun=disturbed nachmessen.
  *
  * @author rhelbing
  *
@@ -43,13 +49,18 @@ public class CompressBench2 {
 	private static final String CSV_SEP = "\t";
 	public static final String COMPRESS_BENCH = "compressBench2-";
 	public static final String CSV = ".csv";
+	/** neue Spalten nur hinten anfügen: ältere CSVs bleiben lesbar */
 	private static final String CSV_HEADER = String.join( CSV_SEP, "Family", "Level", "Threads", "Params", "Phase",
 			"InputBytes", "Size", "Ratio", "WallMs", "UserMs", "SysMs", "MaxRssMB", "TestWallMs", "TestRssMB",
-			"Status", "Command");
+			"Status", "Command", "MajFaults", "InvCtxSw", "OtherCpuMs", "OtherPct", "SwapInMB");
 	/** Größenunterschied, ab dem ein Parameter im Sweep als wirksam gilt */
 	private static final double SIZE_TOL = 0.001;
 	/** Zeitunterschied, ab dem ein Parameter im Sweep als wirksam gilt (Messrauschen) */
 	private static final double TIME_TOL = 0.03;
+	/** gestört: andere Prozesse brauchten mehr als diesen Anteil der Maschine (%) ... */
+	private static final double DISTURBED_OTHER_PCT = 10;
+	/** ... oder es wurde mehr als so viel eingelagert (MB) */
+	private static final long DISTURBED_SWAP_MB = 100;
 
 	private static final int	maxThreads = Runtime.getRuntime().availableProcessors();
 
@@ -61,14 +72,20 @@ public class CompressBench2 {
 	private static Set<String> phases = new LinkedHashSet<>( Arrays.asList( "baseline", "sweep", "search"));
 	private static long deadline = Long.MAX_VALUE;
 	private static int repeat = 1;
-	private static File tmpDir = new File( System.getProperty( "java.io.tmpdir"));
+	private static File tmpDir = new File( System.getProperty( "user.dir"), "compressBench2-tmp");
 	private static boolean cpuObjective = false;
+	/** Pareto-Front mit Toleranz: Zeit- bzw. Größenunterschiede darunter gelten als gleich, 0 = streng */
+	private static double frontTimeTol = TIME_TOL;
+	private static double frontSizeTol = SIZE_TOL;
 	private static boolean testArchives = true;
 	private static boolean pruneFlatDims = true;
 	private static boolean dryRun = false;
 	private static boolean compareOnly = false;
 	private static boolean compareAfter = true;
 	private static String[] mainArgs = new String[ 0];
+	/** was aus früheren Läufen neu gemessen werden soll: disturbed, front, Familiennamen */
+	private static Set<String> rerun = new HashSet<>();
+	private static final List<Config> rerunConfigs = new ArrayList<>();
 	private static List<Integer> threadsList = defaultThreads();
 
 	/** GNU time für CPU-Zeit und max. RSS, null wenn nicht vorhanden */
@@ -675,6 +692,16 @@ public class CompressBench2 {
 		long userMS = -1;
 		long sysMS = -1;
 		long maxRssKB = -1;
+		/** Seitenfehler mit Plattenzugriff (beim Kompressor praktisch nur Swap) */
+		long majFaults = -1;
+		/** unfreiwillige Kontextwechsel: von anderen Prozessen verdrängt */
+		long invCtxSw = -1;
+		/** CPU-Zeit aller anderen Prozesse während des Laufs */
+		long otherCpuMS = -1;
+		/** otherCpuMS als Anteil der ganzen Maschine (alle Threads × Wandzeit) */
+		double otherPct = -1;
+		/** systemweit eingelagert während des Laufs */
+		long swapInMB = -1;
 	}
 
 	private static final class Result {
@@ -705,6 +732,13 @@ public class CompressBench2 {
 		long time() {
 			return cpuObjective && cpuMS() >= 0 ? cpuMS() : comp.wallMS;
 		}
+		/** CPU-Zeit / (Wandzeit × Threads): wie gut die Threads ausgelastet waren, -1 unbekannt */
+		double efficiency() {
+			return cpuMS() < 0 || comp.wallMS <= 0 ? -1 : 100.0 * cpuMS() / ( comp.wallMS * config.threads);
+		}
+		boolean disturbed() {
+			return comp.otherPct > DISTURBED_OTHER_PCT || comp.swapInMB > DISTURBED_SWAP_MB;
+		}
 	}
 
 	private static Measure runMeasured( List<String> cmd, File stdoutTo) throws IOException, InterruptedException {
@@ -712,34 +746,75 @@ public class CompressBench2 {
 		File timeFile = new File( tmpDir, COMPRESS_BENCH + "time.txt");
 		if ( timeCmd != null) {
 			timeFile.delete();
-			full.addAll( Arrays.asList( timeCmd, "-f", "%e %U %S %M", "-o", timeFile.getPath()));
+			full.addAll( Arrays.asList( timeCmd, "-f", "%e %U %S %M %F %c", "-o", timeFile.getPath()));
 		}
 		full.addAll( cmd);
 		ProcessBuilder pb = new ProcessBuilder( full);
 		pb.redirectError( ProcessBuilder.Redirect.INHERIT);
 		pb.redirectOutput( stdoutTo != null ? ProcessBuilder.Redirect.to( stdoutTo) : ProcessBuilder.Redirect.INHERIT);
 		Measure m = new Measure();
+		long busyBefore = systemBusyMS();
+		long swapBefore = swapInPages();
 		long then = System.nanoTime();
 		Process process = pb.start();
 		m.exit = process.waitFor();
 		m.wallMS = ( System.nanoTime() - then) / 1_000_000;
+		long busyAfter = systemBusyMS();
+		long swapAfter = swapInPages();
+		if ( swapBefore >= 0 && swapAfter >= 0) {
+			m.swapInMB = ( swapAfter - swapBefore) * 4096 >> 20;
+		}
 		if ( timeCmd != null && timeFile.exists()) {
 			// bei Fehler steht vorher "Command exited with non-zero status": letzte Zeile nehmen
 			List<String> lines = Files.readAllLines( timeFile.toPath());
 			for ( int i = lines.size() - 1;  i >= 0;  i--) {
 				String[] parts = lines.get( i).trim().split( "\\s+");
-				if ( parts.length == 4) {
+				if ( parts.length == 6) {
 					try {
 						m.userMS = Math.round( Double.parseDouble( parts[ 1]) * 1000);
 						m.sysMS = Math.round( Double.parseDouble( parts[ 2]) * 1000);
 						m.maxRssKB = Long.parseLong( parts[ 3]);
+						m.majFaults = Long.parseLong( parts[ 4]);
+						m.invCtxSw = Long.parseLong( parts[ 5]);
 						break;
 					} catch ( NumberFormatException e) {
 						// nächste Zeile
 			}   }   }
 			timeFile.delete();
 		}
+		if ( busyBefore >= 0 && busyAfter >= 0 && m.userMS >= 0 && m.wallMS > 0) {
+			m.otherCpuMS = Math.max( 0, busyAfter - busyBefore - m.userMS - m.sysMS);
+			m.otherPct = 100.0 * m.otherCpuMS / ( m.wallMS * (double) maxThreads);
+		}
 		return m;
+	}
+
+	/** belegte CPU-Zeit aller Kerne seit Boot in ms (Linux /proc/stat, USER_HZ = 100), -1 wenn nicht verfügbar */
+	private static long systemBusyMS() {
+		try ( BufferedReader reader = new BufferedReader( new FileReader( "/proc/stat"))) {
+			// cpu user nice system idle iowait irq softirq steal
+			String[] p = reader.readLine().trim().split( "\\s+");
+			long busy = 0;
+			for ( int i : new int[] { 1, 2, 3, 6, 7, 8}) {
+				busy += Long.parseLong( p[ i]);
+			}
+			return busy * 10;
+		} catch ( Exception e) {
+			return -1;
+		}
+	}
+
+	/** eingelagerte Seiten seit Boot (Linux /proc/vmstat), -1 wenn nicht verfügbar */
+	private static long swapInPages() {
+		try {
+			for ( String line : Files.readAllLines( Paths.get( "/proc/vmstat"))) {
+				if ( line.startsWith( "pswpin ")) {
+					return Long.parseLong( line.substring( 7).trim());
+			}   }
+		} catch ( Exception e) {
+			// nicht Linux
+		}
+		return -1;
 	}
 
 	private static Result runConfig( Config c, String phase, Inputs in) {
@@ -810,9 +885,10 @@ public class CompressBench2 {
 	private static void printResult( Result r) {
 		long el = ( System.currentTimeMillis() - startMS) / 1000;
 		System.out.println( String.format( Locale.US,
-				"%4d %-8s %-50s ratio %8.3f  wall %7.1fs  cpu %7.1fs  rss %6s MB  test %6.1fs  %s  [%d:%02d:%02d]",
-				runCount, r.phase, r.config.key, r.ratio(), r.comp.wallMS / 1e3, r.cpuMS() / 1e3,
+				"%4d %-8s %-50s ratio %8.3f  wall %7.1fs  cpu %7.1fs  eff %3.0f%%  rss %6s MB  other %4.1f%%  swapin %5d MB%s  test %6.1fs  %s  [%d:%02d:%02d]",
+				runCount, r.phase, r.config.key, r.ratio(), r.comp.wallMS / 1e3, r.cpuMS() / 1e3, r.efficiency(),
 				r.comp.maxRssKB < 0 ? "?" : String.valueOf( r.comp.maxRssKB / 1024),
+				r.comp.otherPct, r.comp.swapInMB, r.disturbed() ? " DISTURBED" : "",
 				r.test != null ? r.test.wallMS / 1e3 : 0.0, r.status, el / 3600, el / 60 % 60, el % 60));
 	}
 
@@ -845,7 +921,17 @@ public class CompressBench2 {
 		if ( timeCmd == null) {
 			System.out.println( "GNU time not found: no CPU time and RSS");
 		}
+		if ( !dryRun && !tmpDir.isDirectory() && !tmpDir.mkdirs()) {
+			throw new IOException( "cannot create temp dir " + tmpDir);
+		}
+		String tmpFs = fsType( tmpDir);
+		if ( tmpFs != null && ( tmpFs.equals( "tmpfs") || tmpFs.equals( "ramfs"))) {
+			System.out.println( "WARNING: temp dir " + tmpDir + " is in RAM (" + tmpFs + "): the input tar ("
+					+ in.totalSize / ( 1 << 20) + " MB) competes with the compressors for memory and may be swapped out."
+					+ " Use --tmp=<dir on disk>.");
+		}
 		machine = detectMachine( in);
+		machine.info.put( "tmp", tmpDir.getAbsolutePath() + ( tmpFs != null ? " (" + tmpFs + ")" : ""));
 		System.out.println( "Compress Bench on " + files.size() + " files, " + in.totalSize / ( 1 << 20) + " MB"
 				+ ", families " + families + ", phases " + phases + ", threads " + threadsList);
 		for ( Family f : families) {
@@ -871,7 +957,11 @@ public class CompressBench2 {
 		}
 
 		boolean inBudget = true;
-		if ( phases.contains( "baseline")) {
+		if ( !rerunConfigs.isEmpty()) {
+			System.out.println( "rerunning " + rerunConfigs.size() + " earlier results (" + rerun + ")");
+			inBudget = runAll( rerunConfigs, "rerun", in);
+		}
+		if ( inBudget && phases.contains( "baseline")) {
 			List<Config> list = new ArrayList<>();
 			for ( Family f : families) {
 				for ( int level : f.baselineLevels()) {
@@ -909,6 +999,7 @@ public class CompressBench2 {
 		if ( in.stream != null && !in.files.contains( in.stream)) {
 			in.stream.delete();
 		}
+		tmpDir.delete();	// nur wenn leer
 		if ( !dryRun) {
 			writeReport( in);
 			if ( compareAfter) {
@@ -1033,14 +1124,29 @@ public class CompressBench2 {
 		return results.stream().filter( r -> r.config.family == f).collect( Collectors.toList());
 	}
 
-	/** nicht dominierte Ergebnisse (kein anderes ist zugleich kleiner-gleich und schneller-gleich), nach Zeit sortiert */
+	/**
+	 * nicht dominierte Ergebnisse (kein anderes ist zugleich kleiner-gleich und schneller-gleich), nach Zeit sortiert.
+	 * Mit Toleranz (ε-Boxen): Zeit und Größe werden logarithmisch in Boxen der Breite frontTimeTol bzw. frontSizeTol
+	 * eingeteilt, je Box zählt nur das kleinste Ergebnis, dominiert wird über die Boxnummern. Messrauschen erzeugt so
+	 * keine Treppe fast gleicher Punkte, und anders als bei "b ist höchstens x% langsamer" gibt es keine Ketten,
+	 * in denen sich viele kleine Schritte zu einem großen Zeitunterschied aufsummieren.
+	 */
 	private static List<Result> paretoFront( Collection<Result> rs) {
-		List<Result> ok = rs.stream().filter( Result::ok).collect( Collectors.toList());
+		Map<String, Result> boxes = new HashMap<>();
+		for ( Result r : rs) {
+			if ( r.ok()) {
+				String k = box( r.time(), frontTimeTol) + "/" + box( r.size, frontSizeTol);
+				Result cur = boxes.get( k);
+				if ( cur == null || r.size < cur.size || r.size == cur.size && r.time() < cur.time()) {
+					boxes.put( k, r);
+		}   }   }
 		List<Result> front = new ArrayList<>();
-		for ( Result a : ok) {
+		for ( Result a : boxes.values()) {
+			double ta = box( a.time(), frontTimeTol), sa = box( a.size, frontSizeTol);
 			boolean dominated = false;
-			for ( Result b : ok) {
-				if ( b != a && b.size <= a.size && b.time() <= a.time() && ( b.size < a.size || b.time() < a.time())) {
+			for ( Result b : boxes.values()) {
+				double tb = box( b.time(), frontTimeTol), sb = box( b.size, frontSizeTol);
+				if ( b != a && tb <= ta && sb <= sa) {	// verschiedene Boxen: mindestens eine Nummer echt kleiner
 					dominated = true;
 					break;
 			}   }
@@ -1049,6 +1155,11 @@ public class CompressBench2 {
 		}   }
 		front.sort( Comparator.comparingLong( Result::time));
 		return front;
+	}
+
+	/** Boxnummer für die tolerante Front, ohne Toleranz der Wert selbst */
+	private static double box( double v, double tol) {
+		return tol <= 0 ? v : Math.floor( Math.log( Math.max( v, 1)) / Math.log1p( tol));
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------
@@ -1074,11 +1185,25 @@ public class CompressBench2 {
 					case "repeat":    repeat = Integer.parseInt( value); break;
 					case "tmp":       tmpDir = new File( value); break;
 					case "objective": cpuObjective = value.equals( "cpu"); break;
+					case "tol": {
+						String[] t = value.split( ",");
+						frontTimeTol = Double.parseDouble( t[ 0]) / 100;
+						if ( t.length > 1) {
+							frontSizeTol = Double.parseDouble( t[ 1]) / 100;
+						}
+						break;
+					}
 					case "no-test":   testArchives = false; break;
 					case "no-prune":  pruneFlatDims = false; break;
 					case "dry-run":   dryRun = true; break;
 					case "compare":   compareOnly = true; break;
 					case "no-compare": compareAfter = false; break;
+					case "rerun":
+						for ( String what : value.split( ",")) {
+							rerun.add( Arrays.stream( Family.values()).anyMatch( f -> f.name().equalsIgnoreCase( what))
+									? what.toUpperCase() : what.toLowerCase());
+						}
+						break;
 					case "threads":
 						threadsList = Arrays.stream( value.split( ",")).map( Integer::valueOf).collect( Collectors.toList());
 						break;
@@ -1182,9 +1307,12 @@ public class CompressBench2 {
 				return Integer.MAX_VALUE;
 			}
 		}
+		/** ein späteres Ergebnis derselben Konfiguration (Nachmessung) ersetzt das frühere */
 		void add( Result r) {
-			if ( !byKey.containsKey( r.config.key)) {
-				byKey.put( r.config.key, r);
+			Result old = byKey.put( r.config.key, r);
+			if ( old != null) {
+				results.set( results.indexOf( old), r);
+			} else {
 				results.add( r);
 			}
 		}
@@ -1210,6 +1338,28 @@ public class CompressBench2 {
 		m.info.put( "corpus", corpusSignature( in.files));
 		m.info.put( "args", String.join( " ", mainArgs));
 		return m;
+	}
+
+	/** Dateisystemtyp des Verzeichnisses aus /proc/mounts (längster passender Mountpoint), null wenn unbekannt */
+	private static String fsType( File dir) {
+		try {
+			String path = dir.getCanonicalPath();
+			String best = null, type = null;
+			for ( String line : Files.readAllLines( Paths.get( "/proc/mounts"))) {
+				String[] p = line.split( " ");
+				if ( p.length < 3) {
+					continue;
+				}
+				String mp = p[ 1];
+				boolean match = path.equals( mp) || path.startsWith( mp.endsWith( "/") ? mp : mp + "/");
+				if ( match && ( best == null || mp.length() > best.length())) {
+					best = mp;
+					type = p[ 2];
+			}   }
+			return type;
+		} catch ( IOException e) {
+			return null;
+		}
 	}
 
 	private static String hostName() {
@@ -1424,6 +1574,13 @@ public class CompressBench2 {
 			}
 			r.status = a[ 14];
 			r.command = a.length > 15 ? a[ 15] : "";
+			if ( a.length > 20) {
+				r.comp.majFaults = Long.parseLong( a[ 16]);
+				r.comp.invCtxSw = Long.parseLong( a[ 17]);
+				r.comp.otherCpuMS = Long.parseLong( a[ 18]);
+				r.comp.otherPct = Double.parseDouble( a[ 19]);
+				r.comp.swapInMB = Long.parseLong( a[ 20]);
+			}
 			return r;
 		} catch ( Exception e) {
 			System.out.println( "not a result: " + line + " (" + e + ")");
@@ -1437,9 +1594,22 @@ public class CompressBench2 {
 			if ( !d.groupKey().equals( machine.groupKey()) || !d.corpus().equals( machine.corpus())) {
 				continue;
 			}
+			Set<String> front = new HashSet<>();
+			if ( rerun.contains( "front")) {
+				for ( Family f : families) {
+					d.results.stream().filter( r -> r.config.family == f).collect( Collectors.collectingAndThen(
+							Collectors.toList(), CompressBench2::paretoFront)).forEach( r -> front.add( r.config.key));
+			}   }
 			int count = 0;
 			for ( Result r : d.results) {
-				if ( families.contains( r.config.family) && !byKey.containsKey( r.config.key)) {
+				if ( !families.contains( r.config.family) || byKey.containsKey( r.config.key)) {
+					continue;
+				}
+				boolean again = rerun.contains( r.config.family.name())
+						|| r.ok() && ( rerun.contains( "disturbed") && r.disturbed() || front.contains( r.config.key));
+				if ( again) {
+					rerunConfigs.add( r.config);
+				} else {
 					results.add( r);
 					byKey.put( r.config.key, r);
 					count++;
@@ -1560,7 +1730,8 @@ public class CompressBench2 {
 			onAnyFront.addAll( front);
 		}
 		List<Config> all = allConfigs( runs);
-		out.println( "=== Configs on the Pareto front of any machine (* = on this machine's front, n/a = needs more threads)");
+		out.println( "=== Configs on the Pareto front of any machine (* = on this machine's front, ! = disturbed run,"
+				+ " n/a = needs more threads)");
 		writeComparisonTable( all.stream().filter( c -> onAnyFront.contains( c.key)).collect( Collectors.toList()), runs, fronts, out);
 		out.flush();
 		summary.print( sw);
@@ -1573,7 +1744,7 @@ public class CompressBench2 {
 		full.flush();
 	}
 
-	private static final String CELL_HEADER = String.format( "%8s %6s %8s %6s  ", "Wall s", "rel", "CPU s", "RSS MB");
+	private static final String CELL_HEADER = String.format( "%8s %6s %8s %4s %6s   ", "Wall s", "rel", "CPU s", "Eff%", "RSS MB");
 	private static final int CELL_WIDTH = CELL_HEADER.length();
 
 	private static void writeComparisonTable( List<Config> configs, List<RunData> runs, List<Set<String>> fronts, PrintWriter out) {
@@ -1611,10 +1782,10 @@ public class CompressBench2 {
 				if ( r != null && r.ok()) {
 					String rel = i > 0 && refResult != null && refResult.ok() && refResult.comp.wallMS > 0
 							? String.format( Locale.US, "x%.2f", (double) r.comp.wallMS / refResult.comp.wallMS) : "";
-					cell = String.format( Locale.US, "%8.2f %6s %8s %6s%s ",
+					cell = String.format( Locale.US, "%8.2f %6s %8s %4s %6s%s%s ",
 							r.comp.wallMS / 1e3, rel, r.cpuMS() < 0 ? "?" : String.format( Locale.US, "%.2f", r.cpuMS() / 1e3),
-							r.comp.maxRssKB < 0 ? "?" : String.valueOf( r.comp.maxRssKB / 1024),
-							fronts.get( i).contains( c.key) ? "*" : " ");
+							pct( r.efficiency()), r.comp.maxRssKB < 0 ? "?" : String.valueOf( r.comp.maxRssKB / 1024),
+							fronts.get( i).contains( c.key) ? "*" : " ", r.disturbed() ? "!" : " ");
 				} else if ( r != null) {
 					cell = "  " + r.status;
 				} else if ( c.threads > d.threads()) {
@@ -1631,7 +1802,8 @@ public class CompressBench2 {
 	private static void writeComparisonTsv( List<RunData> runs, PrintWriter out) {
 		List<String> header = new ArrayList<>( Arrays.asList( "Family", "Level", "Threads", "Params"));
 		for ( RunData d : runs) {
-			for ( String col : new String[] { "Ratio", "WallMs", "CpuMs", "MaxRssMB", "TestWallMs", "Status", "Front"}) {
+			for ( String col : new String[] { "Ratio", "WallMs", "CpuMs", "EffPct", "MaxRssMB", "TestWallMs", "OtherPct",
+					"SwapInMB", "Status", "Front", "Disturbed"}) {
 				header.add( d.label + " " + col);
 		}   }
 		out.println( String.join( CSV_SEP, header));
@@ -1645,14 +1817,15 @@ public class CompressBench2 {
 				RunData d = runs.get( i);
 				Result r = d.byKey.get( c.key);
 				if ( r == null) {
-					row.addAll( Arrays.asList( "", "", "", "", "", c.threads > d.threads() ? "n/a" : "", ""));
+					row.addAll( Arrays.asList( "", "", "", "", "", "", "", "", c.threads > d.threads() ? "n/a" : "", "", ""));
 				} else {
 					row.addAll( Arrays.asList(
 							r.ok() ? String.format( Locale.US, "%.4f", r.ratio()) : "",
-							String.valueOf( r.comp.wallMS), String.valueOf( r.cpuMS()),
+							String.valueOf( r.comp.wallMS), String.valueOf( r.cpuMS()), pct( r.efficiency()),
 							String.valueOf( r.comp.maxRssKB < 0 ? -1 : r.comp.maxRssKB / 1024),
 							String.valueOf( r.test != null ? r.test.wallMS : -1),
-							r.status, fronts.get( i).contains( c.key) ? "*" : ""));
+							pct( r.comp.otherPct), String.valueOf( r.comp.swapInMB),
+							r.status, fronts.get( i).contains( c.key) ? "*" : "", r.disturbed() ? "!" : ""));
 				}
 			}
 			out.println( String.join( CSV_SEP, row));
@@ -1668,7 +1841,9 @@ public class CompressBench2 {
 				String.valueOf( r.comp.maxRssKB < 0 ? -1 : r.comp.maxRssKB / 1024),
 				String.valueOf( r.test != null ? r.test.wallMS : -1),
 				String.valueOf( r.test != null && r.test.maxRssKB >= 0 ? r.test.maxRssKB / 1024 : -1),
-				r.status, r.command));
+				r.status, r.command,
+				String.valueOf( r.comp.majFaults), String.valueOf( r.comp.invCtxSw), String.valueOf( r.comp.otherCpuMS),
+				String.format( Locale.US, "%.1f", r.comp.otherPct), String.valueOf( r.comp.swapInMB)));
 	}
 
 	/** Pareto-Fronten gesamt und je Familie, auf Konsole und in compressBench2-...-pareto.txt */
@@ -1676,7 +1851,8 @@ public class CompressBench2 {
 		StringWriter sw = new StringWriter();
 		PrintWriter out = new PrintWriter( sw);
 		out.println( "Compress Bench " + df.format( new Date()) + ": " + in.files.size() + " files, "
-				+ in.totalSize + " bytes, " + results.size() + " results, objective " + ( cpuObjective ? "cpu" : "wall"));
+				+ in.totalSize + " bytes, " + results.size() + " results, objective " + ( cpuObjective ? "cpu" : "wall")
+				+ String.format( Locale.US, ", front tolerance %.1f%% time / %.2f%% size", frontTimeTol * 100, frontSizeTol * 100));
 		out.println();
 		out.println( "=== Pareto front, all families");
 		writeFront( paretoFront( results), out);
@@ -1689,6 +1865,11 @@ public class CompressBench2 {
 				out.println( "no effect around " + f.anchor().key + ": " + flat);
 			}
 		}
+		long disturbed = results.stream().filter( Result::disturbed).count();
+		out.println();
+		out.println( "! = disturbed (other processes > " + (int) DISTURBED_OTHER_PCT + "% of the machine or swap-in > "
+				+ DISTURBED_SWAP_MB + " MB): " + disturbed + " of " + results.size() + " runs"
+				+ ( disturbed > 0 ? ", re-measure with --rerun=disturbed" : ""));
 		out.flush();
 		System.out.println();
 		System.out.println( sw);
@@ -1698,15 +1879,21 @@ public class CompressBench2 {
 	}
 
 	private static void writeFront( List<Result> front, PrintWriter out) {
-		out.println( String.format( "%-6s %4s %3s  %-45s %9s %9s %9s %8s %9s %8s %8s",
-				"Family", "Lvl", "Thr", "Params", "Ratio", "Size MB", "Wall s", "MB/s", "CPU s", "RSS MB", "Test s"));
+		out.println( String.format( "%-6s %4s %3s  %-45s %9s %9s %9s %8s %9s %5s %8s %8s %6s %7s",
+				"Family", "Lvl", "Thr", "Params", "Ratio", "Size MB", "Wall s", "MB/s", "CPU s", "Eff%", "RSS MB",
+				"Test s", "Oth%", "SwapMB"));
 		for ( Result r : front) {
-			out.println( String.format( Locale.US, "%-6s %4d %3d  %-45s %9.3f %9.2f %9.2f %8.1f %9.2f %8s %8.2f",
+			out.println( String.format( Locale.US, "%-6s %4d %3d  %-45s %9.3f %9.2f %9.2f %8.1f %9.2f %5s %8s %8.2f %6s %7s%s",
 					r.config.family, r.config.level, r.config.threads, r.config.paramString(), r.ratio(),
 					r.size / 1e6, r.comp.wallMS / 1e3, r.inputBytes / 1e3 / Math.max( 1, r.comp.wallMS), r.cpuMS() / 1e3,
-					r.comp.maxRssKB < 0 ? "?" : String.valueOf( r.comp.maxRssKB / 1024),
-					r.test != null ? r.test.wallMS / 1e3 : 0.0));
+					pct( r.efficiency()), r.comp.maxRssKB < 0 ? "?" : String.valueOf( r.comp.maxRssKB / 1024),
+					r.test != null ? r.test.wallMS / 1e3 : 0.0, pct( r.comp.otherPct),
+					r.comp.swapInMB < 0 ? "?" : String.valueOf( r.comp.swapInMB), r.disturbed() ? " !" : ""));
 		}
+	}
+
+	private static String pct( double v) {
+		return v < 0 ? "?" : String.format( Locale.US, "%.0f", v);
 	}
 
 	private static void writeTo( String filename, Consumer<PrintWriter> writeJob) {

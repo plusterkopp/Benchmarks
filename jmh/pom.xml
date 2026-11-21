@@ -114,11 +114,19 @@ questions.
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.14.0</version>
 				<configuration>
-					<compilerVersion>${javac.target}</compilerVersion>
-					<source>11</source>
-					<target>11</target>
+					<!-- bytecode and API level 11, runs on any newer JDK (benchmarks are run on 25) -->
+					<release>11</release>
+					<!-- JDK 23+ no longer runs annotation processors found on the classpath implicitly,
+					     naming the JMH processor explicitly works on every javac -->
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.openjdk.jmh</groupId>
+							<artifactId>jmh-generator-annprocess</artifactId>
+							<version>${jmh.version}</version>
+						</path>
+					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
 			<plugin>
